@@ -6,11 +6,22 @@ from mer_utilities import default_avatar
 class CorePerson(object):
 
 
-    def __init__(self, firstname):
+    def __init__(self, firstname, gender):
 
         self._firstname = firstname
+        self.gender = gender
         self._avatar = None
         self._renpy_character = store.Character(firstname)
+        self._host = list()
+
+    def add_angel(self, angel):
+        self._host.append(angel)
+
+    def remove_angel(self, angel):
+        self._host.remove(angel)
+
+    def get_host(self):
+        return [i for i in self._host]
 
     @property
     def avatar(self):

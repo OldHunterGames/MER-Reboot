@@ -12,6 +12,10 @@ class MERCore(object):
     def __init__(self):
 
         self._player = None
+        self.characters = list()
+
+    def add_character(self, person):
+        self.characters.append(person)
 
     @property
     def player(self):
@@ -166,4 +170,30 @@ class MistTravel(object):
         # mist event again
         self.core.set_world('core')
         #TODO: clear outer world items
+
+
+class Hierarchy(object):
+
+    HIERARCHY = defaultdict(list)
+
+    def __init__(self, person):
+
+        self.person = person
+
+    def add_clientela(self, person):
+        HIERARCHY[self.person].append(person)
+
+    def can_be_clientela(self, person):
+        pass
+
+    def assembly(self):
+        clientelas = self.HIERARCHY[self.person]
+        assembly = self.person.get_chorus()
+        for clientela in clientelas:
+            assembly.extend(clientela.get_host())
+        return assembly
+
+    def status(self):
+        return max([i.level() for i in self.person.get_host()])
+
 
