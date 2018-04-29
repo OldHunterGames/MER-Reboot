@@ -98,23 +98,43 @@ style frame:
 screen say(who, what):
     style_prefix "say"
 
-    window:
-        id "window"
-
-        if who is not None:
-
-            window:
-                id "namebox"
-                style "namebox"
-                text who id "who"
-
-        text what id "what"
+    if who is not None:
+        use sc_dialog(who, what)
+    else:
+        window:
+            id "window"
+            text what id "what"
 
 
     ## If there's a side image, display it above the text. Do not display on the
     ## phone variant - there's no room.
     if not renpy.variant("small"):
         add SideImage() xalign 0.0 yalign 1.0
+
+screen sc_dialog(who, what):
+    python:
+        if getattr(store, 'sayer', None) is not None:
+            avatar = sayer.avatar
+        else:
+            avatar = None
+    add "gui/dialog.png":
+        ypos 220
+    if avatar is not None:
+        $ avatar = im.Scale(avatar, 200, 200)
+        imagebutton:
+            idle avatar
+            pos(99, 295)
+            # hovered If(not core.sayer == narrator, Show('sc_info_popup', person=core.sayer))
+            # unhovered Hide('sc_info_popup')
+            # action Show('sc_character_info_screen', person=core.sayer)
+    if who is not None:
+        text who:
+            pos(310, 470)
+    viewport:
+        pos(110, 520)
+        xysize(780, 500)
+        text what id "what":
+            xmaximum 680
 
 
 ## Make the namebox available for styling through the Character object.
@@ -253,14 +273,14 @@ screen quick_menu():
             xalign 0.5
             yalign 1.0
 
-            textbutton _("Back") action Rollback()
-            textbutton _("History") action ShowMenu('history')
-            textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
-            textbutton _("Auto") action Preference("auto-forward", "toggle")
-            textbutton _("Save") action ShowMenu('save')
-            textbutton _("Q.Save") action QuickSave()
-            textbutton _("Q.Load") action QuickLoad()
-            textbutton _("Prefs") action ShowMenu('preferences')
+            # textbutton _("Back") action Rollback()
+            # textbutton _("History") action ShowMenu('history')
+            # textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
+            # textbutton _("Auto") action Preference("auto-forward", "toggle")
+            # textbutton _("Save") action ShowMenu('save')
+            # textbutton _("Q.Save") action QuickSave()
+            # textbutton _("Q.Load") action QuickLoad()
+            # textbutton _("Prefs") action ShowMenu('preferences')
 
 
 ## This code ensures that the quick_menu screen is displayed in-game, whenever
