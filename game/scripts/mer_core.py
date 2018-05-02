@@ -175,16 +175,23 @@ class MistTravel(object):
 class Hierarchy(object):
 
     HIERARCHY = defaultdict(list)
+    STATUSES = {
+        1: 'plebeian',
+        2: 'patrician',
+        3: 'senator',
+        4: 'noble',
+        5: 'princeps'
+    }
 
     def __init__(self, person):
 
         self.person = person
 
     def add_clientela(self, person):
-        HIERARCHY[self.person].append(person)
+        self.HIERARCHY[self.person].append(person)
 
     def can_be_clientela(self, person):
-        pass
+        return self.status() > Hierarchy(person).status()
 
     def assembly(self):
         clientelas = self.HIERARCHY[self.person]
@@ -195,5 +202,8 @@ class Hierarchy(object):
 
     def status(self):
         return max([i.level() for i in self.person.get_host()])
+
+    def status_str(self):
+        return self.STATUSES[self.status()]
 
 

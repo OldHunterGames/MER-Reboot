@@ -18,6 +18,9 @@ label start:
     $ player = CorePerson('ADAM', 'male')
     $ core = MERCore()
     $ core.player = player
+    python:
+        for i in range(40):
+            core.add_character(PersonCreator.gen_person())
     call _main
 
     return
@@ -32,19 +35,53 @@ label lbl_main:
         'Me':
             call screen sc_cis(player)
         'Others':
-            call screen sc_contacts()
+            $ ContactsInfo(core.characters).show()
         'Travel to outer worlds':
             'You visited and synchronised outer world'
             python:
-                angel = CoreAngel('Placeholder', grade=CoreAngel.DOMINATION_GRADE)
+                angel = AngelMaker.gen_archon()
                 player.add_angel(angel)
 
     return
 
-label lbl_make_patricians():
+label lbl_make_patrician():
     python:
-        for i in xrange(16):
-            angel = CoreAngel('Placeholder', grade=CoreAngel.DOMINATION_GRADE)
-            person = CorePerson('Placeholder1' + str(i))
-            person.add_angel(angle)
+        angel = AngelMaker.gen_archon()
+        person = PersonCreator.gen_person()
+        person.add_angel(angel)
+        core.add_character(person)
+        patricians.append((person, angel))
+    return person
+
+label lbl_make_senator():
+    python:
+        patricians = [renpy.call_in_new_context('lbl_make_patrician') for i in range(2)]
+        senator = PersonCreator.gen_person()
+        angel = AngelMaker.gen_ellohim()
+        for i in range(2):
+            a = AngelMaker.gen_archon()
+            angel.add_angel(a)
+            senator.add_angel(a)
+        senator.add_angel(angel)
+        [Hierarch(senator).add_clientela(person) for person in patricians]
+    return senator
+
+
+label lbl_make_princeps(house):
+    python:
+        angel = AngelMaker.gen_seraph(house)
+        person = CorePerson('%s leader' % house.capitalize())
+        person.add_angel(angel)
+        core.add_character(person)
+    return {'angel': angel, 'person': person}
+
+label lbl_make_nobles():
+    python:
+        seraph, princeps = lbl_make_princeps('serpis')
+        for i in range(2):
+            angel = AngelMaker.gen_cherub()
+            person = CorePerson('Noble person')
+            person.add_angel(person)
             core.add_character(person)
+            seraph.add_angel(angel)
+

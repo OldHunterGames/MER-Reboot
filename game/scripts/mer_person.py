@@ -1,6 +1,29 @@
 # -*- coding: UTF-8 -*-
+import random
 import renpy.store as store
 from mer_utilities import default_avatar
+
+
+class PersonCreator(object):
+
+    @staticmethod
+    def names_data():
+        return store.person_names
+
+    @staticmethod
+    def get_name(gender):
+        data = PersonCreator.names_data()
+        names = data.get(gender, data.get('default'))
+        if names is None:
+            raise Exception('Invalid data')
+        return random.choice(names)
+
+    @staticmethod
+    def gen_person(gender=None):
+        if gender is None:
+            gender = random.choice(store.person_genders)
+        name = PersonCreator.get_name(gender)
+        return CorePerson(name, gender)
 
 
 class CorePerson(object):
@@ -13,6 +36,7 @@ class CorePerson(object):
         self._avatar = None
         self._renpy_character = store.Character(firstname)
         self._host = list()
+        self._sparks = 0
 
     def add_angel(self, angel):
         self._host.append(angel)

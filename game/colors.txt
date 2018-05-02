@@ -1,0 +1,3 @@
+bg - C0FDFB
+borders - 64B6AC
+text - 1C1E15
