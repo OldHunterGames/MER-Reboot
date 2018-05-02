@@ -74,30 +74,12 @@ label lbl_make_noble():
             cherub.add_angel(i)
             noble.add_angel(i)
         for i in range(2):
+            ellohim = ellohims[i]
             for n in archons[i*2, i*2+2]:
-                i.add_angel(n)
-                noble.add_angel(n)
+                ellohim.add_angel(n)
+            noble.add_angel(ellohim)
         noble.add_angel(cherub)
     return noble
 
-
-
-
 label lbl_make_princeps(house):
-    python:
-        angel = AngelMaker.gen_seraph(house)
-        person = CorePerson('%s leader' % house.capitalize())
-        person.add_angel(angel)
-        core.add_character(person)
-    return {'angel': angel, 'person': person}
-
-label lbl_make_nobles():
-    python:
-        seraph, princeps = lbl_make_princeps('serpis')
-        for i in range(2):
-            angel = AngelMaker.gen_cherub()
-            person = CorePerson('Noble person')
-            person.add_angel(person)
-            core.add_character(person)
-            seraph.add_angel(angel)
-
+    return
