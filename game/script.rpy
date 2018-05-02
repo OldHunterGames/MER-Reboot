@@ -55,7 +55,6 @@ label lbl_make_patrician():
 
 label lbl_make_senator():
     python:
-        patricians = [renpy.call_in_new_context('lbl_make_patrician') for i in range(2)]
         senator = PersonCreator.gen_person()
         angel = AngelMaker.gen_ellohim()
         for i in range(2):
@@ -63,8 +62,25 @@ label lbl_make_senator():
             angel.add_angel(a)
             senator.add_angel(a)
         senator.add_angel(angel)
-        [Hierarch(senator).add_clientela(person) for person in patricians]
     return senator
+
+label lbl_make_noble():
+    python:
+        noble = PersonCreator.gen_person()
+        cherub = AngelMaker.gen_cherub()
+        ellohims = [AngelMaker.gen_ellohim() for i in range(2)]
+        archons = [AngelMaker.gen_archon() for i in range(4)]
+        for i in ellohims:
+            cherub.add_angel(i)
+            noble.add_angel(i)
+        for i in range(2):
+            for n in archons[i*2, i*2+2]:
+                i.add_angel(n)
+                noble.add_angel(n)
+        noble.add_angel(cherub)
+    return noble
+
+
 
 
 label lbl_make_princeps(house):
