@@ -175,6 +175,7 @@ class MistTravel(object):
 class Hierarchy(object):
 
     HIERARCHY = defaultdict(list)
+    PATRONS = dict()
     STATUSES = {
         1: 'plebeian',
         2: 'patrician',
@@ -189,6 +190,13 @@ class Hierarchy(object):
 
     def add_clientela(self, person):
         self.HIERARCHY[self.person].append(person)
+        self.PATRONS[person] = self.person
+
+    def get_patron(self):
+        return self.PATRONS.get(self.person)
+
+    def get_clientelas(self):
+        return self.HIERARCHY[self.person]
 
     def can_be_clientela(self, person):
         return self.status() > Hierarchy(person).status()

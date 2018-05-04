@@ -55,5 +55,21 @@ screen sc_contacts(info):
             background '#F0F8FF'
             xpos 215
             frame:
-                background '#000000'
+                style 'mer_bg'
                 xsize 1050
+                if info.selected is not None:
+                    $ person = info.selected
+                    vbox:
+                        xalign 0.5
+                        image person.avatar 
+                        textbutton person.firstname:
+                            xalign 0.5
+                            action Function(CharacterInfoScreen(person).show)
+                    python:
+                        patron = Hierarchy(person).get_patron()
+
+                    if patron is not None:
+                        hbox:
+                            text 'Patron: '
+                            textbutton patron.firstname:
+                                action Function(CharacterInfoScreen(patron).show)
