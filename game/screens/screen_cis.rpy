@@ -46,6 +46,8 @@ screen sc_cis(info, relations=None):
             image im.Scale(person.avatar, 200, 200)
             text person.firstname:
                 xalign 0.5
+            text 'Sparks: %s' % person.sparks:
+                xalign 0.5
             if Hierarchy(person).get_patron() is not None:
                 text 'Patron: %s' % Hierarchy(person).get_patron().firstname
             if len(Hierarchy(person).get_clientelas()) > 0:

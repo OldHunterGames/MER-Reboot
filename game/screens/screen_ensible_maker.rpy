@@ -28,6 +28,16 @@ init python:
         def make(self):
             CreateAngelEnsemble(AngelMaker, self.owner, *self.picked).run()
             self.picked = list()
+            self.owner.sparks -= self.cost()
+
+        def cost(self):
+            if len(self.picked) < 1:
+                return 0
+            else:
+                if self.picked[0].level() == 2:
+                    return 50
+                else:
+                    return 100
 
 
 screen sc_make_ensemble(maker):
@@ -36,8 +46,10 @@ screen sc_make_ensemble(maker):
     tag info
     window:
         vbox:
-            textbutton 'Make':
-                sensitive len(maker.picked) > 1
+            textbutton 'Make(%s sparks)' % maker.cost():
+                if maker.owner.sparks < maker.cost():
+                    text_color '#ff0000'
+                sensitive (len(maker.picked) > 1 and maker.owner.sparks >= maker.cost())
                 action Function(maker.make)
             textbutton 'Leave':
                 action Hide('sc_make_ensemble')

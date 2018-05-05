@@ -147,3 +147,10 @@ label lbl_world_dummy(world):
                 "You synced [world.archon.name]'s world"
             'Back to Rome':
                 return
+
+
+label lbl_gameover():
+    'You are broke'
+    'GAME OVER'
+    $ renpy.full_restart()
+    return

@@ -36,8 +36,16 @@ class CorePerson(object):
         self._avatar = None
         self._renpy_character = store.Character(firstname)
         self._host = list()
-        self._sparks = 0
+        self._sparks = 100
         self._successors = list()
+
+    @property
+    def sparks(self):
+        return self._sparks
+
+    @sparks.setter
+    def sparks(self, value):
+        self._sparks = value
 
     def heir(self):
         try:

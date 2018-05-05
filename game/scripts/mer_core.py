@@ -26,6 +26,22 @@ class MERCore(object):
     def player(self, value):
         self._player = value
 
+    def income(self):
+        income = sum([i.produce_sparks() for i in self.player.get_host()])
+        if Hierarchy(self.player).get_patron() is not None:
+            patron_income = income/10
+            player_income = income - patron_income
+            Hierarchy(self.player).get_patron().sparks += patron_income
+            self.player.sparks += player_income
+        else:
+            self.player.sparks += income
+
+    def skip_turn(self):
+        self.income()
+        self.player.sparks -= 5
+        if self.player.sparks < 0:
+            renpy.call_in_new_context('lbl_gameover')
+
 class EventsBook(object):
 
     def __init__(self, turns_to_store=0):
