@@ -2,7 +2,7 @@
 import renpy.store as store
 import renpy.exports as renpy
 
-from mer_utilities import Observable, empty_card, get_files
+from mer_utilities import Observable, empty_card, get_files, weighted_random
 
 
 class Command(object):
@@ -310,3 +310,33 @@ class NpcActionCommand(Command):
     @Observable
     def run(self):
         self.action.act(self.npc)
+
+
+class SuccessorChallenge(Command):
+
+    def __init__(self, person1, person2):
+        self.person1 = person1
+        self.person2 = person2
+        self.winner = None
+
+    def run(self):
+        weights = {self.person1: 1, self.person2: 1}
+        self.winner = weighted_random(weights)
+        looser = weights.keys()
+        looser.remove(self.winner)
+        looser = looser[0]
+        looser.add_successor(self.winner)
+        renpy.call_in_new_context('lbl_successor_challenge_result', winner=self.winner, looser=looser)
+
+
+class SetAngelApostol(Command):
+
+    def __init__(self, angel, person):
+        self.angel = angel
+        self.person = person
+
+    def run(self):
+        if self.angel.apostol is not None:
+            self.angel.apostol.remove_angel(self.angel)
+        self.angel.apostol = self.person
+        self.person.add_angel(self.angel)

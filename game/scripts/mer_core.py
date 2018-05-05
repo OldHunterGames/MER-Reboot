@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 from mer_utilities import Observable
 from collections import defaultdict
+from mer_command import *
 import random
 import renpy.exports as renpy
 import renpy.store as store
@@ -62,6 +63,24 @@ class PersonalBook(EventsBook):
 
     def _clear_events(self):
         self._events = defaultdict(list)
+
+
+class DummyWorld(object):
+
+    def __init__(self, archon):
+        self.archon = archon
+        archon.world = self
+
+    def visit(self, visitor):
+        self.visitor = visitor
+        self.archon.add_witness(visitor)
+        renpy.call_in_new_context('lbl_world_dummy', self)
+
+    def sync(self):
+        SetAngelApostol(self.archon, self.visitor).run()
+
+    def can_sync(self):
+        return self.archon not in self.visitor.get_host()
 
 
 class World(object):
@@ -192,6 +211,10 @@ class Hierarchy(object):
         self.HIERARCHY[self.person].append(person)
         self.PATRONS[person] = self.person
 
+    def remove_clientela(self, person):
+        self.HIERARCHY[self.person].remove(person)
+        del self.PATRONS[person]
+
     def get_patron(self):
         return self.PATRONS.get(self.person)
 
@@ -201,17 +224,23 @@ class Hierarchy(object):
     def can_be_clientela(self, person):
         return self.status() > Hierarchy(person).status()
 
-    def assembly(self):
+    def assembly(self, exclude_self=False):
         clientelas = self.HIERARCHY[self.person]
-        assembly = self.person.get_chorus()
+        if not exclude_self:
+            assembly = self.person.get_host()
+        else:
+            assembly = []
         for clientela in clientelas:
             assembly.extend(clientela.get_host())
         return assembly
 
     def status(self):
-        return max([i.level() for i in self.person.get_host()])
+        try:
+            status = max([i.level() for i in self.person.get_host()])
+        except ValueError:
+            status = 1
+        return status
 
     def status_str(self):
         return self.STATUSES[self.status()]
-
 

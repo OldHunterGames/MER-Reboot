@@ -4,25 +4,27 @@ from collections import defaultdict
 import renpy.store as store
 import renpy.exports as renpy
 
-
-def encolor_text(text, value, protected=False):
+def value_color(value):
     keyworded = {
         'red': 'ff0000', 'green': '00ff00', 'cyan': '00ffff',
         'gold': 'DAA520', 'magenta': 'ff00ff'}
-
     if value in keyworded:
         colors = keyworded
     else:
         colors = ['ff0000', 'ff00ff', '00ffff',
                   '0000FF', '00ff00', 'DAA520', '000000']
-        if value < 0:
-            value = 0
-        if value > 6:
-            value = 6
+    if value < 0:
+        value = 0
+    if value > 6:
+        value = 6
+    return colors[value]
+
+def encolor_text(text, value, protected=False):
+    color = value_color(value)
     if not protected:
-        return '{color=#%s}%s{/color}' % (colors[value], text)
+        return '{color=#%s}%s{/color}' % (color, text)
     else:
-        return '{{color=#%s}}%s{{/color}}' % (colors[value], text)
+        return '{{color=#%s}}%s{{/color}}' % (color, text)
 
 
 def get_files(path):

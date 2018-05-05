@@ -1,10 +1,22 @@
 # -*- coding: UTF-8 -*-
 import random
-from mer_utilities import default_avatar
+from mer_utilities import default_avatar, Observable
 import renpy.store as store
 
 
 class AngelMaker(object):
+
+    OBSERVERS = {
+        'archon_generated': list()
+    }
+
+    @staticmethod
+    def add_observer(event, callback):
+        AngelMaker.OBSERVERS[event].append(callback)
+
+    @staticmethod
+    def remove_observer(event, callback):
+        AngelMaker.OBSERVERS[event].remove(callback)
 
     @staticmethod
     def gen_archon_name():
@@ -12,7 +24,10 @@ class AngelMaker(object):
 
     @staticmethod
     def gen_archon():
-        return CoreAngel(AngelMaker.gen_archon_name(), grade=CoreAngel.DOMINATION_GRADE)
+        archon = CoreAngel(AngelMaker.gen_archon_name(), grade=CoreAngel.DOMINATION_GRADE)
+        for i in AngelMaker.OBSERVERS['archon_generated']:
+            i(archon)
+        return archon
 
     @staticmethod
     def gen_ellochim_name():
@@ -71,8 +86,45 @@ class CoreAngel(object):
         self.grade = kwargs.get('grade')
         self.ansible = list()
         self.kanonarch = None
-        self.apostol = None
+        self._witnesses = []
+        self._apostol = None
         self.world = None
+    
+    def can_be_apostol(self, person):
+        if person == self.apostol:
+            return False
+        if self.grade == self.DOMINATION_GRADE:
+            return True
+        elif self.grade.value > 2:
+            person_ansible = [i for i in person.get_host() if i in self.ansible]
+            return len(person_ansible) > (len(self.ansible) / 2)
+        return False
+
+    @property
+    def apostol(self):
+        return self._apostol
+
+    @apostol.setter
+    def apostol(self, value):
+        self._witnesses.append(value)
+        self._apostol = value
+
+    def get_witnesses(self, hierarchy):
+        witnesses = [i for i in self._witnesses]
+        witnesses.append(hierarchy(self.apostol).get_patron())
+        witnesses.extend(hierarchy(self.apostol).get_clientelas())
+        witnesses.extend(self.apostol.successors())
+        kanonarch = self.kanonarch
+        while kanonarch is not None:
+            witnesses.append(kanonarch.apostol)
+            kanonarch = kanonarch.kanonarch
+        return list(set([i for i in witnesses if i is not None]))
+
+    def add_witness(self, person):
+        self._witnesses.append(person)
+
+    def remove_witness(self, person):
+        self._witnesses.remove(person)
 
     @property
     def avatar(self):
@@ -90,5 +142,4 @@ class CoreAngel(object):
     def produce_sparks(self):
         if self.world is None:
             return 0
-        else:
-            return self.world.witnesses
+        return len(self.get_witnesses())

@@ -29,34 +29,36 @@ screen sc_contacts(info):
             background '#F0F8FF'
             xalign 0
             yalign 0
-            xsize 210
+            xsize 360
             yfill True
             ysize 720
             frame:
-                background im.Scale('gui/contacts_bg.jpg', 200, 720)
+                background im.Scale('gui/contacts_bg.jpg', 350, 720)
                 viewport:
                     scrollbars 'vertical'
                     draggable True
                     mousewheel True
-                    xmaximum 200
+                    xmaximum 350
                     
                     vbox:
                         spacing 10
                         for i in persons:
                             hbox:
                                 spacing 5
-                                xmaximum 200
+                                xmaximum 350
                                 image im.Scale(i.avatar, 32, 32)
-                                textbutton i.firstname:
+                                textbutton i.firstname + " '%s'" % Hierarchy(i).status_str():
                                     action Function(info.select, i)
                                     selected info.selected == i
                                     text_style 'contacts_button'
         frame:
             background '#F0F8FF'
-            xpos 215
+            xpos 365
             frame:
                 style 'mer_bg'
-                xsize 1050
+                xsize 900
+                yfill True
+                textbutton "Leave" xalign 1.0 yalign 1.0 action Return()
                 if info.selected is not None:
                     $ person = info.selected
                     vbox:
@@ -71,5 +73,6 @@ screen sc_contacts(info):
                     if patron is not None:
                         hbox:
                             text 'Patron: '
-                            textbutton patron.firstname:
+                            textbutton patron.firstname + " '%s'" % Hierarchy(patron).status_str():
                                 action Function(CharacterInfoScreen(patron).show)
+

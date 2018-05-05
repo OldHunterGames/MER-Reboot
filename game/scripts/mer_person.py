@@ -37,6 +37,26 @@ class CorePerson(object):
         self._renpy_character = store.Character(firstname)
         self._host = list()
         self._sparks = 0
+        self._successors = list()
+
+    def heir(self):
+        try:
+            heir = self._successors[0]
+        except IndexError:
+            heir = None
+        return heir
+
+    def add_successor(self, person):
+        self._successors.append(person)
+
+    def remove_successor(self, person):
+        self._successors.remove(person)
+
+    def successors(self):
+        return [i for i in self._successors]
+
+    def is_successor(self, person):
+        return person in self._successors
 
     def add_angel(self, angel):
         self._host.append(angel)

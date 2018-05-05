@@ -11,6 +11,7 @@ init -10 python:
     from mer_angel import *
     from mer_utilities import *
     from mer_core import *
+    from mer_command import *
 
 # The game starts here.
 
@@ -18,6 +19,8 @@ label start:
     $ player = CorePerson('ADAM', 'male')
     $ core = MERCore()
     $ core.player = player
+    python:
+        AngelMaker.add_observer('archon_generated', lambda archon: DummyWorld(archon))
     call lbl_make_initial_characters()
     call _main
 
@@ -31,14 +34,13 @@ label _main:
 label lbl_main:
     menu:
         'Me':
-            call screen sc_cis(player)
+            $ CharacterInfoScreen(player).show()
         'Others':
             $ ContactsInfo(core.characters).show()
         'Travel to outer worlds':
-            'You visited and synchronised outer world'
             python:
                 angel = AngelMaker.gen_archon()
-                player.add_angel(angel)
+                angel.world.visit(player)
 
     return
 
@@ -67,7 +69,7 @@ label lbl_make_patrician():
     python:
         angel = AngelMaker.gen_archon()
         person = PersonCreator.gen_person()
-        person.add_angel(angel)
+        SetAngelApostol(angel, person).run()
         core.add_character(person)
     return person
 
@@ -78,8 +80,8 @@ label lbl_make_senator():
         for i in range(2):
             a = AngelMaker.gen_archon()
             angel.add_angel(a)
-            senator.add_angel(a)
-        senator.add_angel(angel)
+            SetAngelApostol(a, senator).run()
+        SetAngelApostol(angel, senator).run()
         core.add_character(senator)
     return senator
 
@@ -91,13 +93,13 @@ label lbl_make_noble():
         archons = [AngelMaker.gen_archon() for i in range(4)]
         for i in ellohims:
             cherub.add_angel(i)
-            noble.add_angel(i)
+            SetAngelApostol(i, noble).run()
         for i in range(2):
             ellohim = ellohims[i]
             for n in archons[i*2: i*2+2]:
                 ellohim.add_angel(n)
-            noble.add_angel(ellohim)
-        noble.add_angel(cherub)
+                SetAngelApostol(n, noble).run()
+        SetAngelApostol(cherub, noble).run()
         core.add_character(noble)
     return noble
 
@@ -110,17 +112,38 @@ label lbl_make_princeps(house):
         archons = [AngelMaker.gen_archon() for i in range(8)]
         core.add_character(princeps)
         for i in cherubs:
-            princeps.add_angel(i)
+            SetAngelApostol(i, princeps).run()
             seraph.add_angel(i)
         for i in range(2):
             cherub = cherubs[i]
             for n in ellohims[i*2: i*2+2]:
                 cherub.add_angel(n)
-                princeps.add_angel(n)
+                SetAngelApostol(n, princeps).run()
         for i in range(4):
             ellohim = ellohims[i]
             for n in archons[i*2: i*2+2]:
                 ellohim.add_angel(n)
-                princeps.add_angel(n)
-        princeps.add_angel(seraph)
+                SetAngelApostol(n, princeps).run()
+        SetAngelApostol(seraph, princeps).run()
     return princeps
+
+
+label lbl_successor_challenge_result(winner, looser):
+    if winner == player:
+        'You win and become peer for [looser.firstname]'
+    else:
+        'You loose. [winner.firstname] is your peer now'
+    return
+
+label lbl_world_dummy(world):
+    "Hello to [world.archon.name]'s world"
+    while True:
+        menu:
+            'Talk to [world.archon.name]':
+                $ AngelInfoScreen(world.archon).show()
+            'Sync' if world.can_sync():
+                python:
+                    world.sync()
+                "You synced [world.archon.name]'s world"
+            'Back to Rome':
+                return
