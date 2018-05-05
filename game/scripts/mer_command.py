@@ -340,3 +340,28 @@ class SetAngelApostol(Command):
             self.angel.apostol.remove_angel(self.angel)
         self.angel.apostol = self.person
         self.person.add_angel(self.angel)
+
+
+class CreateAngelEnsemble(Command):
+
+    def __init__(self, angel_maker, owner, *args):
+        self.angel_maker = angel_maker
+        self.angels = args
+        self.owner = owner
+
+    def run(self):
+        if len(self.angels) < 2:
+            return False
+        angel = self.angels[0]
+        grade = angel.available_kanonarch_grade()
+        if grade == angel.ELLOCHIM_GRADE:
+            kanonarch = self.angel_maker.gen_ellochim()
+        elif grade == angel.CHERUB_GRADE:
+            kanonarch = self.angel_maker.gen_cherub()
+        else:
+            return False
+        SetAngelApostol(kanonarch, self.owner).run()
+        for i in self.angels:
+            kanonarch.add_angel(i)
+
+

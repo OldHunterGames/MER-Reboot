@@ -84,7 +84,7 @@ class CoreAngel(object):
         self.name = name
         self._avatar = avatar
         self.grade = kwargs.get('grade')
-        self.ansible = list()
+        self.ensemble = list()
         self.kanonarch = None
         self._witnesses = []
         self._apostol = None
@@ -96,9 +96,16 @@ class CoreAngel(object):
         if self.grade == self.DOMINATION_GRADE:
             return True
         elif self.grade.value > 2:
-            person_ansible = [i for i in person.get_host() if i in self.ansible]
-            return len(person_ansible) > (len(self.ansible) / 2)
+            person_ensemble = [i for i in person.get_host() if i in self.ensemble]
+            return len(person_ensemble) > (len(self.ensemble) / 2)
         return False
+
+    def available_kanonarch_grade(self):
+        if self.grade == self.DOMINATION_GRADE:
+            return self.ELLOCHIM_GRADE
+        elif self.grade == self.ELLOCHIM_GRADE:
+            return self.CHERUB_GRADE
+        return None
 
     @property
     def apostol(self):
@@ -133,7 +140,7 @@ class CoreAngel(object):
         return self._avatar
 
     def add_angel(self, angel):
-        self.ansible.append(angel)
+        self.ensemble.append(angel)
         angel.kanonarch = self
 
     def level(self):
