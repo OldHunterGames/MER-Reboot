@@ -33,6 +33,7 @@ screen sc_ais(info, controlled=False, relations=None):
 
         vbox:
             xalign 0.5
+            text 'Ensemble'
             for i in angel.ensemble:
                 textbutton i.name:
                     text_color value_color(i.level())
@@ -44,5 +45,5 @@ screen sc_ais(info, controlled=False, relations=None):
         if apostol is not None:
             vbox:
                 xalign 1.0
-                image apostol.avatar
+                image im.Scale(apostol.avatar, 200, 200)
                 text apostol.firstname

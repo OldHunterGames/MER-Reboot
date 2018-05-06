@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import random
 import renpy.store as store
+import renpy.exports as renpy
 from mer_utilities import default_avatar
 
 
@@ -19,25 +20,68 @@ class PersonCreator(object):
         return random.choice(names)
 
     @staticmethod
-    def gen_person(gender=None):
+    def gen_person(**kwargs):
+        gender = kwargs.get('gender')
+        genus = kwargs.get('genus')
+        age = kwargs.get('age')
         if gender is None:
             gender = random.choice(store.person_genders)
-        name = PersonCreator.get_name(gender)
-        return CorePerson(name, gender)
+        if genus is None:
+            genus = random.choice(store.person_genuses)
+        if age is None:
+            age = random.choice(store.person_ages)
+        name = kwargs.get('name', PersonCreator.get_name(gender))
+        person = CorePerson(name, gender, age, genus)
+        person.set_avatar(PersonCreator.gen_avatar(gender, age, genus))
+        return person
+
+    @staticmethod
+    def appearance_type(gender):
+        return {'male': 'masculine', 'female': 'feminine'}[gender]
+
+    @staticmethod
+    def gen_avatar(gender, age, genus):
+        start_path = 'images/avatar/'
+        start_path += genus
+        start_path = PersonCreator._check_avatar(start_path, PersonCreator.appearance_type(gender))
+        start_path = PersonCreator._check_avatar(start_path, age)
+        try:
+            avatar = random.choice(PersonCreator._get_avatars(start_path))
+        except IndexError:
+            avatar = default_avatar()
+        return avatar
+
+    @staticmethod
+    def _check_avatar(start_path, attr):
+        if attr is not None:
+            if renpy.exists(start_path + '/%s' % attr):
+                start_path += '/%s' % attr
+        return start_path
+
+    @staticmethod
+    def _get_avatars(path):
+        all_ = renpy.list_files()
+        avas = [str_ for str_ in all_ if str_.startswith(path)]
+        return avas
 
 
 class CorePerson(object):
 
 
-    def __init__(self, firstname, gender):
+    def __init__(self, firstname, gender, age, genus):
 
         self._firstname = firstname
         self.gender = gender
+        self.age = age
+        self.genus = genus
         self._avatar = None
         self._renpy_character = store.Character(firstname)
         self._host = list()
         self._sparks = 100
         self._successors = list()
+
+    def set_avatar(self, value):
+        self._avatar = value
 
     @property
     def sparks(self):
@@ -79,6 +123,7 @@ class CorePerson(object):
     def avatar(self):
         if self._avatar is None:
             return default_avatar()
+        return self._avatar
 
     @property
     def firstname(self):

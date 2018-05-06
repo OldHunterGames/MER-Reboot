@@ -63,7 +63,7 @@ screen sc_contacts(info):
                     $ person = info.selected
                     vbox:
                         xalign 0.5
-                        image person.avatar 
+                        image im.Scale(person.avatar, 200, 200)
                         textbutton person.firstname:
                             xalign 0.5
                             action Function(CharacterInfoScreen(person).show)

@@ -95,3 +95,5 @@ init python:
     }
 
     person_genders = ['male', 'female']
+    person_genuses = ['human', 'undead', 'canine', 'fairy', 'slime']
+    person_ages = ['junior', 'adolescent', 'mature', 'elder']

@@ -16,7 +16,7 @@ init -10 python:
 # The game starts here.
 
 label start:
-    $ player = CorePerson('ADAM', 'male')
+    $ player = PersonCreator.gen_person(name='ADAM', gender='male')
     $ core = MERCore()
     $ core.player = player
     python:
