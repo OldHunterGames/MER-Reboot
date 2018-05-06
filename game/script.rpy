@@ -33,6 +33,7 @@ label _main:
 
 label lbl_main:
     menu:
+        'Decade: [core.decade]'
         'Me':
             $ CharacterInfoScreen(player).show()
         'Others':
@@ -41,6 +42,7 @@ label lbl_main:
             python:
                 angel = AngelMaker.gen_archon()
                 angel.world.visit(player)
+                core.skip_turn()
 
     return
 
@@ -137,11 +139,14 @@ label lbl_successor_challenge_result(winner, looser):
 
 label lbl_world_dummy(world):
     "Hello to [world.archon.name]'s world"
+    $ cost = world.archon.apostol_cost()
     while True:
+        if cost > player.sparks:
+            'You have no sparks to sync this world'
         menu:
             'Talk to [world.archon.name]':
                 $ AngelInfoScreen(world.archon).show()
-            'Sync' if world.can_sync():
+            'Sync ([cost] sparks)' if world.can_sync():
                 python:
                     world.sync()
                 "You synced [world.archon.name]'s world"

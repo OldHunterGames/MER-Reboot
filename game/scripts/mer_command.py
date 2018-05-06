@@ -365,3 +365,14 @@ class CreateAngelEnsemble(Command):
             kanonarch.add_angel(i)
 
 
+class ExtendEnsemble(Command):
+
+    def __init__(self, kanonarch, angels):
+        self.angels = angels
+        self.kanonarch = kanonarch
+
+    def run(self):
+        for i in self.angels:
+            self.kanonarch.add_angel(i)
+
+

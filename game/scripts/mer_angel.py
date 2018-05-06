@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import random
 from mer_utilities import default_avatar, Observable
+from mer_core import Hierarchy
 import renpy.store as store
 
 
@@ -116,11 +117,17 @@ class CoreAngel(object):
         self._witnesses.append(value)
         self._apostol = value
 
-    def get_witnesses(self, hierarchy):
+    def apostol_cost(self):
+        if self.level() == 2:
+            return len(self.get_witnesses())
+        return store.ensemble_costs[len(self.ensemble)] * store.ensemble_multiplier[self.level()]
+
+    def get_witnesses(self, hierarchy=Hierarchy):
         witnesses = [i for i in self._witnesses]
-        witnesses.append(hierarchy(self.apostol).get_patron())
-        witnesses.extend(hierarchy(self.apostol).get_clientelas())
-        witnesses.extend(self.apostol.successors())
+        if self.apostol is not None:
+            witnesses.append(hierarchy(self.apostol).get_patron())
+            witnesses.extend(hierarchy(self.apostol).get_clientelas())
+            witnesses.extend(self.apostol.successors())
         kanonarch = self.kanonarch
         while kanonarch is not None:
             witnesses.append(kanonarch.apostol)

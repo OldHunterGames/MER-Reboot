@@ -18,3 +18,21 @@ init python:
     archon_second_names = [ __('Almud'), __('Aarim'), __('Adimus'), __('Achiakh'), __('Anakhita'), __('Abakh'), __('Anakhim'), __('Arakhib'), __('Arioch'), __('Ariukh'), __('Armaros'), __('Asaph'),
     __('Dumah'), __('Gezuriya'), __('Hamon'), __('Haroth'), __('Epoch'), __('Hemah'), __('Irin'), __('Kezef'), __('Malakh'), __('Maroth'), __('Merkabah'), __('Nakir'), __('Purah'), __('Rahab'),
     __('Sabaoth'), __('Zephon'), __('Zephirion'), __('Qaddisin'), __('Rabdos'), __('Talmud'), __('Sephyrot'), __('Talmud'), __('Mochiakh'), ]
+
+    ensemble_costs = {
+            0: 10,
+            1: 20,
+            2: 40,
+            3: 80,
+            4: 160,
+            5: 320,
+            6: 640,
+            7: 1280,
+            8: 2560
+        }
+
+    ensemble_multipliers = {
+            2: 1,
+            3: 2,
+            4: 4,
+        }

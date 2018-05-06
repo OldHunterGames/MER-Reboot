@@ -14,6 +14,7 @@ class MERCore(object):
 
         self._player = None
         self.characters = list()
+        self.decade = 1
 
     def add_character(self, person):
         self.characters.append(person)
@@ -41,6 +42,7 @@ class MERCore(object):
         self.player.sparks -= 5
         if self.player.sparks < 0:
             renpy.call_in_new_context('lbl_gameover')
+        self.decade += 1
 
 class EventsBook(object):
 
@@ -89,11 +91,11 @@ class DummyWorld(object):
 
     def visit(self, visitor):
         self.visitor = visitor
-        self.archon.add_witness(visitor)
         renpy.call_in_new_context('lbl_world_dummy', self)
 
     def sync(self):
         SetAngelApostol(self.archon, self.visitor).run()
+        self.visitor.sparks -= self.archon.apostol_cost()
 
     def can_sync(self):
         return self.archon not in self.visitor.get_host()
@@ -220,12 +222,15 @@ class Hierarchy(object):
     }
 
     def __init__(self, person):
-
+        if person is None:
+            raise Exception('Hierarchy called with None as person param')
         self.person = person
 
     def add_clientela(self, person):
         self.HIERARCHY[self.person].append(person)
         self.PATRONS[person] = self.person
+        person.add_successor(self.person)
+        self.person.add_successor(person)
 
     def remove_clientela(self, person):
         self.HIERARCHY[self.person].remove(person)
