@@ -20,7 +20,7 @@ label start:
     $ core = MERCore()
     $ core.player = player
     python:
-        AngelMaker.add_observer('archon_generated', lambda archon: DummyWorld(archon))
+        AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
     call lbl_make_initial_characters()
     call _main
 
@@ -41,7 +41,7 @@ label lbl_main:
         'Travel to outer worlds':
             python:
                 angel = AngelMaker.gen_archon()
-                angel.world.visit(player)
+                MistTravel(angel.world, player).run()
                 core.skip_turn()
 
     return
