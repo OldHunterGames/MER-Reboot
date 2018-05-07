@@ -41,7 +41,9 @@ class Feature(object):
 class WildWorldPersonMaker(object):
     
     @classmethod
-    def make_person(cls, person):
+    def make_person(cls, person=None, person_maker=None):
+        if person_maker is not None:
+            person = person_maker.gen_person(gender='female')
         gender = Feature.get_feature(person.gender)
         world_person = WildWorldPerson(person)
         world_person.add_feature(gender)
@@ -85,3 +87,9 @@ class WildWorldPerson(object):
     @property
     def avatar(self):
         return self._wrapped_person.avatar
+    
+    def __call__(self, *args, **kwargs):
+        return self._wrapped_person.__call__(*args, **kwargs)
+    
+    def predict(self, *args, **kwargs):
+        return self._wrapped_person.predict(*args, **kwargs)

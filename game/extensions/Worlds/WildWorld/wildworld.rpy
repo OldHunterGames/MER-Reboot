@@ -6,6 +6,10 @@ init 1 python:
         Feature.register_feature(key, Feature(value))
 
     class WildWorld(World):
+        
+        def __init__(self, *args, **kwargs):
+            super(WildWorld, self).__init__(*args, **kwargs)
+            self.characters = list()
 
         def entry_label(self):
             return 'lbl_wildworld'
@@ -15,8 +19,13 @@ init 1 python:
         
         def on_visit(self, person):
             self.player = WildWorldPersonMaker.make_person(person)
+        
+        def add_character(self, person):
+            self.characters.append(person)
 
 label lbl_wildworld(world):
     show screen sc_wildworld_stats(world)
-    'WildWorld'
+    python:
+        captive = WildWorldPersonMaker.make_person(person_maker=PersonCreator)
+    captive 'Hello'
     return

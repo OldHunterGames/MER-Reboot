@@ -130,11 +130,13 @@ screen sc_dialog(who, what):
     if who is not None:
         text who:
             pos(310, 470)
+            color '#ffffff'
     viewport:
         pos(110, 520)
         xysize(780, 500)
         text what id "what":
             xmaximum 680
+            color '#ffffff'
 
 
 ## Make the namebox available for styling through the Character object.
