@@ -26,19 +26,19 @@ class MERCore(object):
     @player.setter
     def player(self, value):
         self._player = value
-
-    def income(self):
-        income = sum([i.produce_sparks() for i in self.player.get_host()])
-        if Hierarchy(self.player).get_patron() is not None:
-            patron_income = income/10
-            player_income = income - patron_income
-            Hierarchy(self.player).get_patron().sparks += patron_income
-            self.player.sparks += player_income
-        else:
-            self.player.sparks += income
-
+    
+    def calc_income(self, person):
+        income = person.income()
+        hierarchy = Hierarchy(person)
+        if hierarchy.get_patron() is not None:
+            income *= 0.9
+            income = int(income)
+        for i in hierarchy.get_clientelas():
+            income += i.income() // 10
+        return income
+        
     def skip_turn(self):
-        self.income()
+        self.player.sparks += self.calc_income(self.player)
         self.player.sparks -= 5
         if self.player.sparks < 0:
             renpy.call_in_new_context('lbl_gameover')

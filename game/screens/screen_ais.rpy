@@ -22,6 +22,7 @@ screen sc_ais(info, controlled=False, relations=None):
         vbox:
             image angel.avatar
             text angel.name
+            text 'Income: %s' % angel.produce_sparks()
             if angel.world is not None and player in angel.get_witnesses(Hierarchy):
                 textbutton 'Visit world':
                     action Function(angel.world.visit, player)

@@ -79,6 +79,9 @@ class CorePerson(object):
         self._host = list()
         self._sparks = 100
         self._successors = list()
+    
+    def income(self):
+        return sum([i.produce_sparks() for i in self.get_host()])
 
     def set_avatar(self, value):
         self._avatar = value
