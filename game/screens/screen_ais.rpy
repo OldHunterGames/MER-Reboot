@@ -34,15 +34,16 @@ screen sc_ais(info, controlled=False, relations=None):
 
         vbox:
             xalign 0.5
-            text 'Ensemble'
-            for i in angel.ensemble:
-                textbutton i.name:
-                    text_color value_color(i.level())
-                    text_hover_color '#EFF0D1'
-                    action Function(AngelInfoScreen(i).show)
-            if angel.apostol == player:
-                textbutton 'Extend ensemble':
-                    action Function(EnsembleMaker(angel.apostol, angel).show)
+            if angel.level() > 2 and len(angel.ensemble) > 0:
+                text 'Ensemble'
+                for i in angel.ensemble:
+                    textbutton i.name:
+                        text_color value_color(i.level())
+                        text_hover_color '#EFF0D1'
+                        action Function(AngelInfoScreen(i).show)
+                if angel.apostol == player:
+                    textbutton 'Extend ensemble':
+                        action Function(EnsembleMaker(angel.apostol, angel).show)
         if apostol is not None:
             vbox:
                 xalign 1.0
