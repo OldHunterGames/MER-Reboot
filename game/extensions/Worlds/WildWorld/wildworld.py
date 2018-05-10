@@ -1,7 +1,131 @@
 # -*- coding: UTF-8 -*-
 import renpy.store as store
+import renpy.exports as renpy
 from mer_utilities import encolor_text
 import random
+
+
+class Location(object):
+    
+    def __init__(self, data):
+        self._data = data
+    
+    def name(self):
+        return self._data.get('name')
+    
+    def label(self):
+        return self._data.get('label')
+    
+    def visit(self, world):
+        renpy.call(self.label(), world=world)
+
+
+class Locations(object):
+    
+    def __init__(self, width=5, height=5, **kwargs):
+        self._width = 5
+        self._height = 5
+        self.locations = [None for i in range(width*height)]
+        self.current = 0
+        self.city_naems = kwargs.get('city_names')
+        self._generate_locations()
+    
+    def size(self):
+        return len(self.locations)
+    
+    def current_location(self):
+        return self.get_loc(self.current)
+    
+    def _generate_locations(self):
+        city = 2
+        empty_row = False
+        for i in range(0, self._height):
+            index = i * self._width
+            if empty_row:
+                self.locations[index] = self.gen_road()
+                self.locations[index+1] = self.gen_wildness()
+                self.locations[index+2] = self.gen_road()
+                self.locations[index+3] = self.gen_wildness()
+                self.locations[index+4] = self.gen_road()
+                empty_row = False
+            else:
+                if city == 2:
+                    self.locations[index] = self.gen_city()
+                    self.locations[index+1] = self.gen_road()
+                    self.locations[index+2] = self.gen_wildness()
+                    self.locations[index+3] = self.gen_road()
+                    self.locations[index+4] = self.gen_city()
+                    city = 1
+                    empty_row = True
+                elif city == 1:
+                    self.locations[index] = self.gen_road()
+                    self.locations[index+1] = self.gen_wildness()
+                    self.locations[index+2] = self.gen_city()
+                    self.locations[index+3] = self.gen_road()
+                    self.locations[index+4] = self.gen_wildness()
+                    city = 2
+                    empty_row = True
+            
+                
+    
+    def get_loc(self, index):
+        return self.locations[index]
+
+    def _can_go(self, index, side):
+        sides = {
+            'left': range(0, self.size(), self._width),
+            'right': range(self._width - 1, self.size(), self._width),
+            'top': range(0, self._width),
+            'bot': range(self.size()-1, self.size()-self._width-1, -1)
+        }
+        return index not in sides[side]
+    
+    def can_go(self, location_pos, turns=1):
+        available = {1: list()}
+        locs = {
+            'top': location_pos - 5,
+            'bot': location_pos + 5,
+            'left': location_pos - 1,
+            'right': location_pos + 1,
+        }
+        for key, value in locs.items():
+            if value >= 0 and value < 25 and self._can_go(location_pos, key):
+                available[1].append(value)
+        calculated = 2
+        calculated_points = [i for i in available[1]]
+        while turns > 1:
+            available[calculated] = list()
+            for i in available[calculated-1]:
+                locs = {
+                    'top': i - 5,
+                    'bot': i + 5,
+                    'left': i - 1,
+                    'right': i + 1,
+                }
+                for key, value in locs.items():
+                    if value >= 0 and value < 25 and value not in calculated_points and self._can_go(i, key):
+                        available[calculated].append(value)
+            available[calculated] = list(set(available[calculated]))
+            calculated_points.extend(available[calculated])
+            calculated += 1
+            turns -= 1
+        return available        
+    
+    def gen_city(self):
+        name = random.choice(store.wildworld_city_names)
+        data = {'name': name, 'type': 'city'}
+        data.update(random.choice(store.wildworld_cities.values()))
+        return Location(data)
+    
+    def gen_road(self):
+        data = {'type': 'road'}
+        data.update(store.wildworld_locations['road'])
+        return Location(data)
+    
+    def gen_wildness(self):
+        data = {'type': 'wildness'}
+        data.update(store.wildworld_locations['wildness'])
+        return Location(data)
 
 
 class Feature(object):
@@ -56,12 +180,19 @@ class WildWorldPerson(object):
         self._wrapped_person = coreperson
         self.features = dict()
         self.slotless_features = list()
+        self.applied_item = None
     
     def add_feature(self, feature):
         if feature.slot is None:
             self.slotless_features.append(feature)
             return
         self.features[feature.slot] = feature
+    
+    def remove_feature(self, feature):
+        if feature.slot is None:
+            self.slotless_features.remove(feature)
+        else:
+            del self.features[feature.slot]
     
     def attribute(self, attr):
         return self.count_modifiers(attr)
@@ -73,6 +204,12 @@ class WildWorldPerson(object):
         for i in self.slotless_features:
             value += i.count_modifiers(attr)
         return max(-2, min(value, 5))
+    
+    def attributes(self):
+        attrs = dict()
+        for key in store.wildworld_attributes.keys():
+            attrs[key] = self.attribute(key)
+        return attrs
     
     def show_attributes(self):
         attrs = dict()
@@ -93,3 +230,11 @@ class WildWorldPerson(object):
     
     def predict(self, *args, **kwargs):
         return self._wrapped_person.predict(*args, **kwargs)
+    
+    @property
+    def name(self):
+        return self._wrapped_person.firstname
+    
+    @property
+    def gender(self):
+        return self._wrapped_person.gender
