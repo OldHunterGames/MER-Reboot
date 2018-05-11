@@ -36,12 +36,14 @@ init python:
             'description': __("For a one unit of food you can buy five pieces of sturdy rope. It's a basic way to restrain a slave, not overly secure, but cheap. You can buy rope anywhere."),
             'name': __("Sturdy rope"),
             'price': 0.2,
+            'tags': ['enslave'],
         },
         'leather_restraints': {
             'name': __("Lether restraints"),
             'description': __("Specially arranged leather restraints is a better way to hold a slave, cutting chances to escape a half."),
             'price': 1,
             'escape_chance': lambda x: x//2,
+            'tags': ['enslave'],
         },
         'wooden_pads': {
             'name': __("Wooden pads"),
@@ -49,11 +51,13 @@ init python:
             'price': 2,
             'escape_chance': lambda x: 0,
             'food_consumption': lambda x: x*2,
+            'tags': ['enslave'],
         },
         'iron_shackles': {
             'name': __("Iron shackles"),
             'description': __("You can buy shackles only in advanced town."),
             'price': 10,
             'escape_chance': lambda x: 0,
+            'tags': ['enslave'],
         }
     }

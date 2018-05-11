@@ -5,6 +5,9 @@ init 1 python:
     from wildworld import *
     for key, value in wildworld_features.items():
         Feature.register_feature(key, Feature(value))
+    
+    for key, value in wildworld_items.items():
+        Item.register_item(key, Item(key, value))
 
     class WildWorld(World):
         
@@ -32,6 +35,7 @@ init 1 python:
             self.locations.current = pos
         
         def skip_turn(self):
+            self.slave_escape()
             self.food -= len(self.characters)
             self.food -= 1
             if self.food < 0:
@@ -45,6 +49,34 @@ init 1 python:
         
         def remove_character(self, person):
             self.characters.remove(person)
+        
+        def security_chance(self):
+            value = 2
+            return value > random.randint(0, 6)
+        
+        def escape_chance(self, person):
+            attr = max(person.attributes().values())
+            if person.applied_item is not None:
+                attr = person.applied_item.escape_chance(attr)
+            print('{0} chance is {1}'.format(person.name, attr))
+            roll = random.randint(0, 6)
+            print('roll is {0}'.format(roll))
+            if attr > roll:
+                return True
+            return False
+        
+        def slave_escape(self):
+            for i in self.characters:
+                result = self.escape_chance(i)
+                security = self.security_chance()
+                if result:
+                    if security:
+                        pass
+                        # return renpy.call('lbl_wildworld_slave_escape_prevented', self, i)
+                    else:
+                        self.remove_character(i)
+                        renpy.call_in_new_context('lbl_wildworld_slave_escaped', self, i)
+
     
 
     class SlaverMarket(object):
@@ -76,6 +108,10 @@ init 1 python:
 
 
 label lbl_wildworld(world):
+    "Wellcome to [world.archon.name]'s world"
+    $ item = Item.get_item('sturdy_rope')
+    $ world.player.add_item(item)
+    "You found 1 [item.name]"
     call lbl_wildworld_main(world)
     return
 
@@ -117,6 +153,21 @@ label lbl_wildworld_wildness(world):
         menu:
             'Catch slave':
                 python:
-                    world.add_character(WildWorldPersonMaker.make_person(person_maker=PersonCreator))
-                    world.skip_turn()
+                    items = sorted([(i.name, i) for i in world.player.items('enslave')])
+                    if len(items) > 0:
+                        item = renpy.display_menu(items)
+                        slave = WildWorldPersonMaker.make_person(person_maker=PersonCreator)
+                        world.add_character(slave)
+                        slave.applied_item = item
+                        world.skip_turn()
+                if len(items) < 1:
+                    'You have no items to catch slave'
+    return
+
+label lbl_wildworld_slave_escaped(world, person):
+    '[person.name] escaped'
+    return
+
+label lbl_wildworld_slave_escape_prevented(world, person):
+    '[world.player.name] prevented escape of [person.name]'
     return

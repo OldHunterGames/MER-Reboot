@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
+import random
+from collections import Counter
 import renpy.store as store
 import renpy.exports as renpy
 from mer_utilities import encolor_text
-import random
 
 
 class Location(object):
@@ -128,6 +129,41 @@ class Locations(object):
         return Location(data)
 
 
+class Item(object):
+    ITEMS = dict()
+
+    def __init__(self, id, data):
+        self.id = id
+        self._data = data
+    
+    @property
+    def type(self):
+        return self._data.get('type')
+    
+    def escape_chance(self, value):
+        return self._data.get('escape_chance', lambda x: x)(value)
+    
+    def food_consumption(self, value):
+        return self._data.get('food_consumption', lambda x: x)(value)
+    
+    def __getattr__(self, key):
+        try:
+            return self.__dict__['_data'][key]
+        except KeyError:
+            raise AttributeError(key)
+    
+    @classmethod
+    def register_item(cls, id, item):
+        cls.ITEMS[id] = item
+    
+    @classmethod
+    def get_item(cls, id):
+        return cls.ITEMS[id]
+    
+    def has_tag(self, tag):
+        return tag in self._data.get('tags', list())
+
+
 class Feature(object):
     
     FEATURES = dict()
@@ -166,8 +202,9 @@ class WildWorldPersonMaker(object):
     
     @classmethod
     def make_person(cls, person=None, person_maker=None):
+        assert person is not None or person_maker is not None
         if person_maker is not None:
-            person = person_maker.gen_person(gender='female')
+            person = person_maker.gen_person()
         gender = Feature.get_feature(person.gender)
         world_person = WildWorldPerson(person)
         world_person.add_feature(gender)
@@ -181,6 +218,15 @@ class WildWorldPerson(object):
         self.features = dict()
         self.slotless_features = list()
         self.applied_item = None
+        self._items = Counter()
+    
+    def add_item(self, item):
+        self._items[item] += 1
+    
+    def items(self, tag=None):
+        if tag is not None:
+            return [i for i in self._items.keys() if i.has_tag(tag)]
+        return self._items.keys()
     
     def add_feature(self, feature):
         if feature.slot is None:
