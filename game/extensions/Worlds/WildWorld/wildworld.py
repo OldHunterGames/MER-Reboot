@@ -202,7 +202,6 @@ class WildWorldPersonMaker(object):
     
     @classmethod
     def make_person(cls, person=None, person_maker=None):
-        assert person is not None or person_maker is not None
         if person_maker is not None:
             person = person_maker.gen_person()
         gender = Feature.get_feature(person.gender)
@@ -222,6 +221,10 @@ class WildWorldPerson(object):
     
     def add_item(self, item):
         self._items[item] += 1
+    
+    def remove_item(self, item):
+        if self._items[item] > 0:
+            self._items[item] -= 1
     
     def items(self, tag=None):
         if tag is not None:

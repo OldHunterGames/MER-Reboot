@@ -17,7 +17,19 @@ init python:
         },
         'brothel_city': {
             'description': __("City with brothel"), 'label': 'lbl_wildworld_brothel_city',
-        }
+        },
+        'amazon_village': {
+            'description': __("Amazon village"), 'label': 'lbl_wildworld_amazon_village',
+        },
+        'sawmill_city':{
+            'description': __("City with sawmill"), 'label': 'lbl_wildworld_sawmill_city',
+        },
+        'artisan_city': {
+            'description': __("Artisans city"), 'label': 'lbl_wildworld_artisan_city', 
+        },
+        'rich_city': {
+            'description': __("Rich city"), 'label': 'lbl_wildworld_rich_city',
+        },
     }
 
     wildworld_locations = {

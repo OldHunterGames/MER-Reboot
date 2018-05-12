@@ -24,6 +24,9 @@ screen sc_wildworld_stats(world):
                     text value
             textbutton 'Map':
                 action Show('sc_wildworld_map', world=world)
+            
+            textbutton 'Slaves':
+                action Function(SlaveManager(world.get_slaves(), world).show)
 
 
 screen sc_wildworld_map(world):
@@ -101,5 +104,45 @@ screen sc_wildworld_sell_slaves(market):
             action Hide('sc_wildworld_sell_slaves')
         
 
+screen sc_wildworld_slaves(manager):
+    modal True
+    zorder 10
+    window:
+        xfill True
+        yfill True
+        ysize 720
+        xsize 1280
+        background '#C0FDFB'
+        vbox:
+            for i in manager.slaves:
+                hbox:
+                    spacing 5
+                    xmaximum 350
+                    image im.Scale(i.avatar, 32, 32)
+                    textbutton i.name:
+                        action Function(manager.select, i)
+                        selected manager.selected == i
+        
+        if manager.selected is not None:
+            frame:
+                xalign 0.5
+                xsize 500
+                ysize 720
+                vbox:
+                    image im.Scale(manager.selected.avatar, 200, 200)
+                    text manager.selected.name:
+                        xalign 0.5
+                    vbox:
+                        xalign 0.5
+                        for value in manager.selected.show_attributes().values():
+                            text value
+                    textbutton 'Gut into food':
+                        action Function(manager.make_food)
+                    
+        
+        textbutton 'Leave':
+            xalign 1.0
+            yalign 1.0
+            action Hide('sc_wildworld_slaves')
             
         
