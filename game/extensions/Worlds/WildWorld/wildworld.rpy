@@ -142,8 +142,8 @@ label lbl_wildworld_main(world):
     return
 
 label lbl_wildworld_road(world):
-    while True:
-        'Road'
+    'Road'
+    call screen sc_wildworld_map(world)
     return
 
 label lbl_wildworld_brothel_city(world):
@@ -155,6 +155,9 @@ label lbl_wildworld_brothel_city(world):
                     $ SlaverMarket(world.get_slaves('female'), world, 3).show()
                 else:
                     $ pass
+            'Leave':
+                call screen sc_wildworld_map(world)
+                return
     return
 
 label lbl_wildworld_market_city(world):
@@ -166,6 +169,9 @@ label lbl_wildworld_market_city(world):
                     $ SlaverMarket(world.get_slaves(), world, 2).show()
                 else:
                     $ pass
+            'Leave':
+                call screen sc_wildworld_map(world)
+                return
     return
 
 label lbl_wildworld_amazon_village(world):
@@ -177,6 +183,9 @@ label lbl_wildworld_amazon_village(world):
                     $ SlaverMarket(world.get_slaves('male'), world, 3).show()
                 else:
                     $ pass
+            'Leave':
+                call screen sc_wildworld_map(world)
+                return
     return
 
 label lbl_wildworld_sawmill_city(world):
@@ -188,6 +197,9 @@ label lbl_wildworld_sawmill_city(world):
                     $ SlaverMarket(world.get_slaves(), world, 5, ['might']).show()
                 else:
                     $ pass
+            'Leave':
+                call screen sc_wildworld_map(world)
+                return
     return
 
 label lbl_wildworld_artisan_city(world):
@@ -199,6 +211,9 @@ label lbl_wildworld_artisan_city(world):
                     $ SlaverMarket(world.get_slaves(), world, 5, ['competence']).show()
                 else:
                     $ pass
+            'Leave':
+                call screen sc_wildworld_map(world)
+                return
     return
 
 label lbl_wildworld_rich_city(world):
@@ -210,6 +225,9 @@ label lbl_wildworld_rich_city(world):
                     $ SlaverMarket(world.get_slaves(), world, 5, ['charisma', 'subtlety']).show()
                 else:
                     $ pass
+            'Leave':
+                call screen sc_wildworld_map(world)
+                return
     return
 
 label lbl_wildworld_wildness(world):
@@ -227,6 +245,9 @@ label lbl_wildworld_wildness(world):
                         world.skip_turn()
                 if len(items) < 1:
                     'You have no items to catch slave'
+            'Leave':
+                call screen sc_wildworld_map(world)
+                return
     return
 
 label lbl_wildworld_slave_escaped(world, person):

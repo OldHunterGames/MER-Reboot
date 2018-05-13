@@ -22,8 +22,6 @@ screen sc_wildworld_stats(world):
             vbox:
                 for value in world.player.show_attributes().values():
                     text value
-            textbutton 'Map':
-                action Show('sc_wildworld_map', world=world)
             
             textbutton 'Slaves':
                 action Function(SlaveManager(world.get_slaves(), world).show)
@@ -58,11 +56,11 @@ screen sc_wildworld_map(world):
                             background '#f0f0f0'
                             if loc == world.locations.current_location():
                                 text_color '#00ff00'
-                            action  Function(world.change_location, j), Hide('sc_wildworld_map'), Function(renpy.return_statement),
-                            sensitive (j in available and loc != world.locations.current_location() or True)
+                            action  Function(world.change_location, j), Return(),
+                            sensitive (j in available and loc != world.locations.current_location())
         
         textbutton 'Leave':
-            action Hide('sc_wildworld_map')
+            action Return()
 
 
 screen sc_wildworld_sell_slaves(market):
