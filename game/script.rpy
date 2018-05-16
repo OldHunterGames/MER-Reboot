@@ -145,7 +145,7 @@ label lbl_world_dummy(world):
             'You have no sparks to sync this world'
         menu:
             'Talk to [world.archon.name]':
-                $ AngelInfoScreen(world.archon).show()
+                $ AngelInfoScreen(world.archon, show_world_btn=False).show()
             'Sync ([cost] sparks)' if world.can_sync():
                 python:
                     world.sync()

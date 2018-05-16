@@ -5,13 +5,14 @@ label lbl_ais_glue(info):
 init python:
     class AngelInfoScreen(object):
 
-        def __init__(self, angel):
+        def __init__(self, angel, show_world_btn=False):
             self.angel = angel
+            self.show_world_btn = show_world_btn
 
         def show(self):
             return renpy.show_screen('sc_ais', self)
 
-screen sc_ais(info, controlled=False, relations=None):
+screen sc_ais(info):
     $ angel = info.angel
     $ apostol = angel.apostol
     tag info
@@ -23,7 +24,7 @@ screen sc_ais(info, controlled=False, relations=None):
             image angel.avatar
             text angel.name
             text 'Income: %s' % angel.produce_sparks()
-            if angel.world is not None and player in angel.get_witnesses(Hierarchy):
+            if angel.world is not None and player in angel.get_witnesses(Hierarchy) and info.show_world_btn:
                 textbutton 'Visit world':
                     action Function(angel.world.visit, player)
             if angel.can_be_apostol(player) and angel.level() > 2:
