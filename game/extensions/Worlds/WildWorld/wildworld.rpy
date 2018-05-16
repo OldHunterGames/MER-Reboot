@@ -58,7 +58,7 @@ init 1 python:
             attr = max(person.attributes().values())
             if person.applied_item is not None:
                 attr = person.applied_item.escape_chance(attr)
-            roll = random.randint(0, 6)
+            roll = random.randint(0, 5)
             if attr > roll:
                 return True
             return False
