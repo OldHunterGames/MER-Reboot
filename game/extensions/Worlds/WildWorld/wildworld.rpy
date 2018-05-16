@@ -44,6 +44,8 @@ init 1 python:
                 self.food = 0
                 self.player.state -= 1
                 self.characters = list()
+                if self.player.state == 0:
+                    renpy.call_in_new_context('lbl_wildworld_gameover')
             self.day += 1
         
         def get_slaves(self, gender='all'):
@@ -130,6 +132,10 @@ init 1 python:
         def show(self):
             return renpy.show_screen('sc_wildworld_slaves', manager=self)
 
+label lbl_wildworld_gameover():
+    'Game is over'
+    $ renpy.full_restart()
+    return
 
 label lbl_wildworld(world):
     "Wellcome to [world.archon.name]'s world"
@@ -177,9 +183,9 @@ label lbl_buy_item(world):
                 info = {'item': item, 'amount': amount, 'price': price}
                 if price <= world.food:
                     items.append(( "%sx %s, price: %s" % (amount, item.name, price), info))
-        items.append(('Leave', None))
+        items.append(('Leave', 'leave'))
         item = renpy.display_menu(items)
-        if item is not None:
+        if item != 'leave':
             world.food -= item['price']
             for i in range(item['amount']):
                 world.player.add_item(item['item'])

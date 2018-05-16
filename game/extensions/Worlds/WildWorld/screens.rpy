@@ -19,6 +19,7 @@ screen sc_wildworld_stats(world):
             
             text 'Food: %s' % world.food
             text 'Day: %s' % world.day
+            text 'State: %s' % world.player.state
             vbox:
                 for value in world.player.show_attributes().values():
                     text value
