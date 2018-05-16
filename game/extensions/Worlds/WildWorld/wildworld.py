@@ -225,6 +225,8 @@ class WildWorldPerson(object):
     def remove_item(self, item):
         if self._items[item] > 0:
             self._items[item] -= 1
+        if self._items[item] == 0:
+            del self._items[item]
     
     def items(self, tag=None):
         if tag is not None:

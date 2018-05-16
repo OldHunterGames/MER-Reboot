@@ -126,16 +126,20 @@ screen sc_wildworld_slaves(manager):
                 xalign 0.5
                 xsize 500
                 ysize 720
-                vbox:
-                    image im.Scale(manager.selected.avatar, 200, 200)
-                    text manager.selected.name:
-                        xalign 0.5
+                hbox:
+                    spacing 5
                     vbox:
-                        xalign 0.5
-                        for value in manager.selected.show_attributes().values():
-                            text value
-                    textbutton 'Gut into food':
-                        action Function(manager.make_food)
+                        image im.Scale(manager.selected.avatar, 200, 200)
+                        text manager.selected.name:
+                            xalign 0.5
+                        vbox:
+                            xalign 0.5
+                            for value in manager.selected.show_attributes().values():
+                                text value
+                        textbutton 'Gut into food':
+                            action Function(manager.make_food)
+                    vbox:
+                        text manager.selected.gender
                     
         
         textbutton 'Leave':
