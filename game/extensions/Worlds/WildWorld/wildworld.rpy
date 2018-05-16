@@ -16,7 +16,7 @@ init 1 python:
             super(WildWorld, self).__init__(*args, **kwargs)
             self.characters = list()
             self.locations = Locations()
-            self.food = 1000
+            self.food = 0
             self.day = 1
             self.halt = False
 
