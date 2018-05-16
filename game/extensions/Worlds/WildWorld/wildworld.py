@@ -61,8 +61,8 @@ class Locations(object):
                     city = 1
                     empty_row = True
                 elif city == 1:
-                    self.locations[index] = self.gen_road()
-                    self.locations[index+1] = self.gen_wildness(index+1)
+                    self.locations[index] = self.gen_wildness(index)
+                    self.locations[index+1] = self.gen_road()
                     self.locations[index+2] = self.gen_city()
                     self.locations[index+3] = self.gen_road()
                     self.locations[index+4] = self.gen_wildness(index+4)

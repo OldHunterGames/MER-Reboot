@@ -294,11 +294,15 @@ label lbl_wildworld_wildness(world):
                 python:
                     items = sorted([(i.name, i) for i in world.player.items('enslave')])
                     if len(items) > 0:
+                        items.append(('Kill for food', 'kill'))
                         item = renpy.display_menu(items)
-                        slave = WildWorldPersonMaker.make_person(person_maker=PersonCreator)
-                        world.add_character(slave)
-                        slave.applied_item = item
-                        world.player.remove_item(item)
+                        if item == 'kill':
+                            world.food += 5
+                        else:
+                            slave = WildWorldPersonMaker.make_person(person_maker=PersonCreator)
+                            world.add_character(slave)
+                            slave.applied_item = item
+                            world.player.remove_item(item)
                         world.skip_turn()
                 if len(items) < 1:
                     'You killed slave and get some food'
