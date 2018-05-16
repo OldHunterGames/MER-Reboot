@@ -23,8 +23,10 @@ screen sc_wildworld_stats(world):
                 for value in world.player.show_attributes().values():
                     text value
             
-            textbutton 'Slaves':
+            textbutton 'Slaves (%s)' % len(world.get_slaves()):
                 action Function(SlaveManager(world.get_slaves(), world).show)
+            for key, value in world.player.items(as_dict=True).items():
+                text '%s: %s' % (key.name, value)
 
 
 screen sc_wildworld_map(world):

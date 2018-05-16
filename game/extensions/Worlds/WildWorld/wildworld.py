@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import random
+import copy
 from collections import Counter
 import renpy.store as store
 import renpy.exports as renpy
@@ -27,6 +28,7 @@ class Locations(object):
         self._width = 5
         self._height = 5
         self.locations = [None for i in range(width*height)]
+        self._wild_indexes = list()
         self.current = 0
         self.city_naems = kwargs.get('city_names')
         self._generate_locations()
@@ -44,28 +46,29 @@ class Locations(object):
             index = i * self._width
             if empty_row:
                 self.locations[index] = self.gen_road()
-                self.locations[index+1] = self.gen_wildness()
+                self.locations[index+1] = self.gen_wildness(index+1)
                 self.locations[index+2] = self.gen_road()
-                self.locations[index+3] = self.gen_wildness()
+                self.locations[index+3] = self.gen_wildness(index+3)
                 self.locations[index+4] = self.gen_road()
                 empty_row = False
             else:
                 if city == 2:
                     self.locations[index] = self.gen_city()
                     self.locations[index+1] = self.gen_road()
-                    self.locations[index+2] = self.gen_wildness()
+                    self.locations[index+2] = self.gen_wildness(index+2)
                     self.locations[index+3] = self.gen_road()
                     self.locations[index+4] = self.gen_city()
                     city = 1
                     empty_row = True
                 elif city == 1:
                     self.locations[index] = self.gen_road()
-                    self.locations[index+1] = self.gen_wildness()
+                    self.locations[index+1] = self.gen_wildness(index+1)
                     self.locations[index+2] = self.gen_city()
                     self.locations[index+3] = self.gen_road()
-                    self.locations[index+4] = self.gen_wildness()
+                    self.locations[index+4] = self.gen_wildness(index+4)
                     city = 2
                     empty_row = True
+        self.current = random.choice(self._wild_indexes)
             
                 
     
@@ -123,9 +126,10 @@ class Locations(object):
         data.update(store.wildworld_locations['road'])
         return Location(data)
     
-    def gen_wildness(self):
+    def gen_wildness(self, index):
         data = {'type': 'wildness'}
         data.update(store.wildworld_locations['wildness'])
+        self._wild_indexes.append(index)
         return Location(data)
 
 
@@ -159,6 +163,10 @@ class Item(object):
     @classmethod
     def get_item(cls, id):
         return cls.ITEMS[id]
+    
+    @classmethod
+    def get_items(cls, tag):
+        return [i for i in cls.ITEMS.values() if i.has_tag(tag)]
     
     def has_tag(self, tag):
         return tag in self._data.get('tags', list())
@@ -218,6 +226,7 @@ class WildWorldPerson(object):
         self.slotless_features = list()
         self.applied_item = None
         self._items = Counter()
+        self.state = 5
     
     def add_item(self, item):
         self._items[item] += 1
@@ -228,7 +237,9 @@ class WildWorldPerson(object):
         if self._items[item] == 0:
             del self._items[item]
     
-    def items(self, tag=None):
+    def items(self, tag=None, as_dict=False):
+        if as_dict:
+            return copy.copy(self._items)
         if tag is not None:
             return [i for i in self._items.keys() if i.has_tag(tag)]
         return self._items.keys()

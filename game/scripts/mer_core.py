@@ -130,6 +130,10 @@ class DummyWorld(World):
     
     def entry_label(self):
         return 'lbl_world_dummy'
+    
+    @classmethod
+    def can_create_worlds(cls):
+        return False
 
 class MistTravel(object):
 

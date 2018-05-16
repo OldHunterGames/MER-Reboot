@@ -1,5 +1,6 @@
 init python:
     sys.path.append(renpy.loader.transfn("extensions/Worlds/WildWorld"))
+    import math
 
 init 1 python:
     from wildworld import *
@@ -15,8 +16,9 @@ init 1 python:
             super(WildWorld, self).__init__(*args, **kwargs)
             self.characters = list()
             self.locations = Locations()
-            self.food = 0
+            self.food = 1000
             self.day = 1
+            self.halt = False
 
         def entry_label(self):
             return 'lbl_wildworld'
@@ -31,7 +33,7 @@ init 1 python:
             self.characters.append(person)
         
         def change_location(self, pos):
-            self.skip_turn()
+            self.halt = True
             self.locations.current = pos
         
         def skip_turn(self):
@@ -40,6 +42,8 @@ init 1 python:
             self.food -= 1
             if self.food < 0:
                 self.food = 0
+                self.player.state -= 1
+                self.characters = list()
             self.day += 1
         
         def get_slaves(self, gender='all'):
@@ -129,16 +133,16 @@ init 1 python:
 
 label lbl_wildworld(world):
     "Wellcome to [world.archon.name]'s world"
-    $ item = Item.get_item('sturdy_rope')
-    $ world.player.add_item(item)
-    "You found 1 [item.name]"
     call lbl_wildworld_main(world)
     return
 
 label lbl_wildworld_main(world):
     show screen sc_wildworld_stats(world)
     while True:
-        $ world.locations.current_location().visit(world)
+        if world.halt:
+            call lbl_wildworld_halt(world)
+        else:
+            $ world.locations.current_location().visit(world)
     return
 
 label lbl_wildworld_road(world):
@@ -146,15 +150,52 @@ label lbl_wildworld_road(world):
     call screen sc_wildworld_map(world)
     return
 
+label lbl_wildworld_halt(world):
+    'Halt'
+    $ world.halt = False
+    $ world.skip_turn()
+    return
+
+label lbl_buy_item(world):
+    python:
+        slavery_items = Item.get_items('enslave')
+        items = list()
+        for item in slavery_items:
+            amount = 1
+            if float(item.price).is_integer():
+                info = {'item': item, 'amount': amount, 'price': item.price}
+                if item.price <= world.food:
+                    items.append(("%s, price: %s" %(item.name, item.price), info))
+            else:
+                while amount < 5:
+                    amount += 1
+                price = item.price * amount
+                if price < 1:
+                    price = 1
+                else:
+                    price = int(math.floor(price))
+                info = {'item': item, 'amount': amount, 'price': price}
+                if price <= world.food:
+                    items.append(( "%sx %s, price: %s" % (amount, item.name, price), info))
+        items.append(('Leave', None))
+        item = renpy.display_menu(items)
+        if item is not None:
+            world.food -= item['price']
+            for i in range(item['amount']):
+                world.player.add_item(item['item'])
+    return
+
 label lbl_wildworld_brothel_city(world):
     while True:
         menu:
-            "In brothe city you can sell female slaves for 3x of it's maximum attribute"
+            "In brothel city you can sell female slaves for 3x of it's maximum attribute"
             'Sell slaves':
                 if len(world.get_slaves('female')) > 0:
                     $ SlaverMarket(world.get_slaves('female'), world, 3).show()
                 else:
                     $ pass
+            'Buy items':
+                call lbl_buy_item(world)
             'Leave':
                 call screen sc_wildworld_map(world)
                 return
@@ -169,6 +210,8 @@ label lbl_wildworld_market_city(world):
                     $ SlaverMarket(world.get_slaves(), world, 2).show()
                 else:
                     $ pass
+            'Buy items':
+                call lbl_buy_item(world)
             'Leave':
                 call screen sc_wildworld_map(world)
                 return
@@ -183,6 +226,8 @@ label lbl_wildworld_amazon_village(world):
                     $ SlaverMarket(world.get_slaves('male'), world, 3).show()
                 else:
                     $ pass
+            'Buy items':
+                call lbl_buy_item(world)
             'Leave':
                 call screen sc_wildworld_map(world)
                 return
@@ -197,6 +242,8 @@ label lbl_wildworld_sawmill_city(world):
                     $ SlaverMarket(world.get_slaves(), world, 5, ['might']).show()
                 else:
                     $ pass
+            'Buy items':
+                call lbl_buy_item(world)
             'Leave':
                 call screen sc_wildworld_map(world)
                 return
@@ -211,6 +258,8 @@ label lbl_wildworld_artisan_city(world):
                     $ SlaverMarket(world.get_slaves(), world, 5, ['competence']).show()
                 else:
                     $ pass
+            'Buy items':
+                call lbl_buy_item(world)
             'Leave':
                 call screen sc_wildworld_map(world)
                 return
@@ -225,6 +274,8 @@ label lbl_wildworld_rich_city(world):
                     $ SlaverMarket(world.get_slaves(), world, 5, ['charisma', 'subtlety']).show()
                 else:
                     $ pass
+            'Buy items':
+                call lbl_buy_item(world)
             'Leave':
                 call screen sc_wildworld_map(world)
                 return
@@ -244,7 +295,8 @@ label lbl_wildworld_wildness(world):
                         world.player.remove_item(item)
                         world.skip_turn()
                 if len(items) < 1:
-                    'You have no items to catch slave'
+                    'You killed slave and get some food'
+                    $ world.food += 5
             'Leave':
                 call screen sc_wildworld_map(world)
                 return
