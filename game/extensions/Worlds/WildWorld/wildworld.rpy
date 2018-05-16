@@ -297,6 +297,7 @@ label lbl_wildworld_wildness(world):
                 if len(items) < 1:
                     'You killed slave and get some food'
                     $ world.food += 5
+                    $ world.skip_turn()
             'Leave':
                 call screen sc_wildworld_map(world)
                 return
