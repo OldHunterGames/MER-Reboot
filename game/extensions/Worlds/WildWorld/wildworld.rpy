@@ -131,6 +131,31 @@ init 1 python:
         
         def show(self):
             return renpy.show_screen('sc_wildworld_slaves', manager=self)
+    
+    class CatchSlave(object):
+        
+        def __init__(self, world, location, slave, items, tries):
+            self.world = world
+            self.location = location
+            self.slave = slave
+            self.items = items
+            self.tries = tries
+            self.catched = False
+        
+        def make_food(self):
+            self.location.slaves.remove(slave)
+            self.world.food += 5
+            self.catched = True
+        
+        def catch(self, item):
+            self.location.slaves.remove(self.slave)
+            self.slave.applied_item = item
+            self.world.add_character(self.slave)
+            self.world.player.remove_item(item)
+            self.catched = True
+        
+        def call(self):
+            return renpy.call_screen('sc_wildworld_catch_slave', manager=self)
 
 label lbl_wildworld_gameover():
     'Game is over'
@@ -261,7 +286,7 @@ label lbl_wildworld_artisan_city(world):
             "In artisan city you can sell any slave for 5x of it's competence"
             'Sell slaves':
                 if len(world.get_slaves()) > 0:
-                    $ SlaverMarket(world.get_slaves(), world, 5, ['competence']).show()
+                    $ SlaverMarket(world.get_slaves(), world, 5, ['competence']).call()
                 else:
                     $ pass
             'Buy items':
@@ -288,26 +313,28 @@ label lbl_wildworld_rich_city(world):
     return
 
 label lbl_wildworld_wildness(world):
+    python:
+        loc = world.locations.current_location()
+        if not loc.visited:
+            loc.visited = True
+            loc.slaves = [WildWorldPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
     while True:
         menu:
-            'Catch slave':
+            'Catch slave' if len(loc.slaves) > 0:
                 python:
-                    items = sorted([(i.name, i) for i in world.player.items('enslave')])
-                    if len(items) > 0:
-                        items.append(('Kill for food', 'kill'))
-                        item = renpy.display_menu(items)
-                        if item == 'kill':
-                            world.food += 5
+                    tries = 3
+                    while tries > 0:
+                        slave = random.choice(loc.slaves)
+                        items = world.player.items('enslave')
+                        catch = CatchSlave(world, loc, slave, items, tries)
+                        catch.call()
+                        if catch.catched:
+                            break
                         else:
-                            slave = WildWorldPersonMaker.make_person(person_maker=PersonCreator)
-                            world.add_character(slave)
-                            slave.applied_item = item
-                            world.player.remove_item(item)
-                        world.skip_turn()
-                if len(items) < 1:
-                    'You killed slave and get some food'
-                    $ world.food += 5
-                    $ world.skip_turn()
+                            tries -= 1
+                    world.skip_turn()
+                        
+
             'Leave':
                 call screen sc_wildworld_map(world)
                 return

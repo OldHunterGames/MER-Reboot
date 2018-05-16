@@ -11,6 +11,7 @@ class Location(object):
     
     def __init__(self, data):
         self._data = data
+        self.visited = False
     
     def name(self):
         return self._data.get('name')

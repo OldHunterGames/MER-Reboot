@@ -150,4 +150,36 @@ screen sc_wildworld_slaves(manager):
             yalign 1.0
             action Hide('sc_wildworld_slaves')
             
-        
+
+screen sc_wildworld_catch_slave(manager=self):
+    modal True
+    zorder 10
+    window:
+        xfill True
+        yfill True
+        ysize 720
+        xsize 1280
+        background '#C0FDFB'
+        frame:
+            xalign 0.5
+            xsize 500
+            ysize 720
+            hbox:
+                spacing 5
+                vbox:
+                    image im.Scale(manager.slave.avatar, 200, 200)
+                    textbutton 'Gut into food':
+                        action Function(manager.make_food), Return()
+                    for i in manager.items:
+                        textbutton i.name:
+                            action Function(manager.catch, i), Return()
+                    if tries > 1:
+                        textbutton 'Try again':
+                            action Return()
+                    else:
+                        textbutton 'End for today':
+                            action Return()
+                vbox:
+                    text slave.gender
+                    for value in manager.slave.show_attributes().values():
+                        text value
