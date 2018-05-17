@@ -7,6 +7,12 @@ init 1 python:
     for key, value in wildworld_features.items():
         Feature.register_feature(key, Feature(value))
     
+    for key, value in wildworld_physical_features.items():
+        Feature.register_feature(key, Feature(value))
+    
+    for key, value in wildworld_alignment_features.items():
+        Feature.register_feature(key, Feature(value))
+    
     for key, value in wildworld_items.items():
         Item.register_item(key, Item(key, value))
 
@@ -323,8 +329,9 @@ label lbl_wildworld_wildness(world):
             'Catch slave' if len(loc.slaves) > 0:
                 python:
                     tries = 3
-                    while tries > 0:
-                        slave = random.choice(loc.slaves)
+                    slaves = [i for i in loc.slaves]
+                    while tries > 0 and len(slaves) > 0:
+                        slave = random.choice(slaves)
                         items = world.player.items('enslave')
                         catch = CatchSlave(world, loc, slave, items, tries)
                         catch.call()
@@ -332,6 +339,7 @@ label lbl_wildworld_wildness(world):
                             break
                         else:
                             tries -= 1
+                            slaves.remove(slave)
                     world.skip_turn()
                         
 

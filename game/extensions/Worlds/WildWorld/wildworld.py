@@ -205,9 +205,34 @@ class Feature(object):
     
     @classmethod
     def random_by_slot(cls, slot):
-        return random.choice(cls.get_by_slot(slot))
+        try:
+            feature = random.choice(cls.get_by_slot(slot))
+        except IndexError:
+            print(slot)
+            raise
+        else:
+            return feature
 
 class WildWorldPersonMaker(object):
+    ALIGNMENT_SLOTS = [
+        'nutrition',
+        'authority',
+        'comfort',
+        'communication',
+        'eros',
+        'ambition',
+        'prosperity',
+        'safety',
+    ]
+
+    PHYSICAL_SLOTS = [
+        'height',
+        'constitution',
+        'voice',
+        'eyes',
+        'smile',
+        'skin',
+    ]
     
     @classmethod
     def make_person(cls, person=None, person_maker=None):
@@ -216,7 +241,48 @@ class WildWorldPersonMaker(object):
         gender = Feature.get_feature(person.gender)
         world_person = WildWorldPerson(person)
         world_person.add_feature(gender)
+        features = cls.make_features()
+        for i in features:
+            world_person.add_feature(i)
         return world_person
+    
+    @classmethod
+    def make_alignments(cls):
+        slots = [i for i in cls.ALIGNMENT_SLOTS]
+        chances = [1 for i in range(5)]
+        chances.append(0)
+        random.shuffle(chances)
+        features = list()
+        for i in chances:
+            if i == 0:
+                break
+            slot = random.choice(slots)
+            slots.remove(slot)
+            feature = Feature.random_by_slot(slot)
+            features.append(feature)
+        return features
+    
+    @classmethod
+    def make_physical(cls):
+        slots = [i for i in cls.PHYSICAL_SLOTS]
+        chances = [1 for i in range(5)]
+        chances.append(0)
+        random.shuffle(chances)
+        features = list()
+        for i in chances:
+            if i == 0:
+                break
+            slot = random.choice(slots)
+            slots.remove(slot)
+            feature = Feature.random_by_slot(slot)
+            features.append(feature)
+        return features
+
+    @classmethod
+    def make_features(cls):
+        features = cls.make_alignments()
+        features.extend(cls.make_physical())
+        return features
 
 class WildWorldPerson(object):
     

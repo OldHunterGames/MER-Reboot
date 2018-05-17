@@ -13,10 +13,10 @@ def value_color(value):
     else:
         colors = ['ff0000', 'ff00ff', '00ffff',
                   '0000FF', '00ff00', 'DAA520', '000000']
-    if value < 0:
-        value = 0
-    if value > 6:
-        value = 6
+        if value < 0:
+            value = 0
+        if value > 6:
+            value = 6
     return colors[value]
 
 def encolor_text(text, value, protected=False):

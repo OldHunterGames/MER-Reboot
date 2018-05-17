@@ -11,6 +11,44 @@ init python:
         'female': {'slot': 'gender', 'name': __('Female'), 'subtlety': 1, 'might': -1},
     }
 
+    wildworld_physical_features = {
+        'tall': {'slot': 'height', 'name': __('Tall'), 'might': 1, 'subtlety': -1},
+        'small': {'slot': 'height', 'name': __('Small'), 'might': -1, 'subtlety': 1},
+        'subtle': {'slot': 'constitution', 'name': __('Subtle'), 'might': -1, 'subtlety': 1},
+        'brawny': {'slot': 'constitution', 'name': __('Brawny'), 'might': 1, 'subtlety': -1},
+        'husky_voice': {'slot': 'voice', 'name': __('Husky voice'), 'might': 1, 'charisma': -1},
+        'clear_voice': {'slot': 'voice', 'name': __('Clear voice'), 'might': -1, 'charisma': 1},
+        'seductive_smile': {'slot': 'smile', 'name': __('Seductive smile'), 'subtlety': 1, 'might': -1},
+        'coarse_grin': {'slot': 'smile', 'name': __('Coarse grin'), 'might': 1, 'charisma': -1},
+        'giggly': {'slot': 'smile', 'name': __('Giggly'), 'charisma': 1, 'knowledge': -1},
+        'inexpressive_face': {'slot': 'smile', 'name': __('Inexpressive face'), 'charisma': -1, 'knowledge': 1},
+        'thick_skin': {'slot': 'skin', 'name': __('Thick skin'), 'might': 1, 'charisma': -1},
+        'smooth_skin': {'slot': 'skin', 'name': __('Smooth skin'), 'might': -1, 'charisma': 1},
+        'leery_eyes': {'slot': 'eyes', 'name': __('Leery eyes'), 'subtlety': 1},
+        'firm_gaze': {'slot': 'eyes', 'name': __('Firm gaze'), 'might': 1},
+        'bright_eyes': {'slot': 'eyes', 'name': __('Bright eyes'), 'charisma': 1},
+        'enigmatic_gaze': {'slot': 'eyes', 'name': __('Enigmatic gaze'), 'knowledge': 1},
+    }
+
+    wildworld_alignment_features = {
+        'gluttonous': {'slot': 'nutrition', 'name': __('Gluttonous'), 'charisma': 1},
+        'temperate': {'slot': 'nutrition', 'name': __('Temperate'), 'knowledge': 1},
+        'proud': {'slot': 'authority', 'name': __('Proud'), 'might': 1},
+        'humble': {'slot': 'authority', 'name': __('Humble'), 'knowledge': 1},
+        'slothful': {'slot': 'comfort', 'name': __('Slothful'), 'knowledge': 1},
+        'diligent': {'slot': 'comfort', 'name': __('Diligent'), 'might': 1},
+        'cruel': {'slot': 'communication', 'name': __('Cruel'), 'might': 1},
+        'merciful': {'slot': 'communication', 'name': __('Merciful'), 'charisma': 1},
+        'lustful': {'slot': 'eros', 'name': __('Lustful'), 'subtlety': 1},
+        'chaste': {'slot': 'eros', 'name': __('Chaste'), 'knowledge': 1},
+        'envious': {'slot': 'ambition', 'name': __('Envious'), 'subtlety': 1},
+        'kind': {'slot': 'ambition', 'name': __('Kind'), 'charisma': 1},
+        'greedy': {'slot': 'prosperity', 'name': __('Greedy'), 'knowledge': 1},
+        'charitable': {'slot': 'prosperity', 'name': __('Charitable'), 'charisma': 1},
+        'coward': {'slot': 'safety', 'name': __('Coward'), 'subtlety': 1},
+        'zealous': {'slot': 'safety', 'name': __('Zealous'), 'might': 1},
+    }
+
     wildworld_cities = {
         'market_city': {
             'description': __("City with market"), 'label': 'lbl_wildworld_market_city',
