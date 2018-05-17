@@ -42,7 +42,13 @@ class PersonCreator(object):
     @staticmethod
     def gen_avatar(gender, age, genus):
         start_path = 'images/avatar/'
-        start_path += genus
+        # TODO: Generate cultures instead of hardcode
+        if genus == 'human':
+            start_path += genus + '/'
+            cultures = ['african', 'arabic', 'native', 'nordic', 'oriental', 'slavic', 'western']
+            start_path += random.choice(cultures)
+        else:
+            start_path += genus
         start_path = PersonCreator._check_avatar(start_path, PersonCreator.appearance_type(gender))
         start_path = PersonCreator._check_avatar(start_path, age)
         try:

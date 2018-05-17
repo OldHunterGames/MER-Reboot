@@ -173,7 +173,7 @@ screen sc_wildworld_catch_slave(manager=self):
                     for i in manager.items:
                         textbutton i.name:
                             action Function(manager.catch, i), Return()
-                    if tries > 1:
+                    if manager.tries > 1:
                         textbutton 'Try again':
                             action Return()
                     else:

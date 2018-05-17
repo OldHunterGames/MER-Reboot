@@ -17,7 +17,7 @@ init 1 python:
         Item.register_item(key, Item(key, value))
 
     class WildWorld(World):
-        
+        PLAYER = None
         def __init__(self, *args, **kwargs):
             super(WildWorld, self).__init__(*args, **kwargs)
             self.characters = list()
@@ -33,8 +33,12 @@ init 1 python:
             return 'WildWorld/resources/'
         
         def on_visit(self, person):
-            if getattr(self, 'player', None) is None:
+            if getattr(WildWorld, 'PLAYER', None) is None:
                 self.player = WildWorldPersonMaker.make_person(person)
+                WildWorld.PLAYER = self.player
+            else:
+                self.player = WildWorld.PLAYER
+
         
         def add_character(self, person):
             self.characters.append(person)
@@ -64,29 +68,26 @@ init 1 python:
             self.characters.remove(person)
         
         def security_chance(self):
-            value = 2
-            return value > random.randint(0, 6)
+            chances = ['catch' for i in range(self.player.state)]
+            chances.extend(['catch' for i in range(max(self.player.attributes().values()))])
+            return chances
         
         def escape_chance(self, person):
-            attr = max(person.attributes().values())
-            if person.applied_item is not None:
-                attr = person.applied_item.escape_chance(attr)
-            roll = random.randint(0, 5)
-            if attr > roll:
-                return True
-            return False
+            value = max(person.attributes().values())
+            value = int(person.applied_item.escape_chance(value))
+            return ['escape' for i in range(value)]
         
         def slave_escape(self):
             for i in self.characters:
-                result = self.escape_chance(i)
-                security = self.security_chance()
-                if result:
-                    if security:
-                        pass
-                        # return renpy.call('lbl_wildworld_slave_escape_prevented', self, i)
-                    else:
-                        self.remove_character(i)
-                        renpy.call_in_new_context('lbl_wildworld_slave_escaped', self, i)
+                chances = self.escape_chance(i)
+                chances.extend(self.security_chance())
+                result = random.choice(chances)
+                if result == 'escape':
+                    self.remove_character(i)
+                    renpy.call_in_new_context('lbl_wildworld_slave_escaped', self, i)
+                elif result == 'catch':
+                    pass
+                    # return renpy.call('lbl_wildworld_slave_escape_prevented', self, i)                        
 
 
     class SlaverMarket(object):
@@ -150,12 +151,12 @@ init 1 python:
             self.catched = False
         
         def make_food(self):
-            self.location.slaves.remove(slave)
+            self.location.slaves[self.location.slaves.index(slave)] = None
             self.world.food += 5
             self.catched = True
         
         def catch(self, item):
-            self.location.slaves.remove(self.slave)
+            self.location.slaves[self.location.slaves.index(slave)] = None
             self.slave.applied_item = item
             self.world.add_character(self.slave)
             self.world.player.remove_item(item)
@@ -190,8 +191,11 @@ label lbl_wildworld_road(world):
 
 label lbl_wildworld_halt(world):
     'Halt'
-    $ world.halt = False
-    $ world.skip_turn()
+    while world.halt:
+        menu:
+            'Skip turn':
+                $ world.halt = False
+                $ world.skip_turn()
     return
 
 label lbl_buy_item(world):
@@ -325,24 +329,31 @@ label lbl_wildworld_wildness(world):
         if not loc.visited:
             loc.visited = True
             loc.slaves = [WildWorldPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
+            loc.tries = 3
     while True:
         menu:
-            'Catch slave' if len(loc.slaves) > 0:
+            'Catch slave' if any([i is not None for i in loc.slaves]) and loc.tries > 0:
                 python:
-                    tries = 3
                     slaves = [i for i in loc.slaves]
-                    while tries > 0 and len(slaves) > 0:
+                    while loc.tries > 0 and any([i is not None for i in loc.slaves]):
                         slave = random.choice(slaves)
+                        if slave is None:
+                            renpy.say(None, 'Just an old trail...')
+                            loc.tries -= 1
+                            continue
                         items = world.player.items('enslave')
-                        catch = CatchSlave(world, loc, slave, items, tries)
+                        catch = CatchSlave(world, loc, slave, items, loc.tries)
                         catch.call()
                         if catch.catched:
+                            loc.tries = 0
                             break
                         else:
-                            tries -= 1
-                            slaves.remove(slave)
-                    world.skip_turn()
-                        
+                            loc.tries -= 1
+                    
+            'Go for halt':
+                $ world.halt = True
+                call lbl_wildworld_halt(world)
+                $ loc.tries = 3
 
             'Leave':
                 call screen sc_wildworld_map(world)

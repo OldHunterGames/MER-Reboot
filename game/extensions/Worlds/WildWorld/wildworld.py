@@ -237,7 +237,7 @@ class WildWorldPersonMaker(object):
     @classmethod
     def make_person(cls, person=None, person_maker=None):
         if person_maker is not None:
-            person = person_maker.gen_person()
+            person = person_maker.gen_person(genus='human')
         gender = Feature.get_feature(person.gender)
         world_person = WildWorldPerson(person)
         world_person.add_feature(gender)
