@@ -143,6 +143,8 @@ screen sc_wildworld_slaves(manager):
                             action Function(manager.make_food)
                     vbox:
                         text manager.selected.gender
+                        text 'escape chance: %s' % manager.escape_chance():
+                            color '#ff0000'
                     
         
         textbutton 'Leave':

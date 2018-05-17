@@ -131,6 +131,11 @@ init 1 python:
             self.world = world
             self.selected = None
         
+        def escape_chance(self):
+            chances = self.world.escape_chance(self.selected)
+            chances.extend(self.world.security_chance())
+            return '%s of %s' % (chances.count('escape'), len(chances))
+        
         def select(self, slave):
             self.selected = slave
         
@@ -358,7 +363,7 @@ label lbl_wildworld_wildness(world):
                 call lbl_wildworld_halt(world)
                 $ loc.tries = 3
 
-            'Leave':
+            'Leave' if not world.halt:
                 call screen sc_wildworld_map(world)
                 return
     return
