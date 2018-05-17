@@ -48,7 +48,8 @@ init 1 python:
             self.locations.current = pos
         
         def skip_turn(self):
-            self.slave_escape()
+            if self.locations.current_location().type() != 'city':
+                self.slave_escape()
             for i in self.characters:
                 self.food -= i.applied_item.food_consumption(1)
             self.food -= 1
@@ -86,6 +87,7 @@ init 1 python:
                 if result == 'escape':
                     self.remove_character(i)
                     renpy.call_in_new_context('lbl_wildworld_slave_escaped', self, i)
+                    return
                 elif result == 'catch':
                     pass
                     # return renpy.call('lbl_wildworld_slave_escape_prevented', self, i)                        

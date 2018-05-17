@@ -19,6 +19,9 @@ class Location(object):
     def label(self):
         return self._data.get('label')
     
+    def type(self):
+        return self._data.get('type')
+    
     def visit(self, world):
         renpy.call(self.label(), world=world)
 
@@ -31,7 +34,7 @@ class Locations(object):
         self.locations = [None for i in range(width*height)]
         self._wild_indexes = list()
         self.current = 0
-        self.city_naems = kwargs.get('city_names')
+        self.city_names = kwargs.get('city_names')
         self._generate_locations()
     
     def size(self):
