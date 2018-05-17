@@ -49,7 +49,8 @@ init 1 python:
         
         def skip_turn(self):
             self.slave_escape()
-            self.food -= len(self.characters)
+            for i in self.characters:
+                self.food -= i.applied_item.food_consumption(1)
             self.food -= 1
             if self.food < 0:
                 self.food = 0
