@@ -1,17 +1,17 @@
 init python:
-    wildworld_attributes = {
+    slavercaravan_attributes = {
         'might': {'name': __('Might'), 'low': __('Weak'), 'high': __('Hardy')},
         'subtlety': {'name': __('Subtlety'), 'low': __('Naive'), 'high': __('Subtle')},
         'charisma': {'name': __('Charisma'), 'low': __('Boring'), 'high': __('Charming')},
         'knowledge': {'name': __('Knowledge'), 'low': __('Incompetent'), 'high': __('Competent')},
     }
 
-    wildworld_features = {
+    slavercaravan_features = {
         'male': {'slot': 'gender', 'name': __('Male'), 'might': 1, 'subtlety': -1},
         'female': {'slot': 'gender', 'name': __('Female'), 'subtlety': 1, 'might': -1},
     }
 
-    wildworld_physical_features = {
+    slavercaravan_physical_features = {
         'tall': {'slot': 'height', 'name': __('Tall'), 'might': 1, 'subtlety': -1},
         'small': {'slot': 'height', 'name': __('Small'), 'might': -1, 'subtlety': 1},
         'subtle': {'slot': 'constitution', 'name': __('Subtle'), 'might': -1, 'subtlety': 1},
@@ -30,7 +30,7 @@ init python:
         'enigmatic_gaze': {'slot': 'eyes', 'name': __('Enigmatic gaze'), 'knowledge': 1},
     }
 
-    wildworld_alignment_features = {
+    slavercaravan_alignment_features = {
         'gluttonous': {'slot': 'nutrition', 'name': __('Gluttonous'), 'charisma': 1},
         'temperate': {'slot': 'nutrition', 'name': __('Temperate'), 'knowledge': 1},
         'proud': {'slot': 'authority', 'name': __('Proud'), 'might': 1},
@@ -49,39 +49,39 @@ init python:
         'zealous': {'slot': 'safety', 'name': __('Zealous'), 'might': 1},
     }
 
-    wildworld_cities = {
+    slavercaravan_cities = {
         'market_city': {
-            'description': __("City with market"), 'label': 'lbl_wildworld_market_city',
+            'description': __("City with market"), 'label': 'lbl_slavercaravan_market_city',
         },
         'brothel_city': {
-            'description': __("City with brothel"), 'label': 'lbl_wildworld_brothel_city',
+            'description': __("City with brothel"), 'label': 'lbl_slavercaravan_brothel_city',
         },
         'amazon_village': {
-            'description': __("Amazon village"), 'label': 'lbl_wildworld_amazon_village',
+            'description': __("Amazon village"), 'label': 'lbl_slavercaravan_amazon_village',
         },
         'sawmill_city':{
-            'description': __("City with sawmill"), 'label': 'lbl_wildworld_sawmill_city',
+            'description': __("City with sawmill"), 'label': 'lbl_slavercaravan_sawmill_city',
         },
         'artisan_city': {
-            'description': __("Artisans city"), 'label': 'lbl_wildworld_artisan_city', 
+            'description': __("Artisans city"), 'label': 'lbl_slavercaravan_artisan_city', 
         },
         'rich_city': {
-            'description': __("Rich city"), 'label': 'lbl_wildworld_rich_city',
+            'description': __("Rich city"), 'label': 'lbl_slavercaravan_rich_city',
         },
     }
 
-    wildworld_locations = {
+    slavercaravan_locations = {
         'road': {
-            'name': __('Road'), 'description': __("Road"), 'label': 'lbl_wildworld_road'
+            'name': __('Road'), 'description': __("Road"), 'label': 'lbl_slavercaravan_road'
         },
         'wildness': {
-            'name': __("Wildness"), 'description': __("Wildness"), 'label': 'lbl_wildworld_wildness'
+            'name': __("Wildness"), 'description': __("Wildness"), 'label': 'lbl_slavercaravan_wildness'
         }
     }
 
-    wildworld_city_names = ['Name1', 'Name2', 'Name3', 'Name4', 'Name5', 'Name6', 'Name7']
+    slavercaravan_city_names = ['Name1', 'Name2', 'Name3', 'Name4', 'Name5', 'Name6', 'Name7']
 
-    wildworld_items = {
+    slavercaravan_items = {
         'sturdy_rope': {
             'description': __("For a one unit of food you can buy five pieces of sturdy rope. It's a basic way to restrain a slave, not overly secure, but cheap. You can buy rope anywhere."),
             'name': __("Sturdy rope"),

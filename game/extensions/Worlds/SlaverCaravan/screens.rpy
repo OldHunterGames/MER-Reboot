@@ -1,4 +1,4 @@
-screen sc_wildworld_stats(world):
+screen sc_slavercaravan_stats(world):
     
     window:
         background Color((0, 0, 0, 100))
@@ -30,7 +30,7 @@ screen sc_wildworld_stats(world):
                 text '%s: %s' % (key.name, value)
 
 
-screen sc_wildworld_map(world):
+screen sc_slavercaravan_map(world):
     $ locations = world.locations.locations
     python:
         width= world.locations._width
@@ -66,7 +66,7 @@ screen sc_wildworld_map(world):
             action Return()
 
 
-screen sc_wildworld_sell_slaves(market):
+screen sc_slavercaravan_sell_slaves(market):
     modal True
     zorder 10
     window:
@@ -102,10 +102,10 @@ screen sc_wildworld_sell_slaves(market):
         textbutton 'Leave':
             xalign 1.0
             yalign 1.0
-            action Hide('sc_wildworld_sell_slaves')
+            action Hide('sc_slavercaravan_sell_slaves')
         
 
-screen sc_wildworld_slaves(manager):
+screen sc_slavercaravan_slaves(manager):
     modal True
     zorder 10
     window:
@@ -150,10 +150,10 @@ screen sc_wildworld_slaves(manager):
         textbutton 'Leave':
             xalign 1.0
             yalign 1.0
-            action Hide('sc_wildworld_slaves')
+            action Hide('sc_slavercaravan_slaves')
             
 
-screen sc_wildworld_catch_slave(manager=self):
+screen sc_slavercaravan_catch_slave(manager=self):
     modal True
     zorder 10
     window:

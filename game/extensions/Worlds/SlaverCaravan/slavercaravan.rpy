@@ -1,25 +1,25 @@
 init python:
-    sys.path.append(renpy.loader.transfn("extensions/Worlds/WildWorld"))
+    sys.path.append(renpy.loader.transfn("extensions/Worlds/SlaverCaravan"))
     import math
 
 init 1 python:
-    from wildworld import *
-    for key, value in wildworld_features.items():
+    from slavercaravan import *
+    for key, value in slavercaravan_features.items():
         Feature.register_feature(key, Feature(value))
     
-    for key, value in wildworld_physical_features.items():
+    for key, value in slavercaravan_physical_features.items():
         Feature.register_feature(key, Feature(value))
     
-    for key, value in wildworld_alignment_features.items():
+    for key, value in slavercaravan_alignment_features.items():
         Feature.register_feature(key, Feature(value))
     
-    for key, value in wildworld_items.items():
+    for key, value in slavercaravan_items.items():
         Item.register_item(key, Item(key, value))
 
-    class WildWorld(World):
+    class SlaverCaravan(World):
         PLAYER = None
         def __init__(self, *args, **kwargs):
-            super(WildWorld, self).__init__(*args, **kwargs)
+            super(SlaverCaravan, self).__init__(*args, **kwargs)
             self.characters = list()
             self.locations = Locations()
             self.food = 0
@@ -27,17 +27,17 @@ init 1 python:
             self.halt = False
 
         def entry_label(self):
-            return 'lbl_wildworld'
+            return 'lbl_slavercaravan'
     
         def get_path(self):
-            return 'WildWorld/resources/'
+            return 'SlaverCaravan/resources/'
         
         def on_visit(self, person):
-            if getattr(WildWorld, 'PLAYER', None) is None:
-                self.player = WildWorldPersonMaker.make_person(person)
-                WildWorld.PLAYER = self.player
+            if getattr(SlaverCaravan, 'PLAYER', None) is None:
+                self.player = SlaverCaravanPersonMaker.make_person(person)
+                SlaverCaravan.PLAYER = self.player
             else:
-                self.player = WildWorld.PLAYER
+                self.player = SlaverCaravan.PLAYER
 
         
         def add_character(self, person):
@@ -58,7 +58,7 @@ init 1 python:
                 self.player.state -= 1
                 self.characters = list()
                 if self.player.state == 0:
-                    renpy.call_in_new_context('lbl_wildworld_gameover')
+                    renpy.call_in_new_context('lbl_slavercaravan_gameover')
             self.day += 1
         
         def get_slaves(self, gender='all'):
@@ -86,11 +86,11 @@ init 1 python:
                 result = random.choice(chances)
                 if result == 'escape':
                     self.remove_character(i)
-                    renpy.call_in_new_context('lbl_wildworld_slave_escaped', self, i)
+                    renpy.call_in_new_context('lbl_slavercaravan_slave_escaped', self, i)
                     return
                 elif result == 'catch':
                     pass
-                    # return renpy.call('lbl_wildworld_slave_escape_prevented', self, i)                        
+                    # return renpy.call('lbl_slavercaravan_slave_escape_prevented', self, i)                        
 
 
     class SlaverMarket(object):
@@ -122,7 +122,7 @@ init 1 python:
             self.selected = None
         
         def show(self):
-            return renpy.show_screen('sc_wildworld_sell_slaves', market=self)
+            return renpy.show_screen('sc_slavercaravan_sell_slaves', market=self)
         
     class SlaveManager(object):
         
@@ -146,7 +146,7 @@ init 1 python:
             self.selected = None
         
         def show(self):
-            return renpy.show_screen('sc_wildworld_slaves', manager=self)
+            return renpy.show_screen('sc_slavercaravan_slaves', manager=self)
     
     class CatchSlave(object):
         
@@ -171,37 +171,37 @@ init 1 python:
             self.catched = True
         
         def call(self):
-            return renpy.call_screen('sc_wildworld_catch_slave', manager=self)
+            return renpy.call_screen('sc_slavercaravan_catch_slave', manager=self)
 
-label lbl_wildworld_gameover():
+label lbl_slavercaravan_gameover():
     'Game is over'
     $ renpy.full_restart()
     return
 
-label lbl_wildworld(world):
+label lbl_slavercaravan(world):
     "Wellcome to [world.archon.name]'s world"
-    call lbl_wildworld_main(world)
+    call lbl_slavercaravan_main(world)
     return
 
-label lbl_wildworld_main(world):
-    show screen sc_wildworld_stats(world)
+label lbl_slavercaravan_main(world):
+    show screen sc_slavercaravan_stats(world)
     while True:
         $ world.locations.current_location().visit(world)
     return
 
-label lbl_wildworld_road(world):
+label lbl_slavercaravan_road(world):
     'Road'
     while True:
         menu:
             'Leave' if not world.halt:
-                call screen sc_wildworld_map(world)
+                call screen sc_slavercaravan_map(world)
                 return
             'Go for halt':
                 $ world.halt = True
-                call lbl_wildworld_halt(world)
+                call lbl_slavercaravan_halt(world)
     return
 
-label lbl_wildworld_halt(world):
+label lbl_slavercaravan_halt(world):
     'Halt'
     while world.halt:
         menu:
@@ -240,7 +240,7 @@ label lbl_buy_item(world):
                 world.player.add_item(item['item'])
     return
 
-label lbl_wildworld_brothel_city(world):
+label lbl_slavercaravan_brothel_city(world):
     while True:
         menu:
             "In brothel city you can sell female slaves for 3x of it's maximum attribute"
@@ -253,13 +253,13 @@ label lbl_wildworld_brothel_city(world):
                 call lbl_buy_item(world)
             'Go for halt':
                 $ world.halt = True
-                call lbl_wildworld_halt(world)
+                call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_wildworld_map(world)
+                call screen sc_slavercaravan_map(world)
                 return
     return
 
-label lbl_wildworld_market_city(world):
+label lbl_slavercaravan_market_city(world):
     while True:
         menu:
             "In market city you can sell any slave for 2x of it's maximum attribute"
@@ -272,13 +272,13 @@ label lbl_wildworld_market_city(world):
                 call lbl_buy_item(world)
             'Go for halt':
                 $ world.halt = True
-                call lbl_wildworld_halt(world)
+                call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_wildworld_map(world)
+                call screen sc_slavercaravan_map(world)
                 return
     return
 
-label lbl_wildworld_amazon_village(world):
+label lbl_slavercaravan_amazon_village(world):
     while True:
         menu:
             "In amazon village you can sell any male slave for 3x of it's maximum attribute"
@@ -291,13 +291,13 @@ label lbl_wildworld_amazon_village(world):
                 call lbl_buy_item(world)
             'Go for halt':
                 $ world.halt = True
-                call lbl_wildworld_halt(world)
+                call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_wildworld_map(world)
+                call screen sc_slavercaravan_map(world)
                 return
     return
 
-label lbl_wildworld_sawmill_city(world):
+label lbl_slavercaravan_sawmill_city(world):
     while True:
         menu:
             "In sawmill city you can sell any slave for 5x of it's might"
@@ -310,13 +310,13 @@ label lbl_wildworld_sawmill_city(world):
                 call lbl_buy_item(world)
             'Go for halt':
                 $ world.halt = True
-                call lbl_wildworld_halt(world)
+                call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_wildworld_map(world)
+                call screen sc_slavercaravan_map(world)
                 return
     return
 
-label lbl_wildworld_artisan_city(world):
+label lbl_slavercaravan_artisan_city(world):
     while True:
         menu:
             "In artisan city you can sell any slave for 5x of it's competence"
@@ -329,13 +329,13 @@ label lbl_wildworld_artisan_city(world):
                 call lbl_buy_item(world)
             'Go for halt':
                 $ world.halt = True
-                call lbl_wildworld_halt(world)
+                call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_wildworld_map(world)
+                call screen sc_slavercaravan_map(world)
                 return
     return
 
-label lbl_wildworld_rich_city(world):
+label lbl_slavercaravan_rich_city(world):
     while True:
         menu:
             "In rich city you can sell any slave for 4x of it's charisma or subtlety"
@@ -348,18 +348,18 @@ label lbl_wildworld_rich_city(world):
                 call lbl_buy_item(world)
             'Go for halt':
                 $ world.halt = True
-                call lbl_wildworld_halt(world)
+                call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_wildworld_map(world)
+                call screen sc_slavercaravan_map(world)
                 return
     return
 
-label lbl_wildworld_wildness(world):
+label lbl_slavercaravan_wildness(world):
     python:
         loc = world.locations.current_location()
         if not loc.visited:
             loc.visited = True
-            loc.slaves = [WildWorldPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
+            loc.slaves = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
             loc.tries = 3
         else:
             loc.tries = 3
@@ -385,18 +385,18 @@ label lbl_wildworld_wildness(world):
                     
             'Go for halt':
                 $ world.halt = True
-                call lbl_wildworld_halt(world)
+                call lbl_slavercaravan_halt(world)
                 $ loc.tries = 3
 
             'Leave' if not world.halt:
-                call screen sc_wildworld_map(world)
+                call screen sc_slavercaravan_map(world)
                 return
     return
 
-label lbl_wildworld_slave_escaped(world, person):
+label lbl_slavercaravan_slave_escaped(world, person):
     '[person.name] escaped'
     return
 
-label lbl_wildworld_slave_escape_prevented(world, person):
+label lbl_slavercaravan_slave_escape_prevented(world, person):
     '[world.player.name] prevented escape of [person.name]'
     return

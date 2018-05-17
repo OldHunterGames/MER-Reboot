@@ -120,19 +120,19 @@ class Locations(object):
         return available        
     
     def gen_city(self):
-        name = random.choice(store.wildworld_city_names)
+        name = random.choice(store.slavercaravan_city_names)
         data = {'name': name, 'type': 'city'}
-        data.update(random.choice(store.wildworld_cities.values()))
+        data.update(random.choice(store.slavercaravan_cities.values()))
         return Location(data)
     
     def gen_road(self):
         data = {'type': 'road'}
-        data.update(store.wildworld_locations['road'])
+        data.update(store.slavercaravan_locations['road'])
         return Location(data)
     
     def gen_wildness(self, index):
         data = {'type': 'wildness'}
-        data.update(store.wildworld_locations['wildness'])
+        data.update(store.slavercaravan_locations['wildness'])
         self._wild_indexes.append(index)
         return Location(data)
 
@@ -216,7 +216,7 @@ class Feature(object):
         else:
             return feature
 
-class WildWorldPersonMaker(object):
+class SlaverCaravanPersonMaker(object):
     ALIGNMENT_SLOTS = [
         'nutrition',
         'authority',
@@ -242,7 +242,7 @@ class WildWorldPersonMaker(object):
         if person_maker is not None:
             person = person_maker.gen_person(genus='human')
         gender = Feature.get_feature(person.gender)
-        world_person = WildWorldPerson(person)
+        world_person = SlaverCaravanPerson(person)
         world_person.add_feature(gender)
         features = cls.make_features()
         for i in features:
@@ -287,7 +287,7 @@ class WildWorldPersonMaker(object):
         features.extend(cls.make_physical())
         return features
 
-class WildWorldPerson(object):
+class SlaverCaravanPerson(object):
     
 
     def __init__(self, coreperson):
@@ -339,13 +339,13 @@ class WildWorldPerson(object):
     
     def attributes(self):
         attrs = dict()
-        for key in store.wildworld_attributes.keys():
+        for key in store.slavercaravan_attributes.keys():
             attrs[key] = self.attribute(key)
         return attrs
     
     def show_attributes(self):
         attrs = dict()
-        for key, value in store.wildworld_attributes.items():
+        for key, value in store.slavercaravan_attributes.items():
             attr = self.attribute(key)
             if attr < -1:
                 attrs[value['name']] = encolor_text(value['low'], 'red')
