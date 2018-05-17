@@ -194,7 +194,13 @@ label lbl_wildworld_main(world):
 
 label lbl_wildworld_road(world):
     'Road'
-    call screen sc_wildworld_map(world)
+    while True:
+        'Leave' if not world.halt:
+            call screen sc_wildworld_map(world)
+            return
+        'Go for halt':
+            $ world.halt = True
+            call lbl_wildworld_halt(world)
     return
 
 label lbl_wildworld_halt(world):
@@ -204,6 +210,7 @@ label lbl_wildworld_halt(world):
             'Skip turn':
                 $ world.halt = False
                 $ world.skip_turn()
+            
     return
 
 label lbl_buy_item(world):
@@ -246,7 +253,10 @@ label lbl_wildworld_brothel_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Leave':
+            'Go for halt':
+                $ world.halt = True
+                call lbl_wildworld_halt(world)
+            'Leave' if not world.halt:
                 call screen sc_wildworld_map(world)
                 return
     return
@@ -262,7 +272,10 @@ label lbl_wildworld_market_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Leave':
+            'Go for halt':
+                $ world.halt = True
+                call lbl_wildworld_halt(world)
+            'Leave' if not world.halt:
                 call screen sc_wildworld_map(world)
                 return
     return
@@ -278,7 +291,10 @@ label lbl_wildworld_amazon_village(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Leave':
+            'Go for halt':
+                $ world.halt = True
+                call lbl_wildworld_halt(world)
+            'Leave' if not world.halt:
                 call screen sc_wildworld_map(world)
                 return
     return
@@ -294,7 +310,10 @@ label lbl_wildworld_sawmill_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Leave':
+            'Go for halt':
+                $ world.halt = True
+                call lbl_wildworld_halt(world)
+            'Leave' if not world.halt:
                 call screen sc_wildworld_map(world)
                 return
     return
@@ -310,7 +329,10 @@ label lbl_wildworld_artisan_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Leave':
+            'Go for halt':
+                $ world.halt = True
+                call lbl_wildworld_halt(world)
+            'Leave' if not world.halt:
                 call screen sc_wildworld_map(world)
                 return
     return
@@ -326,7 +348,10 @@ label lbl_wildworld_rich_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Leave':
+            'Go for halt':
+                $ world.halt = True
+                call lbl_wildworld_halt(world)
+            'Leave' if not world.halt:
                 call screen sc_wildworld_map(world)
                 return
     return
@@ -337,6 +362,8 @@ label lbl_wildworld_wildness(world):
         if not loc.visited:
             loc.visited = True
             loc.slaves = [WildWorldPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
+            loc.tries = 3
+        else:
             loc.tries = 3
     while True:
         menu:
