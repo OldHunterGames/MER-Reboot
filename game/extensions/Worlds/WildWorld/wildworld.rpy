@@ -33,7 +33,8 @@ init 1 python:
             return 'WildWorld/resources/'
         
         def on_visit(self, person):
-            self.player = WildWorldPersonMaker.make_person(person)
+            if getattr(self, 'player', None) is None:
+                self.player = WildWorldPersonMaker.make_person(person)
         
         def add_character(self, person):
             self.characters.append(person)
