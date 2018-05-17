@@ -30,7 +30,7 @@ init 1 python:
             return 'lbl_slavercaravan'
     
         def get_path(self):
-            return 'SlaverCaravan/resources/'
+            return 'SlaverCaravan/'
         
         def on_visit(self, person):
             if getattr(SlaverCaravan, 'PLAYER', None) is None:
@@ -190,6 +190,14 @@ label lbl_slavercaravan_main(world):
     return
 
 label lbl_slavercaravan_road(world):
+    python:
+        loc = world.locations.current_location()
+        if not loc.visited:
+            loc.visited = True
+            img = random.choice(slavercaravan_locations['road']['images'])
+            img = world.path(img)
+            loc.image = img
+    show expression loc.image as bg
     'Road'
     while True:
         menu:
@@ -241,6 +249,14 @@ label lbl_buy_item(world):
     return
 
 label lbl_slavercaravan_brothel_city(world):
+    python:
+        loc = world.locations.current_location()
+        if not loc.visited:
+            loc.visited = True
+            img = random.choice(slavercaravan_cities['brothel_city']['images'])
+            img = world.path(img)
+            loc.image = img
+    show expression loc.image as bg
     while True:
         menu:
             "In brothel city you can sell female slaves for 3x of it's maximum attribute"
@@ -260,6 +276,14 @@ label lbl_slavercaravan_brothel_city(world):
     return
 
 label lbl_slavercaravan_market_city(world):
+    python:
+        loc = world.locations.current_location()
+        if not loc.visited:
+            loc.visited = True
+            img = random.choice(slavercaravan_cities['market_city']['images'])
+            img = world.path(img)
+            loc.image = img
+    show expression loc.image as bg
     while True:
         menu:
             "In market city you can sell any slave for 2x of it's maximum attribute"
@@ -279,6 +303,14 @@ label lbl_slavercaravan_market_city(world):
     return
 
 label lbl_slavercaravan_amazon_village(world):
+    python:
+        loc = world.locations.current_location()
+        if not loc.visited:
+            loc.visited = True
+            img = random.choice(slavercaravan_cities['amazon_village']['images'])
+            img = world.path(img)
+            loc.image = img
+    show expression loc.image as bg
     while True:
         menu:
             "In amazon village you can sell any male slave for 3x of it's maximum attribute"
@@ -298,6 +330,14 @@ label lbl_slavercaravan_amazon_village(world):
     return
 
 label lbl_slavercaravan_sawmill_city(world):
+    python:
+        loc = world.locations.current_location()
+        if not loc.visited:
+            loc.visited = True
+            img = random.choice(slavercaravan_cities['sawmill_city']['images'])
+            img = world.path(img)
+            loc.image = img
+    show expression loc.image as bg
     while True:
         menu:
             "In sawmill city you can sell any slave for 5x of it's might"
@@ -317,6 +357,14 @@ label lbl_slavercaravan_sawmill_city(world):
     return
 
 label lbl_slavercaravan_artisan_city(world):
+    python:
+        loc = world.locations.current_location()
+        if not loc.visited:
+            loc.visited = True
+            img = random.choice(slavercaravan_cities['artisan_city']['images'])
+            img = world.path(img)
+            loc.image = img
+    show expression loc.image as bg
     while True:
         menu:
             "In artisan city you can sell any slave for 5x of it's competence"
@@ -336,6 +384,14 @@ label lbl_slavercaravan_artisan_city(world):
     return
 
 label lbl_slavercaravan_rich_city(world):
+    python:
+        loc = world.locations.current_location()
+        if not loc.visited:
+            loc.visited = True
+            img = random.choice(slavercaravan_cities['rich_city']['images'])
+            img = world.path(img)
+            loc.image = img
+    show expression loc.image as bg
     while True:
         menu:
             "In rich city you can sell any slave for 4x of it's charisma or subtlety"
@@ -361,8 +417,12 @@ label lbl_slavercaravan_wildness(world):
             loc.visited = True
             loc.slaves = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
             loc.tries = 3
+            img = random.choice(slavercaravan_locations['wildness']['images'])
+            img = world.path(img)
+            loc.image = img
         else:
             loc.tries = 3
+    show expression loc.image as bg
     while True:
         menu:
             'Catch slave' if any([i is not None for i in loc.slaves]) and loc.tries > 0:
@@ -379,12 +439,13 @@ label lbl_slavercaravan_wildness(world):
                         catch.call()
                         if catch.catched:
                             loc.tries = 0
+                            world.halt = True
                             break
                         else:
                             loc.tries -= 1
+                    world.halt = True
                     
             'Go for halt':
-                $ world.halt = True
                 call lbl_slavercaravan_halt(world)
                 $ loc.tries = 3
 

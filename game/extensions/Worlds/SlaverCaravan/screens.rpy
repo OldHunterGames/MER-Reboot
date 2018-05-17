@@ -16,10 +16,11 @@ screen sc_slavercaravan_stats(world):
                 xalign 0.5
             text world.player.name:
                 xalign 0.5
+                color '#ffffff'
             
-            text 'Food: %s' % world.food
-            text 'Day: %s' % world.day
-            text 'State: %s' % world.player.state
+            text 'Food: %s' % world.food color '#ffffff'
+            text 'Day: %s' % world.day color '#ffffff'
+            text 'State: %s' % world.player.state color '#ffffff'
             vbox:
                 for value in world.player.show_attributes().values():
                     text value

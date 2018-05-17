@@ -51,31 +51,72 @@ init python:
 
     slavercaravan_cities = {
         'market_city': {
-            'description': __("City with market"), 'label': 'lbl_slavercaravan_market_city',
+            'description': __("City with market"),
+            'label': 'lbl_slavercaravan_market_city',
+            'images': [
+                'bg/town_trade01.png',
+            ]
         },
         'brothel_city': {
-            'description': __("City with brothel"), 'label': 'lbl_slavercaravan_brothel_city',
+            'description': __("City with brothel"),
+            'label': 'lbl_slavercaravan_brothel_city',
+            'images': [
+                'bg/town_brothel01.png',
+                'bg/town_brothel02.png',
+            ]
         },
         'amazon_village': {
-            'description': __("Amazon village"), 'label': 'lbl_slavercaravan_amazon_village',
+            'description': __("Amazon village"),
+            'label': 'lbl_slavercaravan_amazon_village',
+            'images': [
+                'bg/town_amazon01.png',
+                'bg/town_amazon02.png',
+            ]
         },
         'sawmill_city':{
-            'description': __("City with sawmill"), 'label': 'lbl_slavercaravan_sawmill_city',
+            'description': __("City with sawmill"),
+            'label': 'lbl_slavercaravan_sawmill_city',
+            'images': [
+                'bg/town_timber01',
+            ]
         },
         'artisan_city': {
-            'description': __("Artisans city"), 'label': 'lbl_slavercaravan_artisan_city', 
+            'description': __("Artisans city"),
+            'label': 'lbl_slavercaravan_artisan_city', 
+            'images': [
+                'bg/town_mines01.png',
+                'bg/town_mines02.png',
+            ]
         },
         'rich_city': {
-            'description': __("Rich city"), 'label': 'lbl_slavercaravan_rich_city',
+            'description': __("Rich city"),
+            'label': 'lbl_slavercaravan_rich_city',
+            'images': [
+                'bg/town_rich01.png',
+            ]
         },
     }
 
     slavercaravan_locations = {
         'road': {
-            'name': __('Road'), 'description': __("Road"), 'label': 'lbl_slavercaravan_road'
+            'name': __('Road'),
+            'description': __("Road"),
+            'label': 'lbl_slavercaravan_road',
+            'images': [
+                'bg/road01.png',
+                'bg/road02.png',
+            ]
         },
         'wildness': {
-            'name': __("Wildness"), 'description': __("Wildness"), 'label': 'lbl_slavercaravan_wildness'
+            'name': __("Wildness"), 
+            'description': __("Wildness"),
+            'label': 'lbl_slavercaravan_wildness',
+            'images': [
+                'bg/forest01.png', 
+                'bg/forest02.png', 
+                'bg/mountain01.png',
+                'bg/mountain01.png',
+            ]
         }
     }
 
