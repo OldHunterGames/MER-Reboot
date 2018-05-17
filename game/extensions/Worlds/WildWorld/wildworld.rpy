@@ -186,21 +186,19 @@ label lbl_wildworld(world):
 label lbl_wildworld_main(world):
     show screen sc_wildworld_stats(world)
     while True:
-        if world.halt:
-            call lbl_wildworld_halt(world)
-        else:
-            $ world.locations.current_location().visit(world)
+        $ world.locations.current_location().visit(world)
     return
 
 label lbl_wildworld_road(world):
     'Road'
     while True:
-        'Leave' if not world.halt:
-            call screen sc_wildworld_map(world)
-            return
-        'Go for halt':
-            $ world.halt = True
-            call lbl_wildworld_halt(world)
+        menu:
+            'Leave' if not world.halt:
+                call screen sc_wildworld_map(world)
+                return
+            'Go for halt':
+                $ world.halt = True
+                call lbl_wildworld_halt(world)
     return
 
 label lbl_wildworld_halt(world):
