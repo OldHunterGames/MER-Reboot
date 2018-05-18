@@ -34,7 +34,7 @@ class Locations(object):
         self.locations = [None for i in range(width*height)]
         self._wild_indexes = list()
         self.current = 0
-        self.city_names = kwargs.get('city_names')
+        self.city_names = copy.copy(store.slavercaravan_town_names)
         self._generate_locations()
     
     def size(self):
@@ -120,9 +120,12 @@ class Locations(object):
         return available        
     
     def gen_city(self):
-        name = random.choice(store.slavercaravan_city_names)
-        data = {'name': name, 'type': 'city'}
+        data = {'type': 'city'}
+        city = random.choice(store.slavercaravan_cities.items())
+        data.update(city[1])
+        name = random.choice(self.city_names[city[0]])
         data.update(random.choice(store.slavercaravan_cities.values()))
+        data['name'] = name
         return Location(data)
     
     def gen_road(self):

@@ -1,12 +1,12 @@
 init python:
     slavercaravan_town_names = {
-    brothel = [__('Redlight'), __('Whoretown'), __('Putaburg'), ],
-    amazon = [__('Girltown'), __('Amazonia'), __('Sapfica'), ],
-    trade = [__('Market Cross'), __('Haggin'), __('Mercantia'), ],
-    rich = [__('Goldtown'), __('Splendoria'), __('Gracia'), ],
-    craft = [__('Craftsburg'), __('Pottertown'), __('Guildmor'), ],
-    mining = [__('Ironpit'), __('Copperfield'), __('Leadburg'), ],
-    timber = [__('Jackswill'), __('Lumberton'), __('Woodpekkerville'), ],
+        'brothel_city': [__('Redlight'), __('Whoretown'), __('Putaburg'), ],
+        'amazon_village': [__('Girltown'), __('Amazonia'), __('Sapfica'), ],
+        'market_city': [__('Market Cross'), __('Haggin'), __('Mercantia'), ],
+        'rich_city': [__('Goldtown'), __('Splendoria'), __('Gracia'), ],
+        'artisan_city': [__('Craftsburg'), __('Pottertown'), __('Guildmor'), ],
+        'mining': [__('Ironpit'), __('Copperfield'), __('Leadburg'), ],
+        'sawmill_city': [__('Jackswill'), __('Lumberton'), __('Woodpekkerville'), ],
     }
 
 
@@ -130,8 +130,6 @@ init python:
             ]
         }
     }
-
-    slavercaravan_city_names = ['Name1', 'Name2', 'Name3', 'Name4', 'Name5', 'Name6', 'Name7']
 
     slavercaravan_items = {
         'sturdy_rope': {
