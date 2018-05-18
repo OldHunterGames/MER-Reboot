@@ -1,4 +1,15 @@
 init python:
+    slavercaravan_town_names = {
+    brothel = [__('Redlight'), __('Whoretown'), __('Putaburg'), ],
+    amazon = [__('Girltown'), __('Amazonia'), __('Sapfica'), ],
+    trade = [__('Market Cross'), __('Haggin'), __('Mercantia'), ],
+    rich = [__('Goldtown'), __('Splendoria'), __('Gracia'), ],
+    craft = [__('Craftsburg'), __('Pottertown'), __('Guildmor'), ],
+    mining = [__('Ironpit'), __('Copperfield'), __('Leadburg'), ],
+    timber = [__('Jackswill'), __('Lumberton'), __('Woodpekkerville'), ],
+    }
+
+
     slavercaravan_attributes = {
         'might': {'name': __('Might'), 'low': __('Weak'), 'high': __('Hardy')},
         'subtlety': {'name': __('Subtlety'), 'low': __('Naive'), 'high': __('Subtle')},
@@ -82,7 +93,7 @@ init python:
         },
         'artisan_city': {
             'description': __("Artisans city"),
-            'label': 'lbl_slavercaravan_artisan_city', 
+            'label': 'lbl_slavercaravan_artisan_city',
             'images': [
                 'bg/town_mines01.png',
                 'bg/town_mines02.png',
@@ -108,12 +119,12 @@ init python:
             ]
         },
         'wildness': {
-            'name': __("Wildness"), 
+            'name': __("Wildness"),
             'description': __("Wildness"),
             'label': 'lbl_slavercaravan_wildness',
             'images': [
-                'bg/forest01.png', 
-                'bg/forest02.png', 
+                'bg/forest01.png',
+                'bg/forest02.png',
                 'bg/mountain01.png',
                 'bg/mountain01.png',
             ]
