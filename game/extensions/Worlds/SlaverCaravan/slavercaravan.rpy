@@ -86,6 +86,12 @@ init 1 python:
                 result = random.choice(chances)
                 if result == 'escape':
                     self.remove_character(i)
+                    closest_wild = self.locations.get_closest_wildness()
+                    if hasattr(closest_wild, 'slaves'):
+                        closest_wild.slaves.append(i)
+                    else:
+                        closest_wild.slaves = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
+                        closest_wild.slaves.append(i)
                     renpy.call_in_new_context('lbl_slavercaravan_slave_escaped', self, i)
                     return
                 elif result == 'catch':
@@ -211,6 +217,7 @@ label lbl_slavercaravan_road(world):
 
 label lbl_slavercaravan_halt(world):
     'Halt'
+    $ world.halt = True
     while world.halt:
         menu:
             'Skip turn':
@@ -415,7 +422,8 @@ label lbl_slavercaravan_wildness(world):
         loc = world.locations.current_location()
         if not loc.visited:
             loc.visited = True
-            loc.slaves = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
+            if not hasattr(loc, 'slaves'):
+                loc.slaves = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
             loc.tries = 3
             img = random.choice(slavercaravan_locations['wildness']['images'])
             img = world.path(img)

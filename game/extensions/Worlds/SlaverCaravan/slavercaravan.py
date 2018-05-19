@@ -43,6 +43,23 @@ class Locations(object):
     def current_location(self):
         return self.get_loc(self.current)
     
+    def get_closest_wildness(self):
+        locations = []
+        current_location = self.current_location()
+        if current_location.type() == 'wildness':
+            return current_location
+        if current_location.type() == 'city':
+            turns = 2
+        else:
+            turns = 1
+        available = self.can_go(self.current, turns)
+        for list_ in available.values():
+            for i in list_:
+                if self.get_loc(i).type() == 'wildness':
+                    locations.append(self.get_loc(i))
+        return random.choice(locations)
+        
+    
     def _generate_locations(self):
         city = 2
         empty_row = False
