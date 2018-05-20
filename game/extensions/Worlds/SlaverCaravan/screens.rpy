@@ -57,9 +57,12 @@ screen sc_slavercaravan_map(world):
                         textbutton loc.name():
                             xsize 200
                             ysize 35
-                            background '#f0f0f0'
+                            background im.Scale(loc.image, 200, 35)
                             if loc == world.locations.current_location():
                                 text_color '#00ff00'
+                            else:
+                                text_color '#ffffff'
+                            text_hover_color '#aa70ff'
                             action  Function(world.change_location, j), Return(),
                             sensitive (j in available and loc != world.locations.current_location())
         

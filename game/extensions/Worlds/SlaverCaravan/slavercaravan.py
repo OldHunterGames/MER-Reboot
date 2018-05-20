@@ -35,7 +35,9 @@ class Locations(object):
         self._wild_indexes = list()
         self.current = 0
         self.city_names = copy.copy(store.slavercaravan_town_names)
+        self._world = kwargs.get('world')
         self._generate_locations()
+        
     
     def size(self):
         return len(self.locations)
@@ -143,18 +145,30 @@ class Locations(object):
         name = random.choice(self.city_names[city[0]])
         data.update(random.choice(store.slavercaravan_cities.values()))
         data['name'] = name
-        return Location(data)
+        img = random.choice(store.slavercaravan_cities[city[0]]['images'])
+        img = self._world.path(img)
+        loc = Location(data)
+        loc.image = img
+        return loc
     
     def gen_road(self):
         data = {'type': 'road'}
         data.update(store.slavercaravan_locations['road'])
-        return Location(data)
+        img = random.choice(store.slavercaravan_locations['road']['images'])
+        img = self._world.path(img)
+        loc = Location(data)
+        loc.image = img
+        return loc
     
     def gen_wildness(self, index):
         data = {'type': 'wildness'}
         data.update(store.slavercaravan_locations['wildness'])
         self._wild_indexes.append(index)
-        return Location(data)
+        img = random.choice(store.slavercaravan_locations['wildness']['images'])
+        img = self._world.path(img)
+        loc = Location(data)
+        loc.image = img
+        return loc
 
 
 class Item(object):

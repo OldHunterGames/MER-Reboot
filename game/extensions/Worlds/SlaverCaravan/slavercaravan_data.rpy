@@ -88,7 +88,7 @@ init python:
             'description': __("City with sawmill"),
             'label': 'lbl_slavercaravan_sawmill_city',
             'images': [
-                'bg/town_timber01',
+                'bg/town_timber01.png',
             ]
         },
         'artisan_city': {
