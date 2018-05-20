@@ -18,6 +18,7 @@ init 1 python:
 
     class SlaverCaravan(World):
         PLAYER = None
+        SLAVE_GUT_FOOD = 5
         def __init__(self, *args, **kwargs):
             super(SlaverCaravan, self).__init__(*args, **kwargs)
             self.characters = list()
@@ -124,7 +125,7 @@ init 1 python:
             self.slaves.remove(self.selected)
             world.remove_character(self.selected)
             price = self.price()
-            self.world.food += price
+            self.world.food += price + self.world.SLAVE_GUT_FOOD
             self.selected = None
         
         def show(self):
@@ -148,7 +149,7 @@ init 1 python:
         def make_food(self):
             self.world.remove_character(self.selected)
             self.slaves.remove(self.selected)
-            self.world.food += 2
+            self.world.food += self.world.SLAVE_GUT_FOOD
             self.selected = None
         
         def show(self):
@@ -166,7 +167,7 @@ init 1 python:
         
         def make_food(self):
             self.location.slaves[self.location.slaves.index(slave)] = None
-            self.world.food += 5
+            self.world.food += self.world.SLAVE_GUT_FOOD
             self.catched = True
         
         def catch(self, item):
