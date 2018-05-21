@@ -209,6 +209,8 @@ label lbl_slavercaravan_road(world):
         loc = world.locations.current_location()
         if not loc.visited:
             loc.visited = True
+        event = random.choice(slavercaravan_locations['road']['events'])
+        renpy.call_in_new_context(event, world=world)
     show expression loc.image as bg
     'Road'
     while True:
