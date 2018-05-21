@@ -78,6 +78,20 @@ init 1 python:
             value = int(person.applied_item.escape_chance(value))
             return ['escape' for i in range(value)]
         
+        def slave_to_loc(self, person):
+            closest_wild = self.locations.get_closest_wildness()
+            if hasattr(closest_wild, 'slaves'):
+                closest_wild.slaves.append(person)
+            else:
+                closest_wild.slaves = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
+                closest_wild.slaves.append(person)
+
+        def slaves_escape(self, value=None):
+            if value is None:
+                value = len(self.characters)
+            for i in self.characters[0:value]:
+                self.slave_to_loc(i)
+                self.characters.remove(i)
         def slave_escape(self):
             for i in self.characters:
                 chances = self.escape_chance(i)
@@ -86,11 +100,7 @@ init 1 python:
                 if result == 'escape':
                     self.remove_character(i)
                     closest_wild = self.locations.get_closest_wildness()
-                    if hasattr(closest_wild, 'slaves'):
-                        closest_wild.slaves.append(i)
-                    else:
-                        closest_wild.slaves = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
-                        closest_wild.slaves.append(i)
+                    self.slave_to_loc(i)
                     renpy.call_in_new_context('lbl_slavercaravan_slave_escaped', self, i)
                     return
                 elif result == 'catch':
