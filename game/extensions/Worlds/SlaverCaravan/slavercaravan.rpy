@@ -57,9 +57,7 @@ init 1 python:
             if self.food < 0:
                 self.food = 0
                 self.player.state -= 1
-                self.characters = list()
-                if self.player.state == 0:
-                    renpy.call_in_new_context('lbl_slavercaravan_gameover')
+                self.characters = list()                    
             self.day += 1
         
         def get_slaves(self, gender='all'):

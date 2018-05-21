@@ -330,7 +330,17 @@ class SlaverCaravanPerson(object):
         self.slotless_features = list()
         self.applied_item = None
         self._items = Counter()
-        self.state = 5
+        self._state = 5
+    
+    @property
+    def state(self):
+        return self._state
+    
+    @state.setter
+    def state(self, value):
+        self._state = max(-1, min(5, value))
+        if self._state <= 0:
+            renpy.call_in_new_context('lbl_slavercaravan_gameover')
     
     def add_item(self, item):
         self._items[item] += 1
