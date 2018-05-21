@@ -1,12 +1,12 @@
 ## Slaver's caravan slavercaravan_alignment_features
 
 
-label lbl_slavercaravan_event_noevent(world):
+lbl_slavercaravan_event_noevent(world):
     $ pass
 
     return
 
-label lbl_slavercaravan_event_fruittree(world):
+lbl_slavercaravan_event_fruittree(world):
     show expression world.path('bg/event_fruittree.png') as bg
     menu:
         'You find a tree full of ripe fruits standing right behind the roadside'
@@ -21,7 +21,7 @@ label lbl_slavercaravan_event_fruittree(world):
             $ pass
     return
 
-label lbl_slavercaravan_event_bandits(world):
+lbl_slavercaravan_event_bandits(world):
     show expression world.path('bg/event_bandits.png') as bg
     menu:
         "A nasty looking gang of bandits closes your pass"
