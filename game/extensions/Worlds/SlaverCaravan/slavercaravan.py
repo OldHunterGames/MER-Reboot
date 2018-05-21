@@ -22,6 +22,9 @@ class Location(object):
     def type(self):
         return self._data.get('type')
     
+    def events(self):
+        return self._data.get('events')
+    
     def visit(self, world):
         renpy.call(self.label(), world=world)
 

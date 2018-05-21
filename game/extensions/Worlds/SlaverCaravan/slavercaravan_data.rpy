@@ -117,10 +117,10 @@ init python:
                 'bg/road01.png',
                 'bg/road02.png',
             ],
-            'events': [
-                'lbl_slavercaravan_event_fruittree',
-                'lbl_slavercaravan_event_bandits',
-            ],
+            'events': {
+                'lbl_slavercaravan_event_fruittree': 5,
+                'lbl_slavercaravan_event_bandits': 5,
+            },
         },
         'wildness': {
             'name': __("Wildness"),

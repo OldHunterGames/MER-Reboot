@@ -19,6 +19,28 @@ init 1 python:
     class SlaverCaravan(World):
         PLAYER = None
         SLAVE_GUT_FOOD = 5
+
+        def get_event(self, loc=None):
+            if loc is None:
+                loc = self.locations.current_location()
+            events = loc.events()
+            if events is None:
+                return None
+            pool = list()
+            for key, value in events.items():
+                if isinstance(value, int):
+                    pool.append((key, value))
+                else:
+                    pool.append((key, renpy.call_in_new_context(value, world=self)))
+            return weighted_random(pool)
+        
+        def call_event(self):
+            event = self.get_event()
+            if event is None:
+                return
+            else:
+                return renpy.call_in_new_context(event, world=self)
+        
         def __init__(self, *args, **kwargs):
             super(SlaverCaravan, self).__init__(*args, **kwargs)
             self.characters = list()
@@ -209,8 +231,7 @@ label lbl_slavercaravan_road(world):
         loc = world.locations.current_location()
         if not loc.visited:
             loc.visited = True
-        event = random.choice(slavercaravan_locations['road']['events'])
-        renpy.call_in_new_context(event, world=world)
+        event = world.call_event()
     show expression loc.image as bg
     'Road'
     while True:
