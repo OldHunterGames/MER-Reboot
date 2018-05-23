@@ -27,7 +27,18 @@ class Location(object):
     
     def visit(self, world):
         renpy.call(self.label(), world=world)
-
+    
+    def get_text(self, id):
+        data = self._data.get('texts', dict())
+        return data.get(id, 'No text')
+    
+    def random_text(self, id):
+        data = self._data.get('texts', dict())
+        texts = data.get(id, [])
+        if len(texts) > 0:
+            return random.choice(texts)
+        else:
+            return 'No text'
 
 class Locations(object):
     

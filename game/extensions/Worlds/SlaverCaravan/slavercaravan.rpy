@@ -291,8 +291,9 @@ label lbl_slavercaravan_brothel_city(world):
             loc.visited = True
     show expression loc.image as bg
     while True:
+        $ text = loc.random_text('entry_text')
         menu:
-            "In brothel city you can sell female slaves for 3x of it's maximum attribute"
+            "[text]"
             'Sell slaves':
                 if len(world.get_slaves('female')) > 0:
                     $ SlaverMarket(world.get_slaves('female'), world, 3).show()
@@ -315,8 +316,9 @@ label lbl_slavercaravan_market_city(world):
             loc.visited = True
     show expression loc.image as bg
     while True:
+        $ text = loc.random_text('entry_text')
         menu:
-            "In market city you can sell any slave for 2x of it's maximum attribute"
+            "[text]"
             'Sell slaves':
                 if len(world.get_slaves()) > 0:
                     $ SlaverMarket(world.get_slaves(), world, 2).show()
@@ -339,8 +341,9 @@ label lbl_slavercaravan_amazon_village(world):
             loc.visited = True
     show expression loc.image as bg
     while True:
+        $ text = loc.random_text('entry_text')
         menu:
-            "In amazon village you can sell any male slave for 3x of it's maximum attribute"
+            "[text]"
             'Sell slaves':
                 if len(world.get_slaves('male')) > 0:
                     $ SlaverMarket(world.get_slaves('male'), world, 3).show()
@@ -363,8 +366,9 @@ label lbl_slavercaravan_sawmill_city(world):
             loc.visited = True
     show expression loc.image as bg
     while True:
+        $ text = loc.random_text('entry_text')
         menu:
-            "In sawmill city you can sell any slave for 5x of it's might"
+            "[text]"
             'Sell slaves':
                 if len(world.get_slaves()) > 0:
                     $ SlaverMarket(world.get_slaves(), world, 5, ['might']).show()
@@ -387,8 +391,9 @@ label lbl_slavercaravan_artisan_city(world):
             loc.visited = True
     show expression loc.image as bg
     while True:
+        $ text = loc.random_text('entry_text')
         menu:
-            "In artisan city you can sell any slave for 5x of it's competence"
+            "[text]"
             'Sell slaves':
                 if len(world.get_slaves()) > 0:
                     $ SlaverMarket(world.get_slaves(), world, 5, ['competence']).call()
@@ -411,8 +416,9 @@ label lbl_slavercaravan_rich_city(world):
             loc.visited = True
     show expression loc.image as bg
     while True:
+        $ text = loc.random_text('entry_text')
         menu:
-            "In rich city you can sell any slave for 4x of it's charisma or subtlety"
+            "[text]"
             'Sell slaves':
                 if len(world.get_slaves()) > 0:
                     $ SlaverMarket(world.get_slaves(), world, 5, ['charisma', 'subtlety']).show()

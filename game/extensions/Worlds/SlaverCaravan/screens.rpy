@@ -1,12 +1,20 @@
+style slavercaravan_button_text:
+    color '#405A0E'
+    hover_color '#1b2900'
+
+style slavercaravan_button:
+    background Color((27, 41, 0))
+    hover_background '#405a0e'
+
 screen sc_slavercaravan_stats(world):
     
     window:
-        background Color((0, 0, 0, 100))
+        background Color((32, 32, 32, 100))
         xfill True
         yfill True
         ysize 720
         xsize 192
-        xpos 1168
+        xpos 1188
 
         vbox:
             spacing 10
@@ -27,6 +35,9 @@ screen sc_slavercaravan_stats(world):
             
             textbutton 'Slaves (%s)' % len(world.get_slaves()):
                 action Function(SlaveManager(world.get_slaves(), world).show)
+                text_style 'slavercaravan_button_text'
+                style 'slavercaravan_button'
+
             for key, value in world.player.items(as_dict=True).items():
                 text '%s: %s' % (key.name, value)
 

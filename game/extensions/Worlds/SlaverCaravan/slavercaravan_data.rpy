@@ -66,7 +66,12 @@ init python:
             'label': 'lbl_slavercaravan_market_city',
             'images': [
                 'bg/town_trade01.png',
-            ]
+            ],
+            'texts': {
+                'entry_text': [
+                    "In market city you can sell any slave for 2x of it's maximum attribute", 
+                ]
+            }
         },
         'brothel_city': {
             'description': __("City with brothel"),
@@ -74,7 +79,12 @@ init python:
             'images': [
                 'bg/town_brothel01.png',
                 'bg/town_brothel02.png',
-            ]
+            ],
+            'texts': {
+                'entry_text': [
+                    "In brothel city you can sell female slaves for 3x of it's maximum attribute", 
+                ]
+            }
         },
         'amazon_village': {
             'description': __("Amazon village"),
@@ -82,14 +92,24 @@ init python:
             'images': [
                 'bg/town_amazon01.png',
                 'bg/town_amazon02.png',
-            ]
+            ],
+            'texts': {
+                'entry_text': [
+                    "In amazon village you can sell any male slave for 3x of it's maximum attribute", 
+                ]
+            }
         },
         'sawmill_city':{
             'description': __("City with sawmill"),
             'label': 'lbl_slavercaravan_sawmill_city',
             'images': [
                 'bg/town_timber01.png',
-            ]
+            ],
+            'texts': {
+                'entry_text': [
+                    "In sawmill city you can sell any slave for 5x of it's might", 
+                ]
+            }
         },
         'artisan_city': {
             'description': __("Artisans city"),
@@ -97,14 +117,24 @@ init python:
             'images': [
                 'bg/town_mines01.png',
                 'bg/town_mines02.png',
-            ]
+            ],
+            'texts': {
+                'entry_text': [
+                    "In artisan city you can sell any slave for 5x of it's competence", 
+                ]
+            }
         },
         'rich_city': {
             'description': __("Rich city"),
             'label': 'lbl_slavercaravan_rich_city',
             'images': [
                 'bg/town_rich01.png',
-            ]
+            ],
+            'texts': {
+                'entry_text': [
+                    "In rich city you can sell any slave for 4x of it's charisma or subtlety", 
+                ]
+            }
         },
     }
 
@@ -117,11 +147,16 @@ init python:
                 'bg/road01.png',
                 'bg/road02.png',
             ],
-            'events': [
-                'lbl_slavercaravan_noevent_fruittree',
-                'lbl_slavercaravan_event_fruittree',
-                'lbl_slavercaravan_event_bandits',
-            ],
+            'events': {
+                'lbl_slavercaravan_noevent_fruittree': 1,
+                'lbl_slavercaravan_event_fruittree': 1,
+                'lbl_slavercaravan_event_bandits': 1,
+            },
+            'texts': {
+                'entry_text': [
+                    "In rich city you can sell any slave for 4x of it's charisma or subtlety", 
+                ]
+            }
         },
         'wildness': {
             'name': __("Wildness"),
@@ -132,7 +167,12 @@ init python:
                 'bg/forest02.png',
                 'bg/mountain01.png',
                 'bg/mountain01.png',
-            ]
+            ],
+            'texts': {
+                'entry_text': [
+                    "In rich city you can sell any slave for 4x of it's charisma or subtlety", 
+                ]
+            }
         }
     }
 
