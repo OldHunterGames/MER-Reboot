@@ -121,6 +121,21 @@ class Locations(object):
         }
         return index not in sides[side]
     
+    def locs_to_go(self):
+        locs = {
+            'top': self.current - 5,
+            'bot': self.current + 5,
+            'left': self.current - 1,
+            'right': self.current + 1,
+        }
+        available = dict()
+        for key, value in locs.items():
+            if value >= 0 and value < 25 and self._can_go(self.current, key):
+                available[key] = value
+            else:
+                available[key] = None
+        return available
+        
     def can_go(self, location_pos, turns=1):
         available = {1: list()}
         locs = {

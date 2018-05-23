@@ -237,7 +237,7 @@ label lbl_slavercaravan_road(world):
     while True:
         menu:
             'Leave' if not world.halt:
-                call screen sc_slavercaravan_map(world)
+                call lbl_slavercaravan_change_location(world)
                 return
             'Go for halt':
                 $ world.halt = True
@@ -305,7 +305,7 @@ label lbl_slavercaravan_brothel_city(world):
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_slavercaravan_map(world)
+                call lbl_slavercaravan_change_location(world)
                 return
     return
 
@@ -330,7 +330,7 @@ label lbl_slavercaravan_market_city(world):
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_slavercaravan_map(world)
+                call lbl_slavercaravan_change_location(world)
                 return
     return
 
@@ -355,7 +355,7 @@ label lbl_slavercaravan_amazon_village(world):
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_slavercaravan_map(world)
+                call lbl_slavercaravan_change_location(world)
                 return
     return
 
@@ -380,7 +380,7 @@ label lbl_slavercaravan_sawmill_city(world):
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_slavercaravan_map(world)
+                call lbl_slavercaravan_change_location(world)
                 return
     return
 
@@ -405,7 +405,7 @@ label lbl_slavercaravan_artisan_city(world):
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_slavercaravan_map(world)
+                call lbl_slavercaravan_change_location(world)
                 return
     return
 
@@ -430,7 +430,7 @@ label lbl_slavercaravan_rich_city(world):
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
-                call screen sc_slavercaravan_map(world)
+                call lbl_slavercaravan_change_location(world)
                 return
     return
 
@@ -472,7 +472,7 @@ label lbl_slavercaravan_wildness(world):
                 $ loc.tries = 3
 
             'Leave' if not world.halt:
-                call screen sc_slavercaravan_map(world)
+                call lbl_slavercaravan_change_location(world)
                 return
     return
 
@@ -482,4 +482,18 @@ label lbl_slavercaravan_slave_escaped(world, person):
 
 label lbl_slavercaravan_slave_escape_prevented(world, person):
     '[world.player.name] prevented escape of [person.name]'
+    return
+
+label lbl_slavercaravan_change_location(world):
+    python:
+        available_locations = world.locations.locs_to_go()
+    menu:
+        'North' if available_locations['top']:
+            $ world.change_location(available_locations['top'])
+        'South' if available_locations['bot']:
+            $ world.change_location(available_locations['bot'])
+        'West' if available_locations['left']:
+            $ world.change_location(available_locations['left'])
+        'East' if available_locations['right']:
+            $ world.change_location(available_locations['right'])
     return
