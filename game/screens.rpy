@@ -232,7 +232,7 @@ screen choice(items):
     vbox:
         for i in items:
             textbutton i.caption action i.action
-
+            
 
 ## When this is true, menu captions will be spoken by the narrator. When false,
 ## menu captions will be displayed as empty buttons.
@@ -252,6 +252,8 @@ style choice_vbox:
 
 style choice_button is default:
     properties gui.button_properties("choice_button")
+    background Color((27, 41, 0, 220))
+    hover_background Color((64, 90, 14, 220))
 
 style choice_button_text is default:
     properties gui.button_text_properties("choice_button")

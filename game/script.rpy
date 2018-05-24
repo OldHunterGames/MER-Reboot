@@ -32,6 +32,7 @@ label _main:
     return
 
 label lbl_main:
+    scene expression 'images/bg/vatican.png'
     menu:
         'Decade: [core.decade]'
         'Me':
@@ -65,7 +66,7 @@ label lbl_make_initial_characters():
         Hierarchy(random.choice(free_nobles)).add_clientela(senators.pop())
         for i in nobles:
             Hierarchy(princeps).add_clientela(i)
-    return
+    return 
 
 label lbl_make_patrician():
     python:
@@ -158,4 +159,13 @@ label lbl_gameover():
     'You are broke'
     'GAME OVER'
     $ renpy.full_restart()
+    return
+
+label lbl_world_return():
+    # This is needed to safely return from any outer world via world.leave method
+    $ depth = renpy.context_nesting_level()
+    if depth > 1:
+        $ renpy.jump_out_of_context('lbl_world_return')
+    else:
+        $ renpy.set_return_stack([])
     return

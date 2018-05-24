@@ -228,6 +228,19 @@ label lbl_slavercaravan(world):
             $ pass
     return
 
+label lbl_pray_archon(world):
+    show expression world.path('bg/archon.png') as bg
+    while True:
+        menu:
+            "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
+            "How can I please you?":
+                "Make a hundred food before month get old and I'll make you my apostole."
+            "I'll return to Eternal Rome":
+                $ world.leave()
+            "Leave":
+                return
+    return
+
 label lbl_slavercaravan_main(world):
     show screen sc_slavercaravan_stats(world)
     while True:
@@ -260,6 +273,8 @@ label lbl_slavercaravan_halt(world):
             'Go to sleep':
                 $ world.halt = False
                 $ world.skip_turn()
+            'Pray to archon':
+                $ renpy.call_in_new_context('lbl_pray_archon', world=world)
 
     return
 

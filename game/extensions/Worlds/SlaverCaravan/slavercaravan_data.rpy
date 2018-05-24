@@ -148,7 +148,6 @@ init python:
                 'bg/road02.png',
             ],
             'events': {
-                'lbl_slavercaravan_noevent_fruittree': 1,
                 'lbl_slavercaravan_event_fruittree': 1,
                 'lbl_slavercaravan_event_bandits': 1,
             },

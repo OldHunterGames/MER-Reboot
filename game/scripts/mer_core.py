@@ -84,7 +84,6 @@ class PersonalBook(EventsBook):
     
 
 class World(object):
-    
     def __init__(self, archon):
         self.archon = archon
         archon.world = self
@@ -96,6 +95,9 @@ class World(object):
     
     def on_visit(self, person):
         return
+    
+    def leave(self):
+        renpy.jump_out_of_context('lbl_world_return')
     
     def entry_label(self):
         raise NotImplementedError()
