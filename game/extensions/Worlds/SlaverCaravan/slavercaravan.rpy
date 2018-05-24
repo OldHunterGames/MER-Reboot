@@ -6,13 +6,13 @@ init 1 python:
     from slavercaravan import *
     for key, value in slavercaravan_features.items():
         Feature.register_feature(key, Feature(value))
-    
+
     for key, value in slavercaravan_physical_features.items():
         Feature.register_feature(key, Feature(value))
-    
+
     for key, value in slavercaravan_alignment_features.items():
         Feature.register_feature(key, Feature(value))
-    
+
     for key, value in slavercaravan_items.items():
         Item.register_item(key, Item(key, value))
 
@@ -33,14 +33,14 @@ init 1 python:
                 else:
                     pool.append((key, renpy.call_in_new_context(value, world=self)))
             return weighted_random(pool)
-        
+
         def call_event(self):
             event = self.get_event()
             if event is None:
                 return
             else:
                 return renpy.call_in_new_context(event, world=self)
-        
+
         def __init__(self, *args, **kwargs):
             super(SlaverCaravan, self).__init__(*args, **kwargs)
             self.characters = list()
@@ -51,10 +51,10 @@ init 1 python:
 
         def entry_label(self):
             return 'lbl_slavercaravan'
-    
+
         def get_path(self):
             return 'SlaverCaravan/'
-        
+
         def on_visit(self, person):
             if getattr(SlaverCaravan, 'PLAYER', None) is None:
                 self.player = SlaverCaravanPersonMaker.make_person(person)
@@ -62,14 +62,14 @@ init 1 python:
             else:
                 self.player = SlaverCaravan.PLAYER
 
-        
+
         def add_character(self, person):
             self.characters.append(person)
-        
+
         def change_location(self, pos):
             self.halt = True
             self.locations.current = pos
-        
+
         def skip_turn(self):
             if self.locations.current_location().type() != 'city':
                 self.slave_escape()
@@ -79,27 +79,27 @@ init 1 python:
             if self.food < 0:
                 self.food = 0
                 self.player.state -= 1
-                self.characters = list()                    
+                self.characters = list()
             self.day += 1
-        
+
         def get_slaves(self, gender='all'):
             if gender == 'all':
                 return [i for i in self.characters]
             return [i for i in self.characters if i.gender == gender]
-        
+
         def remove_character(self, person):
             self.characters.remove(person)
-        
+
         def security_chance(self):
             chances = ['catch' for i in range(self.player.state)]
             chances.extend(['catch' for i in range(max(self.player.attributes().values()))])
             return chances
-        
+
         def escape_chance(self, person):
             value = max(person.attributes().values())
             value = int(person.applied_item.escape_chance(value))
             return ['escape' for i in range(value)]
-        
+
         def slave_to_loc(self, person):
             closest_wild = self.locations.get_closest_wildness()
             if hasattr(closest_wild, 'slaves'):
@@ -127,21 +127,21 @@ init 1 python:
                     return
                 elif result == 'catch':
                     pass
-                    # return renpy.call('lbl_slavercaravan_slave_escape_prevented', self, i)                        
+                    # return renpy.call('lbl_slavercaravan_slave_escape_prevented', self, i)
 
 
     class SlaverMarket(object):
-        
+
         def __init__(self, slaves, world, multiplier=1, attributes='all'):
             self.slaves = slaves
             self.world = world
             self.multiplier = multiplier
             self.selected = None
             self.attributes = attributes
-        
+
         def select(self, slave):
             self.selected = slave
-        
+
         def price(self):
             if self.attributes == 'all':
                 price = max(self.selected.attributes().values()) * self.multiplier
@@ -150,43 +150,43 @@ init 1 python:
             if price <= 0:
                 price = 1
             return price
-        
+
         def sell(self):
             self.slaves.remove(self.selected)
             world.remove_character(self.selected)
             price = self.price()
             self.world.food += price + self.world.SLAVE_GUT_FOOD
             self.selected = None
-        
+
         def show(self):
             return renpy.show_screen('sc_slavercaravan_sell_slaves', market=self)
-        
+
     class SlaveManager(object):
-        
+
         def __init__(self, slaves, world):
             self.slaves = slaves
             self.world = world
             self.selected = None
-        
+
         def escape_chance(self):
             chances = self.world.escape_chance(self.selected)
             chances.extend(self.world.security_chance())
             return '%s of %s' % (chances.count('escape'), len(chances))
-        
+
         def select(self, slave):
             self.selected = slave
-        
+
         def make_food(self):
             self.world.remove_character(self.selected)
             self.slaves.remove(self.selected)
             self.world.food += self.world.SLAVE_GUT_FOOD
             self.selected = None
-        
+
         def show(self):
             return renpy.show_screen('sc_slavercaravan_slaves', manager=self)
-    
+
     class CatchSlave(object):
-        
+
         def __init__(self, world, location, slave, items, tries):
             self.world = world
             self.location = location
@@ -194,19 +194,19 @@ init 1 python:
             self.items = items
             self.tries = tries
             self.catched = False
-        
+
         def make_food(self):
             self.location.slaves[self.location.slaves.index(slave)] = None
             self.world.food += self.world.SLAVE_GUT_FOOD
             self.catched = True
-        
+
         def catch(self, item):
             self.location.slaves[self.location.slaves.index(slave)] = None
             self.slave.applied_item = item
             self.world.add_character(self.slave)
             self.world.player.remove_item(item)
             self.catched = True
-        
+
         def call(self):
             return renpy.call_screen('sc_slavercaravan_catch_slave', manager=self)
 
@@ -216,8 +216,16 @@ label lbl_slavercaravan_gameover():
     return
 
 label lbl_slavercaravan(world):
-    "Wellcome to [world.archon.name]'s world"
-    call lbl_slavercaravan_main(world)
+    show expression world.path('bg/archon.png') as bg
+    menu:
+        "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
+        "How can I please you?":
+            "Make a hundred food before month get old and I'll make you my apostole."
+            call lbl_slavercaravan(world)
+        "Let me in":
+            call lbl_slavercaravan_main(world)
+        "I'll return to Eternal Rome":
+            $ pass
     return
 
 label lbl_slavercaravan_main(world):
@@ -239,20 +247,20 @@ label lbl_slavercaravan_road(world):
             'Leave' if not world.halt:
                 call lbl_slavercaravan_change_location(world)
                 return
-            'Go for halt':
+            'Setup a camp':
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
     return
 
 label lbl_slavercaravan_halt(world):
-    'Halt'
+    'You have some time before night falls.'
     $ world.halt = True
     while world.halt:
         menu:
-            'Skip turn':
+            'Go to sleep':
                 $ world.halt = False
                 $ world.skip_turn()
-            
+
     return
 
 label lbl_buy_item(world):
@@ -326,7 +334,7 @@ label lbl_slavercaravan_market_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Go for halt':
+            'Rent inn':
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -351,7 +359,7 @@ label lbl_slavercaravan_amazon_village(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Go for halt':
+            'Rent inn':
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -376,7 +384,7 @@ label lbl_slavercaravan_sawmill_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Go for halt':
+            'Rent inn':
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -401,7 +409,7 @@ label lbl_slavercaravan_artisan_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Go for halt':
+            'Rent a room':
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -426,7 +434,7 @@ label lbl_slavercaravan_rich_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Go for halt':
+            'Reny inn':
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -466,12 +474,12 @@ label lbl_slavercaravan_wildness(world):
                         else:
                             loc.tries -= 1
                     world.halt = True
-                    
-            'Go for halt':
+
+            'Setup a camp':
                 call lbl_slavercaravan_halt(world)
                 $ loc.tries = 3
 
-            'Leave' if not world.halt:
+            'Travel' if not world.halt:
                 call lbl_slavercaravan_change_location(world)
                 return
     return

@@ -7,7 +7,7 @@ style slavercaravan_button:
     hover_background '#405a0e'
 
 screen sc_slavercaravan_stats(world):
-    
+
     window:
         background Color((32, 32, 32, 100))
         xfill True
@@ -25,14 +25,14 @@ screen sc_slavercaravan_stats(world):
             text world.player.name:
                 xalign 0.5
                 color '#ffffff'
-            
+
             text 'Food: %s' % world.food color '#ffffff'
             text 'Day: %s' % world.day color '#ffffff'
             text 'State: %s' % world.player.state color '#ffffff'
             vbox:
                 for value in world.player.show_attributes().values():
                     text value
-            
+
             textbutton 'Slaves (%s)' % len(world.get_slaves()):
                 action Function(SlaveManager(world.get_slaves(), world).show)
                 text_style 'slavercaravan_button_text'
@@ -64,7 +64,7 @@ screen sc_slavercaravan_map(world):
                     spacing 5
                     for j in range(i*width, i*width+width):
                         $ loc = locations[j]
-                        
+
                         textbutton loc.name():
                             xsize 200
                             ysize 35
@@ -76,7 +76,7 @@ screen sc_slavercaravan_map(world):
                             text_hover_color '#aa70ff'
                             action  Function(world.change_location, j), Return(),
                             sensitive (j in available and loc != world.locations.current_location())
-        
+
         textbutton 'Leave':
             action Return()
 
@@ -99,7 +99,7 @@ screen sc_slavercaravan_sell_slaves(market):
                     textbutton i.name:
                         action Function(market.select, i)
                         selected market.selected == i
-        
+
         if market.selected is not None:
             frame:
                 xalign 0.5
@@ -113,12 +113,12 @@ screen sc_slavercaravan_sell_slaves(market):
                         xalign 0.5
                     textbutton 'Sell':
                         action Function(market.sell)
-        
+
         textbutton 'Leave':
             xalign 1.0
             yalign 1.0
             action Hide('sc_slavercaravan_sell_slaves')
-        
+
 
 screen sc_slavercaravan_slaves(manager):
     modal True
@@ -138,7 +138,7 @@ screen sc_slavercaravan_slaves(manager):
                     textbutton i.name:
                         action Function(manager.select, i)
                         selected manager.selected == i
-        
+
         if manager.selected is not None:
             frame:
                 xalign 0.5
@@ -154,19 +154,19 @@ screen sc_slavercaravan_slaves(manager):
                             xalign 0.5
                             for value in manager.selected.show_attributes().values():
                                 text value
-                        textbutton 'Gut into food':
+                        textbutton 'Butcher for food':
                             action Function(manager.make_food)
                     vbox:
                         text manager.selected.gender
                         text 'escape chance: %s' % manager.escape_chance():
                             color '#ff0000'
-                    
-        
+
+
         textbutton 'Leave':
             xalign 1.0
             yalign 1.0
             action Hide('sc_slavercaravan_slaves')
-            
+
 
 screen sc_slavercaravan_catch_slave(manager=self):
     modal True
@@ -185,7 +185,7 @@ screen sc_slavercaravan_catch_slave(manager=self):
                 spacing 5
                 vbox:
                     image im.Scale(manager.slave.avatar, 200, 200)
-                    textbutton 'Gut into food':
+                    textbutton 'Butcher for food':
                         action Function(manager.make_food), Return()
                     for i in manager.items:
                         textbutton i.name:

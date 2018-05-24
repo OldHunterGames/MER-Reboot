@@ -16,7 +16,7 @@ init -10 python:
 # The game starts here.
 
 label start:
-    $ player = PersonCreator.gen_person(name='ADAM', gender='male', genus='human')
+    $ player = PersonCreator.gen_person(name='Player', gender='male', genus='human')
     $ core = MERCore()
     $ core.player = player
     python:
@@ -65,7 +65,7 @@ label lbl_make_initial_characters():
         Hierarchy(random.choice(free_nobles)).add_clientela(senators.pop())
         for i in nobles:
             Hierarchy(princeps).add_clientela(i)
-    return 
+    return
 
 label lbl_make_patrician():
     python:

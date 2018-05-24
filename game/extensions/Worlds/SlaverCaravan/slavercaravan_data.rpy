@@ -69,7 +69,7 @@ init python:
             ],
             'texts': {
                 'entry_text': [
-                    "In market city you can sell any slave for 2x of it's maximum attribute", 
+                    "In market city you can sell any slave for 2x of it's maximum attribute",
                 ]
             }
         },
@@ -82,7 +82,7 @@ init python:
             ],
             'texts': {
                 'entry_text': [
-                    "In brothel city you can sell female slaves for 3x of it's maximum attribute", 
+                    "In brothel city you can sell female slaves for 3x of it's maximum attribute",
                 ]
             }
         },
@@ -95,7 +95,7 @@ init python:
             ],
             'texts': {
                 'entry_text': [
-                    "In amazon village you can sell any male slave for 3x of it's maximum attribute", 
+                    "In amazon village you can sell any male slave for 3x of it's maximum attribute",
                 ]
             }
         },
@@ -107,7 +107,7 @@ init python:
             ],
             'texts': {
                 'entry_text': [
-                    "In sawmill city you can sell any slave for 5x of it's might", 
+                    "In sawmill city you can sell any slave for 5x of it's might",
                 ]
             }
         },
@@ -118,9 +118,9 @@ init python:
                 'bg/town_mines01.png',
                 'bg/town_mines02.png',
             ],
-            'texts': {
+            'texts': {            
                 'entry_text': [
-                    "In artisan city you can sell any slave for 5x of it's competence", 
+                    "In artisan city you can sell any slave for 5x of it's competence",
                 ]
             }
         },
@@ -132,7 +132,7 @@ init python:
             ],
             'texts': {
                 'entry_text': [
-                    "In rich city you can sell any slave for 4x of it's charisma or subtlety", 
+                    "In rich city you can sell any slave for 4x of it's charisma or subtlety",
                 ]
             }
         },
@@ -154,7 +154,7 @@ init python:
             },
             'texts': {
                 'entry_text': [
-                    "In rich city you can sell any slave for 4x of it's charisma or subtlety", 
+                    "In rich city you can sell any slave for 4x of it's charisma or subtlety",
                 ]
             }
         },
@@ -170,7 +170,7 @@ init python:
             ],
             'texts': {
                 'entry_text': [
-                    "In rich city you can sell any slave for 4x of it's charisma or subtlety", 
+                    "In rich city you can sell any slave for 4x of it's charisma or subtlety",
                 ]
             }
         }
