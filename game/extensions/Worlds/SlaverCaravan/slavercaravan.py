@@ -172,7 +172,6 @@ class Locations(object):
         city = random.choice(store.slavercaravan_cities.items())
         data.update(city[1])
         name = random.choice(self.city_names[city[0]])
-        data.update(random.choice(store.slavercaravan_cities.values()))
         data['name'] = name
         img = random.choice(store.slavercaravan_cities[city[0]]['images'])
         img = self._world.path(img)

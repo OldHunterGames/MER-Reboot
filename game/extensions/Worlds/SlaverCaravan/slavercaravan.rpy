@@ -19,6 +19,8 @@ init 1 python:
     class SlaverCaravan(World):
         PLAYER = None
         SLAVE_GUT_FOOD = 5
+        FOOD_TO_WIN = 100
+        MAX_DAYS = 30
 
         def get_event(self, loc=None):
             if loc is None:
@@ -81,6 +83,8 @@ init 1 python:
                 self.player.state -= 1
                 self.characters = list()
             self.day += 1
+            if self.day > self.MAX_DAYS:
+                renpy.call_in_new_context('lbl_slavercaravan_archon_end_screen', world=self, condition='loose')
 
         def get_slaves(self, gender='all'):
             if gender == 'all':
@@ -148,14 +152,16 @@ init 1 python:
             else:
                 price = max([self.selected.attribute(i) for i in self.attributes])
             if price <= 0:
-                price = 1
+                price = self.world.SLAVE_GUT_FOOD
+            else:
+                price += self.world.SLAVE_GUT_FOOD
             return price
 
         def sell(self):
             self.slaves.remove(self.selected)
             world.remove_character(self.selected)
             price = self.price()
-            self.world.food += price + self.world.SLAVE_GUT_FOOD
+            self.world.food += price
             self.selected = None
 
         def show(self):
@@ -235,6 +241,8 @@ label lbl_pray_archon(world):
             "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
             "How can I please you?":
                 "Make a hundred food before month get old and I'll make you my apostole."
+            "Become apostol" if world.food >= 100:
+                $ world.sync()
             "I'll return to Eternal Rome":
                 $ world.leave()
             "Leave":
@@ -519,4 +527,12 @@ label lbl_slavercaravan_change_location(world):
             $ world.change_location(available_locations['left'])
         'East' if available_locations['right']:
             $ world.change_location(available_locations['right'])
+    return
+
+label lbl_slavercaravan_archon_end_screen(world, condition):
+    if condition == 'win':
+        world.archon 'You win'
+    elif condition == 'loose':
+        world.archon 'You loose'
+    $ world.leave()
     return

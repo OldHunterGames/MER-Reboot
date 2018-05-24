@@ -90,6 +90,7 @@ class CoreAngel(object):
         self._witnesses = []
         self._apostol = None
         self.world = None
+        self._renpy_character = store.Character(name)
     
     def can_be_apostol(self, person):
         if person == self.apostol:
@@ -157,3 +158,11 @@ class CoreAngel(object):
         if self.world is None:
             return 0
         return len(self.get_witnesses())
+    
+    def predict(self, what):
+        self._renpy_character.predict(what)
+    
+    def __call__(self, what, interact=True):
+        store.sayer = self
+        self._renpy_character(what, interact=interact)
+        store.sayer = None

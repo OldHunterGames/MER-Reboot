@@ -24,6 +24,8 @@ class PersonCreator(object):
         gender = kwargs.get('gender')
         genus = kwargs.get('genus')
         age = kwargs.get('age')
+        # temporary genus is always human
+        genus = 'human'
         if gender is None:
             gender = random.choice(store.person_genders)
         if genus is None:
