@@ -519,13 +519,13 @@ label lbl_slavercaravan_change_location(world):
     python:
         available_locations = world.locations.locs_to_go()
     menu:
-        'North' if available_locations['top']:
+        'North' if available_locations['top'] is not None:
             $ world.change_location(available_locations['top'])
-        'South' if available_locations['bot']:
+        'South' if available_locations['bot'] is not None:
             $ world.change_location(available_locations['bot'])
-        'West' if available_locations['left']:
+        'West' if available_locations['left'] is not None:
             $ world.change_location(available_locations['left'])
-        'East' if available_locations['right']:
+        'East' if available_locations['right'] is not None:
             $ world.change_location(available_locations['right'])
     return
 
