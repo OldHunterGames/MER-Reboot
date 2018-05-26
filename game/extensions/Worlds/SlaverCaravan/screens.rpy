@@ -89,7 +89,7 @@ screen sc_slavercaravan_sell_slaves(market):
         yfill True
         ysize 720
         xsize 1280
-        background '#C0FDFB'
+        background world.path('bg/action_sell_slave.png')
         vbox:
             for i in market.slaves:
                 hbox:
@@ -109,10 +109,14 @@ screen sc_slavercaravan_sell_slaves(market):
                     image im.Scale(market.selected.avatar, 200, 200)
                     text market.selected.name:
                         xalign 0.5
+                    vbox:
+                        xalign 0.5
+                        for value in market.selected.show_attributes().values():
+                            text value
                     text 'Price: %s' % market.price():
                         xalign 0.5
                     textbutton 'Sell':
-                        action Function(market.sell)
+                        action Function(market.sell), If(len(market.slaves < 1), Hide('sc_slavercaravan_sell_slaves'))
 
         textbutton 'Leave':
             xalign 1.0

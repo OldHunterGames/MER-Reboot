@@ -20,7 +20,7 @@ init 1 python:
         PLAYER = None
         SLAVE_GUT_FOOD = 5
         FOOD_TO_WIN = 100
-        MAX_DAYS = 30
+        MAX_DAYS = 90
 
         def get_event(self, loc=None):
             if loc is None:
@@ -45,7 +45,7 @@ init 1 python:
 
         def __init__(self, *args, **kwargs):
             super(SlaverCaravan, self).__init__(*args, **kwargs)
-            self.characters = list()
+            self.characters = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(50)]
             self.locations = Locations(world=self)
             self.food = 0
             self.day = 1
@@ -150,7 +150,7 @@ init 1 python:
             if self.attributes == 'all':
                 price = max(self.selected.attributes().values()) * self.multiplier
             else:
-                price = max([self.selected.attribute(i) for i in self.attributes])
+                price = max([self.selected.attribute(i) for i in self.attributes]) * self.multiplier
             if price <= 0:
                 price = self.world.SLAVE_GUT_FOOD
             else:
@@ -325,7 +325,7 @@ label lbl_slavercaravan_brothel_city(world):
         $ text = loc.random_text('entry_text')
         menu:
             "[text]"
-            'Sell slaves':
+            'Sell slaves' if len(world.characters) > 0:
                 if len(world.get_slaves('female')) > 0:
                     $ SlaverMarket(world.get_slaves('female'), world, 3).show()
                 else:
@@ -350,7 +350,7 @@ label lbl_slavercaravan_market_city(world):
         $ text = loc.random_text('entry_text')
         menu:
             "[text]"
-            'Sell slaves':
+            'Sell slaves' if len(world.characters) > 0:
                 if len(world.get_slaves()) > 0:
                     $ SlaverMarket(world.get_slaves(), world, 2).show()
                 else:
@@ -375,7 +375,7 @@ label lbl_slavercaravan_amazon_village(world):
         $ text = loc.random_text('entry_text')
         menu:
             "[text]"
-            'Sell slaves':
+            'Sell slaves' if len(world.characters) > 0:
                 if len(world.get_slaves('male')) > 0:
                     $ SlaverMarket(world.get_slaves('male'), world, 3).show()
                 else:
@@ -400,7 +400,7 @@ label lbl_slavercaravan_sawmill_city(world):
         $ text = loc.random_text('entry_text')
         menu:
             "[text]"
-            'Sell slaves':
+            'Sell slaves' if len(world.characters) > 0:
                 if len(world.get_slaves()) > 0:
                     $ SlaverMarket(world.get_slaves(), world, 5, ['might']).show()
                 else:
@@ -425,7 +425,7 @@ label lbl_slavercaravan_artisan_city(world):
         $ text = loc.random_text('entry_text')
         menu:
             "[text]"
-            'Sell slaves':
+            'Sell slaves' if len(world.characters) > 0:
                 if len(world.get_slaves()) > 0:
                     $ SlaverMarket(world.get_slaves(), world, 5, ['competence']).call()
                 else:
@@ -450,7 +450,7 @@ label lbl_slavercaravan_rich_city(world):
         $ text = loc.random_text('entry_text')
         menu:
             "[text]"
-            'Sell slaves':
+            'Sell slaves' if len(world.characters) > 0:
                 if len(world.get_slaves()) > 0:
                     $ SlaverMarket(world.get_slaves(), world, 5, ['charisma', 'subtlety']).show()
                 else:
@@ -485,6 +485,10 @@ label lbl_slavercaravan_wildness(world):
                         slave = random.choice(slaves)
                         if slave is None:
                             renpy.say(None, 'Just an old trail...')
+                            if loc.tries > 1:
+                                choice = renpy.display_menu(
+                                    [('Try again', 'try')]
+                                )   
                             loc.tries -= 1
                             continue
                         items = world.player.items('enslave')
@@ -496,6 +500,9 @@ label lbl_slavercaravan_wildness(world):
                             break
                         else:
                             loc.tries -= 1
+                    renpy.display_menu(
+                        [('End of the day', 'end')]
+                    )
                     world.halt = True
 
             'Setup a camp':
