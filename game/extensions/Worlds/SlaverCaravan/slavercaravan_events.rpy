@@ -14,7 +14,7 @@ label lbl_slavercaravan_event_fruittree(world):
             'You got 3 days worth of food'
             $ world.food += 3
         'Make yourself a small feast':
-            'The ripe fruits are good addition to meat and dry iron-rations. Your stste is better now.'
+            'The ripe fruits are good addition to meat and dry iron-rations. Your state is better now.'
             $ world.player.state += 1
         'Let it be':
             "You just pass by the tree."

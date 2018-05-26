@@ -274,10 +274,10 @@ label lbl_slavercaravan_road(world):
     return
 
 label lbl_slavercaravan_halt(world):
-    'You have some time before night falls.'
     $ world.halt = True
     while world.halt:
         menu:
+            'You have some time before night falls.'
             'Go to sleep':
                 $ world.halt = False
                 $ world.skip_turn()
@@ -332,7 +332,7 @@ label lbl_slavercaravan_brothel_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Go for halt':
+            'Rent a room':
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -382,7 +382,7 @@ label lbl_slavercaravan_amazon_village(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Rent inn':
+            'Rent a room':
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -407,7 +407,7 @@ label lbl_slavercaravan_sawmill_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Rent inn':
+            'Rent a room':
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -457,7 +457,7 @@ label lbl_slavercaravan_rich_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Reny inn':
+            'Reny a room':
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
