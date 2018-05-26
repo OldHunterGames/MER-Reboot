@@ -359,6 +359,17 @@ class SlaverCaravanPerson(object):
         self.applied_item = None
         self._items = Counter()
         self._state = 5
+        self._statuses = set()
+    
+    def has_status(self, value):
+        return value in self._statuses
+    
+    def add_status(self, value):
+        self._statuses.add(value)
+    
+    def remove_status(self, value):
+        if self.has_status(value):
+            self._statuses.remove(value)
     
     @property
     def state(self):

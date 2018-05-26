@@ -160,6 +160,12 @@ screen sc_slavercaravan_slaves(manager):
                                 text value
                         textbutton 'Butcher for food':
                             action Function(manager.make_food)
+                        if manager.can_rape():
+                            textbutton 'Rape':
+                                action Function(manager.rape)
+                        if manager.can_tame():
+                            textbutton 'Tame':
+                                action Function(manager.tame)
                     vbox:
                         text manager.selected.gender
                         text 'escape chance: %s' % manager.escape_chance():

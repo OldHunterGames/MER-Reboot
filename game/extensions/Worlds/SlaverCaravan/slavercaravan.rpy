@@ -45,11 +45,12 @@ init 1 python:
 
         def __init__(self, *args, **kwargs):
             super(SlaverCaravan, self).__init__(*args, **kwargs)
-            self.characters = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(50)]
+            self.characters = list()
             self.locations = Locations(world=self)
             self.food = 0
             self.day = 1
             self.halt = False
+            self.is_at_halt = False
 
         def entry_label(self):
             return 'lbl_slavercaravan'
@@ -148,9 +149,14 @@ init 1 python:
 
         def price(self):
             if self.attributes == 'all':
-                price = max(self.selected.attributes().values()) * self.multiplier
+                price = max(self.selected.attributes().values())
             else:
-                price = max([self.selected.attribute(i) for i in self.attributes]) * self.multiplier
+                price = max([self.selected.attribute(i) for i in self.attributes])
+            if self.selected.has_status('tamed'):
+                price += 1
+            price *= self.multiplier
+            if self.selected.has_status('wounded'):
+                price = int(price/2)
             if price <= 0:
                 price = self.world.SLAVE_GUT_FOOD
             else:
@@ -187,6 +193,20 @@ init 1 python:
             self.slaves.remove(self.selected)
             self.world.food += self.world.SLAVE_GUT_FOOD
             self.selected = None
+        
+        def tame(self):
+            self.selected.add_status('tamed')
+        
+        def rape(self):
+            self.selected.add_status('wounded')
+            self.world.player.state += 1
+        
+        def can_tame(self):
+            status_check =self.selected.has_status('wounded') or self.selected.has_status('tamed')
+            return not status_check and self.world.is_at_halt
+
+        def can_rape(self):
+            return not self.selected.has_status('wounded') and self.world.is_at_halt
 
         def show(self):
             return renpy.show_screen('sc_slavercaravan_slaves', manager=self)
@@ -275,11 +295,13 @@ label lbl_slavercaravan_road(world):
 
 label lbl_slavercaravan_halt(world):
     $ world.halt = True
+    $ world.is_at_halt = True
     while world.halt:
         menu:
             'You have some time before night falls.'
             'Go to sleep':
                 $ world.halt = False
+                $ world.is_at_halt = False
                 $ world.skip_turn()
             'Pray to archon':
                 $ renpy.call_in_new_context('lbl_pray_archon', world=world)
