@@ -193,14 +193,14 @@ init 1 python:
             self.slaves.remove(self.selected)
             self.world.food += self.world.SLAVE_GUT_FOOD
             self.selected = None
-        
+
         def tame(self):
             self.selected.add_status('tamed')
-        
+
         def rape(self):
             self.selected.add_status('wounded')
             self.world.player.state += 1
-        
+
         def can_tame(self):
             status_check =self.selected.has_status('wounded') or self.selected.has_status('tamed')
             return not status_check and self.world.is_at_halt
@@ -246,7 +246,7 @@ label lbl_slavercaravan(world):
     menu:
         "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
         "How can I please you?":
-            "Make a hundred food before month get old and I'll make you my apostole."
+            "Make a hundred food before the summer passes (90 days) and I'll make you my apostole."
             call lbl_slavercaravan(world)
         "Let me in":
             call lbl_slavercaravan_main(world)
@@ -355,6 +355,7 @@ label lbl_slavercaravan_brothel_city(world):
             'Buy items':
                 call lbl_buy_item(world)
             'Rent a room':
+                $ world.player.state += 1 
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -379,7 +380,8 @@ label lbl_slavercaravan_market_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Rent inn':
+            'Rent a room':
+                $ world.player.state += 1
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -405,6 +407,7 @@ label lbl_slavercaravan_amazon_village(world):
             'Buy items':
                 call lbl_buy_item(world)
             'Rent a room':
+                $ world.player.state += 1
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -430,6 +433,7 @@ label lbl_slavercaravan_sawmill_city(world):
             'Buy items':
                 call lbl_buy_item(world)
             'Rent a room':
+                $ world.player.state += 1
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -479,7 +483,8 @@ label lbl_slavercaravan_rich_city(world):
                     $ pass
             'Buy items':
                 call lbl_buy_item(world)
-            'Reny a room':
+            'Rent a room':
+                $ world.player.state += 1
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
@@ -510,7 +515,7 @@ label lbl_slavercaravan_wildness(world):
                             if loc.tries > 1:
                                 choice = renpy.display_menu(
                                     [('Try again', 'try')]
-                                )   
+                                )
                             loc.tries -= 1
                             continue
                         items = world.player.items('enslave')
