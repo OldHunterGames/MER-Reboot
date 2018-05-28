@@ -214,10 +214,10 @@ init 1 python:
         
         def can_tame(self):
             status_check =self.selected.has_status('wounded') or self.selected.has_status('tamed')
-            return not status_check and self.world.is_at_halt and not self.halt_acted
+            return not status_check and self.world.is_at_halt and not self.world.halt_acted
 
         def can_rape(self):
-            return not self.selected.has_status('wounded') and self.world.is_at_halt and not self.halt_acted
+            return not self.selected.has_status('wounded') and self.world.is_at_halt and not self.world.halt_acted
 
         def can_make_food(self):
             return not self.world.halt_acted and self.world.is_at_halt
@@ -535,7 +535,7 @@ label lbl_slavercaravan_wildness(world):
                             break
                         else:
                             loc.tries -= 1
-                    if slave is not None or catch.catched:
+                    if slave is not None and not catch.catched:
                         renpy.display_menu(
                             [('End of the day', 'end')]
                         )

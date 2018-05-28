@@ -114,7 +114,7 @@ screen sc_slavercaravan_sell_slaves(market):
                         for value in market.selected.show_attributes().values():
                             text value
                         for value in market.selected.statuses():
-                            text i
+                            text value
                     text 'Price: %s' % market.price():
                         xalign 0.5
                     textbutton 'Sell':
@@ -161,7 +161,7 @@ screen sc_slavercaravan_slaves(manager):
                             for value in manager.selected.show_attributes().values():
                                 text value
                             for value in manager.selected.statuses():
-                                text i
+                                text value
                         if manager.can_make_food():
                             textbutton 'Butcher for food':
                                 action Function(manager.make_food)
