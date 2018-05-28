@@ -28,7 +28,7 @@ screen sc_slavercaravan_stats(world):
 
             text 'Food: %s' % world.food color '#ffffff'
             text 'Day: %s' % world.day color '#ffffff'
-            text 'State: %s' % world.player.state color '#ffffff'
+            text 'State: %s' % world.player.state color value_color(world.player.state)
             vbox:
                 for value in world.player.show_attributes().values():
                     text value
@@ -113,6 +113,8 @@ screen sc_slavercaravan_sell_slaves(market):
                         xalign 0.5
                         for value in market.selected.show_attributes().values():
                             text value
+                        for value in market.selected.statuses():
+                            text i
                     text 'Price: %s' % market.price():
                         xalign 0.5
                     textbutton 'Sell':
@@ -158,8 +160,11 @@ screen sc_slavercaravan_slaves(manager):
                             xalign 0.5
                             for value in manager.selected.show_attributes().values():
                                 text value
-                        textbutton 'Butcher for food':
-                            action Function(manager.make_food)
+                            for value in manager.selected.statuses():
+                                text i
+                        if manager.can_make_food():
+                            textbutton 'Butcher for food':
+                                action Function(manager.make_food)
                         if manager.can_rape():
                             textbutton 'Rape':
                                 action Function(manager.rape)

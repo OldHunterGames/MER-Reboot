@@ -62,7 +62,7 @@ screen sc_cis(info, relations=None):
                 if not person.is_successor(player) and not player.is_successor(person):
                     textbutton 'Challenge' action Function(SuccessorChallenge(person, player).run)
             if controlled:
-                textbutton 'Ensibles':
+                textbutton 'Ensembles':
                     action Function(EnsembleMaker(person).show)
             textbutton "Leave" action Hide('sc_cis')
         vbox:
