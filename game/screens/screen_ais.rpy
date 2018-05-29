@@ -48,5 +48,7 @@ screen sc_ais(info):
         if apostol is not None:
             vbox:
                 xalign 1.0
-                image im.Scale(apostol.avatar, 200, 200)
+                imagebutton:
+                    idle im.Scale(apostol.avatar, 200, 200)
+                    action Function(CharacterInfoScreen(apostol).show)
                 text apostol.firstname

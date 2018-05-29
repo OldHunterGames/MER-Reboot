@@ -51,6 +51,10 @@ init 1 python:
             self.day = 1
             self.halt = False
             self.is_at_halt = False
+            self.halt_acted = False
+        
+        def critical_state_callback(self, person):
+            renpy.call_in_new_context('lbl_slavercaravan_critialstate', world=self, person=person)
 
         def entry_label(self):
             return 'lbl_slavercaravan'
@@ -62,6 +66,7 @@ init 1 python:
             if getattr(SlaverCaravan, 'PLAYER', None) is None:
                 self.player = SlaverCaravanPersonMaker.make_person(person)
                 SlaverCaravan.PLAYER = self.player
+                self.player.add_event('critical_state', self.critical_state_callback)
             else:
                 self.player = SlaverCaravan.PLAYER
 
@@ -84,6 +89,7 @@ init 1 python:
                 self.player.state -= 1
                 self.characters = list()
             self.day += 1
+            self.halt_acted = False
             if self.day > self.MAX_DAYS:
                 renpy.call_in_new_context('lbl_slavercaravan_archon_end_screen', world=self, condition='loose')
 
@@ -193,6 +199,7 @@ init 1 python:
             self.slaves.remove(self.selected)
             self.world.food += self.world.SLAVE_GUT_FOOD
             self.selected = None
+<<<<<<< HEAD
 
         def tame(self):
             self.selected.add_status('tamed')
@@ -201,13 +208,30 @@ init 1 python:
             self.selected.add_status('wounded')
             self.world.player.state += 1
 
+=======
+            self.world.halt_acted = True
+        
+        def tame(self):
+            self.selected.add_status('tamed')
+            self.world.halt_acted = True
+            renpy.call_in_new_context('lbl_slavercaravan_tame', world=self.world, target=self.selected)
+        
+        def rape(self):
+            self.selected.add_status('wounded')
+            self.world.player.state += 1
+            self.world.halt_acted = True
+            renpy.call_in_new_context('lbl_slavercaravan_rape', world=self.world, target=self.selected)
+        
+>>>>>>> master
         def can_tame(self):
             status_check =self.selected.has_status('wounded') or self.selected.has_status('tamed')
-            return not status_check and self.world.is_at_halt
+            return not status_check and self.world.is_at_halt and not self.world.halt_acted
 
         def can_rape(self):
-            return not self.selected.has_status('wounded') and self.world.is_at_halt
+            return not self.selected.has_status('wounded') and self.world.is_at_halt and not self.world.halt_acted
 
+        def can_make_food(self):
+            return not self.world.halt_acted and self.world.is_at_halt
         def show(self):
             return renpy.show_screen('sc_slavercaravan_slaves', manager=self)
 
@@ -453,7 +477,7 @@ label lbl_slavercaravan_artisan_city(world):
             "[text]"
             'Sell slaves' if len(world.characters) > 0:
                 if len(world.get_slaves()) > 0:
-                    $ SlaverMarket(world.get_slaves(), world, 5, ['competence']).call()
+                    $ SlaverMarket(world.get_slaves(), world, 5, ['competence']).show()
                 else:
                     $ pass
             'Buy items':
@@ -527,9 +551,10 @@ label lbl_slavercaravan_wildness(world):
                             break
                         else:
                             loc.tries -= 1
-                    renpy.display_menu(
-                        [('End of the day', 'end')]
-                    )
+                    if slave is not None and not catch.catched:
+                        renpy.display_menu(
+                            [('End of the day', 'end')]
+                        )
                     world.halt = True
 
             'Setup a camp':
@@ -569,4 +594,13 @@ label lbl_slavercaravan_archon_end_screen(world, condition):
     elif condition == 'loose':
         world.archon 'You loose'
     $ world.leave()
+    return
+
+label lbl_slavercaravan_tame(world, target):
+    return
+
+label lbl_slavercaravan_rape(world, target):
+    return
+
+label lbl_slavercaravan_critialstate(world, person):
     return

@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import random
 import copy
-from collections import Counter
+from collections import Counter, defaultdict
 import renpy.store as store
 import renpy.exports as renpy
 from mer_utilities import encolor_text
@@ -360,6 +360,16 @@ class SlaverCaravanPerson(object):
         self._items = Counter()
         self._state = 5
         self._statuses = set()
+        self._events = defaultdict(list)
+    
+    def add_event(self, id, func):
+        self._events[id].append(func)
+    
+    def remove_event(self, id, func):
+        try:
+            self._events[id].remove(func)
+        except ValueError:
+            pass
     
     def has_status(self, value):
         return value in self._statuses
@@ -371,6 +381,9 @@ class SlaverCaravanPerson(object):
         if self.has_status(value):
             self._statuses.remove(value)
     
+    def statuses(self):
+        return [i for i in self._statuses]
+    
     @property
     def state(self):
         return self._state
@@ -378,6 +391,9 @@ class SlaverCaravanPerson(object):
     @state.setter
     def state(self, value):
         self._state = max(-1, min(5, value))
+        if self._state < 2:
+            for func in self._events['critical_state']:
+                func(self)
         if self._state <= 0:
             renpy.call_in_new_context('lbl_slavercaravan_gameover')
     
