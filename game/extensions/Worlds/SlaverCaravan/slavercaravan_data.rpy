@@ -107,7 +107,7 @@ init python:
             ],
             'texts': {
                 'entry_text': [
-                    "In sawmill city you can sell any slave for 5x of it's might",
+                    "In sawmill city you can sell any slave for 5x of it's hardyness",
                 ]
             }
         },
@@ -118,7 +118,7 @@ init python:
                 'bg/town_mines01.png',
                 'bg/town_mines02.png',
             ],
-            'texts': {            
+            'texts': {
                 'entry_text': [
                     "In artisan city you can sell any slave for 5x of it's competence",
                 ]

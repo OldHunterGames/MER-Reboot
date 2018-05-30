@@ -52,7 +52,7 @@ init 1 python:
             self.halt = False
             self.is_at_halt = False
             self.halt_acted = False
-        
+
         def critical_state_callback(self, person):
             renpy.call_in_new_context('lbl_slavercaravan_critialstate', world=self, person=person)
 
@@ -199,30 +199,18 @@ init 1 python:
             self.slaves.remove(self.selected)
             self.world.food += self.world.SLAVE_GUT_FOOD
             self.selected = None
-<<<<<<< HEAD
 
-        def tame(self):
-            self.selected.add_status('tamed')
-
-        def rape(self):
-            self.selected.add_status('wounded')
-            self.world.player.state += 1
-
-=======
-            self.world.halt_acted = True
-        
         def tame(self):
             self.selected.add_status('tamed')
             self.world.halt_acted = True
             renpy.call_in_new_context('lbl_slavercaravan_tame', world=self.world, target=self.selected)
-        
+
         def rape(self):
             self.selected.add_status('wounded')
             self.world.player.state += 1
             self.world.halt_acted = True
             renpy.call_in_new_context('lbl_slavercaravan_rape', world=self.world, target=self.selected)
-        
->>>>>>> master
+
         def can_tame(self):
             status_check =self.selected.has_status('wounded') or self.selected.has_status('tamed')
             return not status_check and self.world.is_at_halt and not self.world.halt_acted
@@ -379,7 +367,7 @@ label lbl_slavercaravan_brothel_city(world):
             'Buy items':
                 call lbl_buy_item(world)
             'Rent a room':
-                $ world.player.state += 1 
+                $ world.player.state += 1
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
             'Leave' if not world.halt:
