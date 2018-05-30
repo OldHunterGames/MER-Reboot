@@ -118,7 +118,7 @@ screen sc_slavercaravan_sell_slaves(market):
                     text 'Price: %s' % market.price():
                         xalign 0.5
                     textbutton 'Sell':
-                        action Function(market.sell), If(len(market.slaves < 1), Hide('sc_slavercaravan_sell_slaves'))
+                        action Function(market.sell), If(len(market.slaves) < 1, Hide('sc_slavercaravan_sell_slaves'))
 
         textbutton 'Leave':
             xalign 1.0
