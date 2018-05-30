@@ -80,7 +80,7 @@ screen sc_cis(info, relations=None):
                         textbutton i.name:
                             text_color value_color(i.level())
                             text_hover_color '#EFF0D1'
-                            action Function(AngelInfoScreen(i).show)
+                            action Function(AngelInfoScreen(i, show_world_btn=True).show)
         vbox:
             xpos 410
             text 'Sonm'
@@ -95,5 +95,5 @@ screen sc_cis(info, relations=None):
                         textbutton i.name:
                             text_color value_color(i.level())
                             text_hover_color '#EFF0D1'
-                            action Function(AngelInfoScreen(i).show)
+                            action Function(AngelInfoScreen(i, show_world_btn=True).show)
                     
