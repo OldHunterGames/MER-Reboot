@@ -51,7 +51,8 @@ screen sc_cis(info, relations=None):
             text 'Income: %s' % core.calc_income(person):
                 xalign 0.5
             if Hierarchy(person).get_patron() is not None:
-                text 'Patron: %s' % Hierarchy(person).get_patron().firstname
+                textbutton 'Patron: %s' % Hierarchy(person).get_patron().firstname:
+                    action Function(CharacterInfoScreen(Hierarchy(person).get_patron()).show)
             if len(Hierarchy(person).get_clientelas()) > 0:
                 textbutton 'Clientelas':
                     action Function(ContactsInfo(Hierarchy(person).get_clientelas()).show)
