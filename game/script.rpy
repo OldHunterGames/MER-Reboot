@@ -42,8 +42,7 @@ label lbl_main:
         'Travel to outer worlds':
             python:
                 angel = AngelMaker.gen_archon()
-                MistTravel(angel.world, player).run()
-                core.skip_turn()
+                MistTravel(angel.world, player, core).run()
 
     return
 

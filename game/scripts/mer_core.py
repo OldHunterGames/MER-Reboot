@@ -140,12 +140,14 @@ class DummyWorld(World):
 class MistTravel(object):
 
 
-    def __init__(self, world, visitor):
+    def __init__(self, world, visitor, core):
         self.world = world
         self.visitor = visitor
+        self.core = core
     
     def run(self):
         self.world.visit(self.visitor)
+        self.core.skip_turn()
 
 
 class Hierarchy(object):
