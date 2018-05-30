@@ -1,7 +1,7 @@
 ## Slaver's caravan quest
 
-python:
-    quest = ['beggar', 'donation', 'virgin', 'bunch', 'perfect']
+init python:
+    slavercaravan_quests = ['beggar', 'donation', 'virgin', 'bunch', 'perfect']
 
 label lbl_slavercaravan_quest_beggar(world):
 

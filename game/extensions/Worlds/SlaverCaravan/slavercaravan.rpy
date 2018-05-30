@@ -16,6 +16,9 @@ init 1 python:
     for key, value in slavercaravan_items.items():
         Item.register_item(key, Item(key, value))
 
+    for key in slavercaravan_quests:
+        SlaverCaravanQuest.register_quest(key, SlaverCaravanQuest(key))
+
     class SlaverCaravan(World):
         PLAYER = None
         SLAVE_GUT_FOOD = 5
@@ -46,7 +49,7 @@ init 1 python:
         def __init__(self, *args, **kwargs):
             super(SlaverCaravan, self).__init__(*args, **kwargs)
             self.characters = list()
-            self.locations = Locations(world=self)
+            self.locations = Locations(world=self, quests=SlaverCaravanQuest.get_quests())
             self.food = 0
             self.day = 1
             self.halt = False
@@ -372,6 +375,8 @@ label lbl_slavercaravan_brothel_city(world):
                 $ world.player.state += 1
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
+            'Quest' if loc.quest is not None:
+                $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
                 call lbl_slavercaravan_change_location(world)
                 return
@@ -398,6 +403,8 @@ label lbl_slavercaravan_market_city(world):
                 $ world.player.state += 1
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
+            'Quest' if loc.quest is not None:
+                $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
                 call lbl_slavercaravan_change_location(world)
                 return
@@ -424,6 +431,8 @@ label lbl_slavercaravan_amazon_village(world):
                 $ world.player.state += 1
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
+            'Quest' if loc.quest is not None:
+                $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
                 call lbl_slavercaravan_change_location(world)
                 return
@@ -450,6 +459,8 @@ label lbl_slavercaravan_sawmill_city(world):
                 $ world.player.state += 1
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
+            'Quest' if loc.quest is not None:
+                $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
                 call lbl_slavercaravan_change_location(world)
                 return
@@ -475,6 +486,8 @@ label lbl_slavercaravan_artisan_city(world):
             'Rent a room':
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
+            'Quest' if loc.quest is not None:
+                $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
                 call lbl_slavercaravan_change_location(world)
                 return
@@ -501,6 +514,8 @@ label lbl_slavercaravan_rich_city(world):
                 $ world.player.state += 1
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world)
+            'Quest' if loc.quest is not None:
+                $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
                 call lbl_slavercaravan_change_location(world)
                 return

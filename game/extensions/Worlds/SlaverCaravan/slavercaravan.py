@@ -7,6 +7,25 @@ import renpy.exports as renpy
 from mer_utilities import encolor_text
 
 
+class SlaverCaravanQuest(object):
+
+    QUESTS = dict()
+
+    def __init__(self, id):
+        self.id = id
+
+    @classmethod
+    def register_quest(cls, id, quest):
+        cls.QUESTS[id] = quest
+
+    @classmethod
+    def get_quests(cls):
+        return [i for i in cls.QUESTS.values()]
+
+    def label(self):
+        return 'lbl_slavercaravan_quest_' + self.id
+
+
 class Location(object):
     
     def __init__(self, data):
@@ -50,6 +69,7 @@ class Locations(object):
         self.current = 0
         self.city_names = copy.copy(store.slavercaravan_town_names)
         self._world = kwargs.get('world')
+        self.quests_pool = kwargs.get('quests')
         self._generate_locations()
         
     
@@ -177,6 +197,8 @@ class Locations(object):
         img = self._world.path(img)
         loc = Location(data)
         loc.image = img
+        loc.quest = random.choice(self.quests_pool)
+        self.quests_pool.remove(loc.quest)
         return loc
     
     def gen_road(self):
