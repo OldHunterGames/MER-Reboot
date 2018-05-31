@@ -33,7 +33,7 @@ screen sc_ais(info):
                     sensitive (player.sparks >= angel.apostol_cost())
             if angel.kanonarch is not None:
                 textbutton 'Kanonarch: %s' % angel.kanonarch.name:
-                    action Function(AngelInfoScreen(angel.kanonrach, show_world_btn=True).show)
+                    action Function(AngelInfoScreen(angel.kanonarch, show_world_btn=True).show)
             textbutton "Leave" action Hide('sc_ais')
 
         vbox:
