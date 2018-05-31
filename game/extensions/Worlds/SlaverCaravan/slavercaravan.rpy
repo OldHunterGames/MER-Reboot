@@ -55,7 +55,6 @@ init 1 python:
             self.halt = False
             self.is_at_halt = False
             self.halt_acted = False
-            self.quests_completed = 0
 
         def critical_state_callback(self, person):
             renpy.call_in_new_context('lbl_slavercaravan_critialstate', world=self, person=person)
@@ -82,8 +81,8 @@ init 1 python:
             self.halt = True
             self.locations.current = pos
 
-        def skip_turn(self, slave_escape=True):
-            if self.locations.current_location().type() != 'city' and self.slave_escape:
+        def skip_turn(self):
+            if self.locations.current_location().type() != 'city':
                 self.slave_escape()
             for i in self.characters:
                 self.food -= i.applied_item.food_consumption(1)
@@ -270,6 +269,8 @@ label lbl_slavercaravan(world):
             call lbl_slavercaravan_main(world)
         "I'll return to Eternal Rome":
             $ pass
+        "(DEBUG) Synchronise":
+            $ world.sync()
     return
 
 label lbl_pray_archon(world):
@@ -321,6 +322,12 @@ label lbl_slavercaravan_halt(world):
                 $ world.halt = False
                 $ world.is_at_halt = False
                 $ world.skip_turn()
+            '{color=#0000ffff}(State > 1){/color} Guard slaves' if world.player.state > 1:
+                "Your vigilant guard guarentees no slaves escaped. But your state is harmed by sleep deprevation {color=#f00}(state drops){/color}"
+                $ world.player.state -= 1
+                $ world.halt = False
+                $ world.is_at_halt = False
+                $ world.skip_turn(slave_escape=False)
             'Pray to archon':
                 $ renpy.call_in_new_context('lbl_pray_archon', world=world)
 

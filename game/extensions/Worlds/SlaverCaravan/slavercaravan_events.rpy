@@ -14,7 +14,7 @@ label lbl_slavercaravan_event_fruittree(world):
             'You got 3 days worth of food'
             $ world.food += 3
         'Make yourself a small feast':
-            'The ripe fruits are good addition to meat and dry iron-rations. Your state is better now.'
+            'The ripe fruits are good addition to meat and dry iron-rations. Your {color=#00ff00}state is better{/color} now.'
             $ world.player.state += 1
         'Let it be':
             "You just pass by the tree."
@@ -28,7 +28,7 @@ label lbl_slavercaravan_event_bandits(world):
         'Run':
             "You run away from thugs, and your slaves run away from you!"
             $ world.slaves_escape()
-        '{color=#0000ffff}(State > 0){/color} Fend them off' if world.player.state > 0:
+        '{color=#0000ffff}(State > 1){/color} Fend them off' if world.player.state > 1:
             'Your fight fierecly and babdits run away, leaving you with a fresh wound {color=#f00}(state drops){/color}'
             $ world.player.state -= 1
 
