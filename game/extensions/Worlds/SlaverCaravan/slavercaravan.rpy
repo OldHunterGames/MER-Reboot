@@ -55,6 +55,7 @@ init 1 python:
             self.halt = False
             self.is_at_halt = False
             self.halt_acted = False
+            self.quests_completed = 0
 
         def critical_state_callback(self, person):
             renpy.call_in_new_context('lbl_slavercaravan_critialstate', world=self, person=person)
