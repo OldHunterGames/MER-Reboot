@@ -26,7 +26,7 @@ screen sc_ais(info):
             text 'Income: %s' % angel.produce_sparks()
             if angel.world is not None and player in angel.get_witnesses(Hierarchy) and info.show_world_btn:
                 textbutton 'Visit world':
-                    action Function(MistTravel(angel.world, player, core).run)
+                    action Function(MistTravel(angel.world, player, core).run), Hide('sc_ais')
             if angel.can_be_apostol(player) and angel.level() > 2:
                 textbutton 'Become apostol(%s sparks)' % angel.apostol_cost():
                     action Function(SetAngelApostol(angel, player).run)
