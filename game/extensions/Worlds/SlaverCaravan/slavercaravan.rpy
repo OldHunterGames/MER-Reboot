@@ -112,7 +112,7 @@ init 1 python:
         def escape_chance(self, person):
             value = max(person.attributes().values())
             value = int(person.applied_item.escape_chance(value))
-            if person.has_state('tamed'):
+            if person.has_status('tamed'):
                 value -= 1
             return ['escape' for i in range(value)]
 

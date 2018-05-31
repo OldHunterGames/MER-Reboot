@@ -13,7 +13,7 @@ init python:
             self.selected = None
 
         def show(self):
-            return renpy.call_in_new_context('_sc_contacts', info=self)
+            return renpy.show_screen('sc_contacts', info=self)
 
         def select(self, person):
             self.selected = person
@@ -23,6 +23,9 @@ label _sc_contacts(info):
 
 screen sc_contacts(info):
     $ persons = info.persons
+    tag info
+    modal True
+    zorder 10
     window:
         style 'char_info_window'
         frame:
@@ -58,7 +61,7 @@ screen sc_contacts(info):
                 style 'mer_bg'
                 xsize 900
                 yfill True
-                textbutton "Leave" xalign 1.0 yalign 1.0 action Return()
+                textbutton "Leave" xalign 1.0 yalign 1.0 action Hide('sc_contacts')
                 if info.selected is not None:
                     $ person = info.selected
                     vbox:
