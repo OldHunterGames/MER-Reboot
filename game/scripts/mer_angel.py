@@ -121,7 +121,7 @@ class CoreAngel(object):
     def apostol_cost(self):
         if self.level() == 2:
             return len(self.get_witnesses())
-        return store.ensemble_costs[len(self.ensemble)] * store.ensemble_multiplier[self.level()]
+        return store.ensemble_costs[len(self.ensemble)] * store.ensemble_multipliers[self.level()]
 
     def get_witnesses(self, hierarchy=Hierarchy):
         witnesses = [i for i in self._witnesses]

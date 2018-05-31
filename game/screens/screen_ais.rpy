@@ -41,7 +41,7 @@ screen sc_ais(info):
                     textbutton i.name:
                         text_color value_color(i.level())
                         text_hover_color '#EFF0D1'
-                        action Function(AngelInfoScreen(i).show)
+                        action Function(AngelInfoScreen(i, show_world_btn=True).show)
                 if angel.apostol == player:
                     textbutton 'Extend ensemble':
                         action Function(EnsembleMaker(angel.apostol, angel).show)
