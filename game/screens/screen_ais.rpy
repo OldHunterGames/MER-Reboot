@@ -31,6 +31,9 @@ screen sc_ais(info):
                 textbutton 'Become apostol(%s sparks)' % angel.apostol_cost():
                     action Function(SetAngelApostol(angel, player).run)
                     sensitive (player.sparks >= angel.apostol_cost())
+            if angel.kanonarch is not None:
+                textbutton 'Kanonarch: %s' % angel.kanonarch.name:
+                    action Function(AngelInfoScreen(angel.kanonrach, show_world_btn=True).show)
             textbutton "Leave" action Hide('sc_ais')
 
         vbox:
