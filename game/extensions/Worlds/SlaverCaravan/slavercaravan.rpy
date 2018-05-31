@@ -260,8 +260,8 @@ label lbl_slavercaravan_gameover():
 
 label lbl_slavercaravan(world):
     show expression world.path('bg/archon.png') as bg
+    "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
     menu:
-        "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
         "How can I please you?":
             "Make a hundred food before the summer passes (90 days) and I'll make you my apostole."
             call lbl_slavercaravan(world)
