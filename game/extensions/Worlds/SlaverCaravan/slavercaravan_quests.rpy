@@ -9,6 +9,7 @@ label lbl_slavercaravan_quest_beggar(world):
         "Give some" if world.food > 0:
             $ world.food -= 1
         "Give all you have" if world.food > 5:
+            "Beggar will pray for you. {color=#00ff00}Archon is pleased{/color}"
             $ world.food = 0
             $ world.quests_completed += 1
             $ world.current_location.quest = None
@@ -40,9 +41,49 @@ label lbl_slavercaravan_quest_donation(world):
     return
 
 label lbl_slavercaravan_quest_virgin(world):
-    "Virgin quest done"
-    $ world.quests_completed += 1
-    $ world.current_location.quest = None
+    image listvennik = 'extensions/Worlds/SlaverCaravan/character/oleysha.png'
+    image whore = 'extensions/Worlds/SlaverCaravan/character/oldwhore.png'
+    define listvennik = Character('Skinny Boy', color="#c8ffc8")
+    define whore = Character('Old Whore', color="#800000")
+    "Passing by the street you hear an angry woman voice in a dark alley."
+    show whore at left with dissolve
+    show listvennik at right with dissolve
+    whore "You are disgusting little brat. How dare you!"
+    listvennik "S-sury m'eam, b-but you are... um... the p-pr..."
+    whore "Who I am?"
+    listvennik "Uh. I mean y-you do it... with a man... f-for a money"
+    whore "WHAAAAT? You dare to call me a whore?!"
+    whore "You are the miserable little bag of rotten semen. No woman in all the world will touch your wrinkled little snag! Not for all the money in the fucking world!!"
+    listvennik "B-but I putt off all my school breakfast money for a year to get 10 g.p. for you"
+    whore "You whant to defile such a noble whoman as me for a mere 10 g.p. Pff! It's just so insulting."
+    listvennik "B-but Yaroch-kun said you sucked him for a 1 g.p."
+    whore "SHUT UP, YOU MOTHERFUCKER!!!"
+    whore "Thats it. I'm calling a pimp and he will beat all the crap out of you!!"
+    listvennik "N-no! P-please... m'eam I'd never mean to offend you... please"
+    whore "Give me 5 g.p. and get the hell out of here."
+    listvennik "Yes, yes. Here you are."
+    whore "Now fuck off, you little weirdo!"
+    hide listvennik with moveoutright
+    "Whore stayed in the alley to count her ill gained gold, while a boy run off towards you..."
+    hide whore with dissolve
+    "This damn kid is running like crasy with a tears and his eyes. He is so distracted that he flew straight into you."
+    show listvennik at center with moveinright
+    show listvennik at center with vpunch
+    listvennik "Whaaaa.... It hurts... ouch..."
+    player "Mind you way!"
+    listvennik "Oh... I'm so sorry"
+    player "Hm. Just for lulz. What is your name?"
+    listvennik "I'm Aleosha."
+    player "So, Aleosha..."
+    menu:
+        "You can use this kid to your profit. He appears to used to be used anyway."
+        "I'm a pimp. Give me all your money":
+            listvennik "Oh now. Don't hurt me. This is all I have. 5 gold. Get it. Just don't hurt me, please!"
+            "You got 5 gold"
+        "Do quest":
+            "{color=#00ff00}Archon is pleased{/color}"
+            $ world.quests_completed += 1
+            $ world.current_location.quest = None
 
     return
 

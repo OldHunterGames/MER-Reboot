@@ -259,6 +259,7 @@ label lbl_slavercaravan_gameover():
     return
 
 label lbl_slavercaravan(world):
+    $ world.quests_completed = 0
     show expression world.path('bg/archon.png') as bg
     "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
     menu:
@@ -280,7 +281,7 @@ label lbl_pray_archon(world):
             "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
             "How can I please you?":
                 "Make a hundred food before month get old and I'll make you my apostole."
-            "Become apostol" if world.food >= 100:
+            "Become apostol" if world.quests_completed > 2:
                 $ world.sync()
             "I'll return to Eternal Rome":
                 $ world.leave()
