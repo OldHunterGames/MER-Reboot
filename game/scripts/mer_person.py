@@ -147,6 +147,7 @@ class CorePerson(object):
 
     @property
     def name(self):
+        return self.firstname
 
     def _set_renpy_char_name(self):
         self._renpy_character.name = self.firstname
