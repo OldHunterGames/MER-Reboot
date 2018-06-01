@@ -145,6 +145,8 @@ class CorePerson(object):
         self._firstname = value
         self._set_renpy_char_name()
 
+    @property
+    def name(self):
 
     def _set_renpy_char_name(self):
         self._renpy_character.name = self.firstname
@@ -157,6 +159,9 @@ class CorePerson(object):
     def say_phrase(self, phrase_id, default_value='No phrase'):
         phrase = self.get_phrase(phrase_id, default_value)
         self(phrase)
+
+    def say(self, what):
+        renpy.call_screen('sc_dialog', who=self, what=what)
 
     def predict(self, what):
         self._renpy_character.predict(what)
