@@ -491,3 +491,17 @@ class SlaverCaravanPerson(object):
     @property
     def gender(self):
         return self._wrapped_person.gender
+
+
+class SlaverCaravarFilter(object):
+
+    @staticmethod
+    def filter_by_gender(items, gender):
+        return [person for person in items if person.gender == gender]
+
+    @staticmethod
+    def filter_by_attribute(items, attr_value, attr='all'):
+        if attr == 'all':
+            return [person for person in items if any([value >= attr_value for value in person.attributes().values()])]
+        else:
+            return [person for person in items if person.attribute(attr) >= attr_value]
