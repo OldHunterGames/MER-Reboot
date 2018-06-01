@@ -183,7 +183,7 @@ screen sc_slavercaravan_slaves(manager):
             action Hide('sc_slavercaravan_slaves')
 
 
-screen sc_slavercaravan_catch_slave(manager=self):
+screen sc_slavercaravan_catch_slave(manager):
     modal True
     zorder 10
     window:
@@ -215,3 +215,45 @@ screen sc_slavercaravan_catch_slave(manager=self):
                     text slave.gender
                     for value in manager.slave.show_attributes().values():
                         text value
+
+
+screen sc_slavercaravan_pick_slave(manager):
+    modal True
+    zorder 10
+    window:
+        xfill True
+        yfill True
+        ysize 720
+        xsize 1280
+        background '#C0FDFB'
+        vbox:
+            for i in manager.slaves:
+                hbox:
+                    spacing 5
+                    xmaximum 350
+                    image im.Scale(i.avatar, 32, 32)
+                    textbutton i.name:
+                        action Function(manager.select, i)
+                        selected manager.selected == i
+
+        if manager.selected is not None:
+            frame:
+                xalign 0.5
+                xsize 500
+                ysize 720
+                hbox:
+                    spacing 5
+                    vbox:
+                        image im.Scale(manager.selected.avatar, 200, 200)
+                        text manager.selected.name:
+                            xalign 0.5
+                        text manager.selected.gender:
+                            xalign 0.5
+                        vbox:
+                            xalign 0.5
+                            for value in manager.selected.show_attributes().values():
+                                text value
+                            for value in manager.selected.statuses():
+                                text value
+                        textbutton 'Pick':
+                            action Function(manager.pick), Return()

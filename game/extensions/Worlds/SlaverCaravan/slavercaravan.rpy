@@ -254,6 +254,25 @@ init 1 python:
         def call(self):
             return renpy.call_screen('sc_slavercaravan_catch_slave', manager=self)
 
+
+    class PickSlave(object):
+
+        def __init__(self, world, slaves):
+            self.world = world
+            self.slaves = slaves
+            self.selected = None
+
+        def pick(self):
+            return
+
+        def select(self, slave):
+            self.selected = slave
+
+        def call(self):
+            renpy.call_screen('sc_slavercaravan_pick_slave', manager=self)
+            return self.selected
+
+
 label lbl_slavercaravan_gameover():
     'Game is over'
     $ renpy.full_restart()
