@@ -186,14 +186,14 @@ init python:
             'name': __("Lether restraints"),
             'description': __("Specially arranged leather restraints is a better way to hold a slave, cutting chances to escape a half."),
             'price': 1,
-            'escape_chance': lambda x: x//2,
+            'escape_chance': lambda x: x-1,
             'tags': ['enslave'],
         },
         'wooden_pads': {
             'name': __("Wooden pads"),
             'description': __(""),
             'price': 2,
-            'escape_chance': lambda x: 0,
+            'escape_chance': lambda x: x//2,
             'food_consumption': lambda x: x*2,
             'tags': ['enslave'],
         },
@@ -201,7 +201,7 @@ init python:
             'name': __("Iron shackles"),
             'description': __("You can buy shackles only in advanced town."),
             'price': 10,
-            'escape_chance': lambda x: 0,
+            'escape_chance': lambda x: x//2,
             'tags': ['enslave'],
         }
     }
