@@ -12,9 +12,9 @@ label lbl_slavercaravan_quest_beggar(world):
             "Beggar will pray for you. {color=#00ff00}Archon is pleased{/color}"
             $ world.food = 0
             $ world.quests_completed += 1
-            $ world.current_location.quest = None
+            $ world.locations.current_location().quest = None
         "No way":
-            $ world.current_location.quest = None
+            $ world.locations.current_location().quest = None
 
     return
 
@@ -28,15 +28,15 @@ label lbl_slavercaravan_quest_donation(world):
             "You donated small ammout of food to church."
             $ world.food -= 1
         "{color=#0000ffff}(food => 50){/color} I'll humbly donate this food to a church" if world.food > 49:
-            "Priest will mention you in all the prayers from now on. {color=#00ff00}Archon is pleased{/color}"
+            "Priest will mention you in all the prayers from now on./n {color=#00ff00}Archon is pleased{/color}"
             $ world.food -= 50
             $ world.quests_completed += 1
-            $ world.current_location.quest = None
+            $ world.locations.current_location().quest = None
         "I'm starving myself. Please give me a food, father!":
             bishop "Here you are. {i}Pax vobiscum{/i}."
             "You gou a cup of watery cabbage stew. But priest will not listen you anymore."
             $ world.food += 1
-            $ world.current_location.quest = None
+            $ world.locations.current_location().quest = None
 
     return
 
@@ -49,13 +49,13 @@ label lbl_slavercaravan_quest_virgin(world):
     show whore at left with dissolve
     show listvennik at right with dissolve
     whore "You are disgusting little brat. How dare you!"
-    listvennik "S-sury m'eam, b-but you are... um... the p-pr..."
+    listvennik "S-sorry m'eam, b-but you are... um... the p-pr..."
     whore "Who I am?"
     listvennik "Uh. I mean y-you do it... with a man... f-for a money"
     whore "WHAAAAT? You dare to call me a whore?!"
     whore "You are the miserable little bag of rotten semen. No woman in all the world will touch your wrinkled little snag! Not for all the money in the fucking world!!"
     listvennik "B-but I putt off all my school breakfast money for a year to get 10 g.p. for you"
-    whore "You whant to defile such a noble whoman as me for a mere 10 g.p. Pff! It's just so insulting."
+    whore "You whant to defile such a noble whoman as me for a mere 10 g.p?! Pff! It's just so insulting."
     listvennik "B-but Yaroch-kun said you sucked him for a 1 g.p."
     whore "SHUT UP, YOU MOTHERFUCKER!!!"
     whore "Thats it. I'm calling a pimp and he will beat all the crap out of you!!"
@@ -83,20 +83,31 @@ label lbl_slavercaravan_quest_virgin(world):
         "Do quest":
             "{color=#00ff00}Archon is pleased{/color}"
             $ world.quests_completed += 1
-            $ world.current_location.quest = None
+            $ world.locations.current_location().quest = None
 
     return
 
 label lbl_slavercaravan_quest_bunch(world):
-    "Bunch quest done"
-    $ world.quests_completed += 1
-    $ world.current_location.quest = None
+    "You a farm destroyed by the fire. Farmer lose all his family and workers and now have no means to attend his land."
+    "He desperately need a bunch of ANY slaves. At least five of them in a bunch"
+    menu:
+        "I have a plenty of slaves. You need them more than me, good man." if len(world.characters) > 4:
+            "You saved the farm and old man, so he will pray for you untill end of his days./n {color=#00ff00}Archon is pleased{/color}"
+            $ world.quests_completed += 1
+            $ world.locations.current_location().quest = None
+        "I can't help righ now":
+            $ pass
 
     return
 
 label lbl_slavercaravan_quest_perfect(world):
-    "Perfect quest done"
-    $ world.quests_completed += 1
-    $ world.current_location.quest = None
+    "Local ruler seeks a mate. You can present a slave with a {color=#FFBF00}perect{/color} attribute to him."
+    menu:
+        "I'll present a slave to ruler":
+            "Slave is grateful to become a rulers concubine and will pray for you./n {color=#00ff00}Archon is pleased{/color}"
+            $ world.quests_completed += 1
+            $ world.locations.current_location().quest = None
+        "Maybe later":
+            $ pass
 
     return

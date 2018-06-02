@@ -54,7 +54,7 @@ screen sc_cis(info, relations=None):
                 textbutton 'Patron: %s' % Hierarchy(person).get_patron().firstname:
                     action Function(CharacterInfoScreen(Hierarchy(person).get_patron()).show)
             if len(Hierarchy(person).get_clientelas()) > 0:
-                textbutton 'Clientelas':
+                textbutton 'Clientela':
                     action Function(ContactsInfo(Hierarchy(person).get_clientelas()).show)
             if person.heir() is not None:
                 textbutton 'Heir: %s' % person.heir().firstname:
@@ -68,7 +68,7 @@ screen sc_cis(info, relations=None):
             textbutton "Leave" action Hide('sc_cis')
         vbox:
             xpos 205
-            text 'Angels'
+            text 'Host angels'
             viewport:
                 scrollbars 'vertical'
                 draggable True
@@ -83,7 +83,7 @@ screen sc_cis(info, relations=None):
                             action Function(AngelInfoScreen(i, show_world_btn=True).show)
         vbox:
             xpos 410
-            text 'Sonm'
+            text 'Concordat angels'
             viewport:
                 scrollbars 'vertical'
                 draggable True
@@ -96,4 +96,3 @@ screen sc_cis(info, relations=None):
                             text_color value_color(i.level())
                             text_hover_color '#EFF0D1'
                             action Function(AngelInfoScreen(i, show_world_btn=True).show)
-                    

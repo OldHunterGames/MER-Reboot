@@ -343,7 +343,7 @@ label lbl_slavercaravan_halt(world):
                 $ world.halt = False
                 $ world.is_at_halt = False
                 $ world.skip_turn()
-            '{color=#0000ffff}(State > 1){/color} Guard slaves' if world.player.state > 1:
+            '{color=#0000ffff}(State > 1){/color} Guard slaves' if world.player.state > 1 and  len(world.characters) > 0:
                 "Your vigilant guard guarentees no slaves escaped. But your state is harmed by sleep deprevation {color=#f00}(state drops){/color}"
                 $ world.player.state -= 1
                 $ world.halt = False
