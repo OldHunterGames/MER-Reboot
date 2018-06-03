@@ -58,7 +58,7 @@ init 1 python:
             self.quests_completed = 0
 
         def critical_state_callback(self, person):
-            renpy.call_in_new_context('lbl_slavercaravan_critialstate', world=self, person=person)
+            renpy.call_in_new_context('lbl_slavercaravan_criticalstate', world=self, person=person)
 
         def entry_label(self):
             return 'lbl_slavercaravan'
@@ -85,13 +85,17 @@ init 1 python:
         def skip_turn(self):
             if self.locations.current_location().type() != 'city':
                 self.slave_escape()
-            for i in self.characters:
-                self.food -= i.applied_item.food_consumption(1)
             self.food -= 1
             if self.food < 0:
                 self.food = 0
                 self.player.state -= 1
-                self.characters = list()
+                renpy.call_in_new_context("lbl_slavercaravan_player_starving", world=self)
+            for i in self.characters:
+                self.food -= i.applied_item.food_consumption(1)
+                if self.food < 0:
+                    self.characters.remove(i)
+                    renpy.call_in_new_context('lbl_slavercaravan_slave_starving', world=self, slave=i)
+                    break
             self.day += 1
             self.halt_acted = False
             if self.day > self.MAX_DAYS:
@@ -636,5 +640,11 @@ label lbl_slavercaravan_tame(world, target):
 label lbl_slavercaravan_rape(world, target):
     return
 
-label lbl_slavercaravan_critialstate(world, person):
+label lbl_slavercaravan_criticalstate(world, person):
+    return
+
+label lbl_slavercaravan_player_starving(world):
+    return
+
+label lbl_slavercaravan_slave_starving(world, slave):
     return
