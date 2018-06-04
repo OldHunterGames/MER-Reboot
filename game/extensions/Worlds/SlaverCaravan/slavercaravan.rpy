@@ -285,31 +285,31 @@ label lbl_slavercaravan_gameover():
 label lbl_slavercaravan(world):
     $ world.quests_completed = 0
     show expression world.path('bg/archon.png') as bg
-    "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
     menu:
+        "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
         "How can I please you?":
-            "Make a hundred food before the summer passes (90 days) and I'll make you my apostole."
+            "Make 3 people of the world pray with a true heart for thou soul before the summer passes (90 days) and I'll make thou my apostole."
             call lbl_slavercaravan(world)
         "Let me in":
             call lbl_slavercaravan_main(world)
         "I'll return to Eternal Rome":
             $ pass
-        "(DEBUG) Synchronise":
-            $ world.sync()
+
     return
 
 label lbl_pray_archon(world):
     show expression world.path('bg/archon.png') as bg
     while True:
         menu:
-            "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
+            "What is thou pray, mortal?"
             "How can I please you?":
-                "Make a hundred food before month get old and I'll make you my apostole."
+                "Make 3 people of the world pray with a true heart for your soul before the summer passes (90 days) and I'll make you my apostole."
             "Become apostol" if world.quests_completed > 2:
                 $ world.sync()
-            "I'll return to Eternal Rome":
                 $ world.leave()
-            "Leave":
+            "That's it. I'm going back to Eternal Rome":
+                $ world.leave()
+            "Amen":
                 return
     return
 
