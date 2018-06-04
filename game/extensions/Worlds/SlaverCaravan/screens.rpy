@@ -39,7 +39,7 @@ screen sc_slavercaravan_stats(world):
                 style 'slavercaravan_button'
 
             for key, value in world.player.items(as_dict=True).items():
-                text '%s: %s' % (key.name, value)
+                text '%s: %s' % (key.name, value) color '#ffffff'
 
 
 screen sc_slavercaravan_map(world):
