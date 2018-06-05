@@ -48,7 +48,7 @@ label lbl_slavercaravan_quest_donation(world):
     return
 
 label lbl_slavercaravan_quest_virgin(world):
-    # $ girls = SlaverCaravanFilter.filter_by_gender(world.characters, 'female')
+    $ girls = SlaverCaravanFilter.filter_by_gender(world.characters, 'female')
     image listvennik = 'extensions/Worlds/SlaverCaravan/character/oleysha.png'
     image whore = 'extensions/Worlds/SlaverCaravan/character/oldwhore.png'
     define listvennik = Character('Skinny Boy', color="#c8f0c8")
@@ -90,8 +90,8 @@ label lbl_slavercaravan_quest_virgin(world):
             $ world.food += 5
             "You got 5 food"
         "{color=#0000ffff}(have a slavegirl){/color} I'll give you a slavegirl to play with, kid.":
-            # $ slave = PickSlave(girls, world).call()
-            # $ world.remove_character(slave)
+            $ slave = PickSlave(girls, world).call()
+            $ world.remove_character(slave)
             listvennik "My own slavegirl? WOW! THANK YOU SO MUCH!!!"
             "He will pray for your soul till the end of his days. {color=#00ff00}Archon is pleased{/color}"
             $ world.quests_completed += 1
@@ -114,12 +114,12 @@ label lbl_slavercaravan_quest_bunch(world):
     return
 
 label lbl_slavercaravan_quest_perfect(world):
-    # $ slaves = SlaverCaravanFilter.filter_by_attribute(world.characters, 5)
+    $ slaves = SlaverCaravanFilter.filter_by_attribute(world.characters, 5)
     "Local ruler seeks a mate. You can present a slave with a {color=#FFBF00}perect{/color} attribute to him."
     menu:
         "I'll present a slave to ruler" if slaves:
-            # $ slave = PickSlave(slaves, world).call()
-            # $ world.remove_character(slave)
+            $ slave = PickSlave(slaves, world).call()
+            $ world.remove_character(slave)
             "Slave is grateful to become a rulers concubine and will pray for you.\n {color=#00ff00}Archon is pleased{/color}"
             $ world.quests_completed += 1
             $ world.locations.current_location().quest = None

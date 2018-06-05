@@ -289,9 +289,9 @@ label lbl_slavercaravan(world):
         "Kneel in ave before me, mortal for as the archon of this world, [world.archon.name]. The adventure of the slave hunt is beyound this gates."
         "How can I please you?":
             "Make 3 people of the world pray with a true heart for thou soul before the summer passes (90 days) and I'll make thou my apostole."
-            call lbl_slavercaravan(world)
+            call lbl_slavercaravan(world) from _call_lbl_slavercaravan
         "Let me in":
-            call lbl_slavercaravan_main(world)
+            call lbl_slavercaravan_main(world) from _call_lbl_slavercaravan_main
         "I'll return to Eternal Rome":
             $ pass
 
@@ -330,11 +330,11 @@ label lbl_slavercaravan_road(world):
     while True:
         menu:
             'Leave' if not world.halt:
-                call lbl_slavercaravan_change_location(world)
+                call lbl_slavercaravan_change_location(world) from _call_lbl_slavercaravan_change_location
                 return
             'Setup a camp':
                 $ world.halt = True
-                call lbl_slavercaravan_halt(world)
+                call lbl_slavercaravan_halt(world) from _call_lbl_slavercaravan_halt
     return
 
 label lbl_slavercaravan_halt(world):
@@ -403,15 +403,15 @@ label lbl_slavercaravan_brothel_city(world):
                 else:
                     $ pass
             'Buy items':
-                call lbl_buy_item(world)
+                call lbl_buy_item(world) from _call_lbl_buy_item
             'Rent a room':
                 $ world.player.state += 1
                 $ world.halt = True
-                call lbl_slavercaravan_halt(world)
+                call lbl_slavercaravan_halt(world) from _call_lbl_slavercaravan_halt_1
             'Quest' if loc.quest is not None:
                 $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
-                call lbl_slavercaravan_change_location(world)
+                call lbl_slavercaravan_change_location(world) from _call_lbl_slavercaravan_change_location_1
                 return
     return
 
@@ -431,15 +431,15 @@ label lbl_slavercaravan_market_city(world):
                 else:
                     $ pass
             'Buy items':
-                call lbl_buy_item(world)
+                call lbl_buy_item(world) from _call_lbl_buy_item_1
             'Rent a room':
                 $ world.player.state += 1
                 $ world.halt = True
-                call lbl_slavercaravan_halt(world)
+                call lbl_slavercaravan_halt(world) from _call_lbl_slavercaravan_halt_2
             'Quest' if loc.quest is not None:
                 $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
-                call lbl_slavercaravan_change_location(world)
+                call lbl_slavercaravan_change_location(world) from _call_lbl_slavercaravan_change_location_2
                 return
     return
 
@@ -459,15 +459,15 @@ label lbl_slavercaravan_amazon_village(world):
                 else:
                     $ pass
             'Buy items':
-                call lbl_buy_item(world)
+                call lbl_buy_item(world) from _call_lbl_buy_item_2
             'Rent a room':
                 $ world.player.state += 1
                 $ world.halt = True
-                call lbl_slavercaravan_halt(world)
+                call lbl_slavercaravan_halt(world) from _call_lbl_slavercaravan_halt_3
             'Quest' if loc.quest is not None:
                 $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
-                call lbl_slavercaravan_change_location(world)
+                call lbl_slavercaravan_change_location(world) from _call_lbl_slavercaravan_change_location_3
                 return
     return
 
@@ -487,15 +487,15 @@ label lbl_slavercaravan_sawmill_city(world):
                 else:
                     $ pass
             'Buy items':
-                call lbl_buy_item(world)
+                call lbl_buy_item(world) from _call_lbl_buy_item_3
             'Rent a room':
                 $ world.player.state += 1
                 $ world.halt = True
-                call lbl_slavercaravan_halt(world)
+                call lbl_slavercaravan_halt(world) from _call_lbl_slavercaravan_halt_4
             'Quest' if loc.quest is not None:
                 $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
-                call lbl_slavercaravan_change_location(world)
+                call lbl_slavercaravan_change_location(world) from _call_lbl_slavercaravan_change_location_4
                 return
     return
 
@@ -515,14 +515,14 @@ label lbl_slavercaravan_artisan_city(world):
                 else:
                     $ pass
             'Buy items':
-                call lbl_buy_item(world)
+                call lbl_buy_item(world) from _call_lbl_buy_item_4
             'Rent a room':
                 $ world.halt = True
-                call lbl_slavercaravan_halt(world)
+                call lbl_slavercaravan_halt(world) from _call_lbl_slavercaravan_halt_5
             'Quest' if loc.quest is not None:
                 $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
-                call lbl_slavercaravan_change_location(world)
+                call lbl_slavercaravan_change_location(world) from _call_lbl_slavercaravan_change_location_5
                 return
     return
 
@@ -542,15 +542,15 @@ label lbl_slavercaravan_rich_city(world):
                 else:
                     $ pass
             'Buy items':
-                call lbl_buy_item(world)
+                call lbl_buy_item(world) from _call_lbl_buy_item_5
             'Rent a room':
                 $ world.player.state += 1
                 $ world.halt = True
-                call lbl_slavercaravan_halt(world)
+                call lbl_slavercaravan_halt(world) from _call_lbl_slavercaravan_halt_6
             'Quest' if loc.quest is not None:
                 $ renpy.call_in_new_context(loc.quest.label(), world=world)
             'Leave' if not world.halt:
-                call lbl_slavercaravan_change_location(world)
+                call lbl_slavercaravan_change_location(world) from _call_lbl_slavercaravan_change_location_6
                 return
     return
 
@@ -596,11 +596,11 @@ label lbl_slavercaravan_wildness(world):
                     world.halt = True
 
             'Setup a camp':
-                call lbl_slavercaravan_halt(world)
+                call lbl_slavercaravan_halt(world) from _call_lbl_slavercaravan_halt_7
                 $ loc.tries = 3
 
             'Travel' if not world.halt:
-                call lbl_slavercaravan_change_location(world)
+                call lbl_slavercaravan_change_location(world) from _call_lbl_slavercaravan_change_location_7
                 return
     return
 

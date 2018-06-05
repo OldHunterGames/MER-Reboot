@@ -21,14 +21,14 @@ label start:
     $ core.player = player
     python:
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
-    call lbl_make_initial_characters()
-    call _main
+    call lbl_make_initial_characters() from _call_lbl_make_initial_characters
+    call _main from _call__main
 
     return
 
 label _main:
     while True:
-        call lbl_main
+        call lbl_main from _call_lbl_main
     return
 
 label lbl_main:
