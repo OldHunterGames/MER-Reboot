@@ -82,8 +82,8 @@ init 1 python:
             self.halt = True
             self.locations.current = pos
 
-        def skip_turn(self):
-            if self.locations.current_location().type() != 'city':
+        def skip_turn(self, slave_escpae=True):
+            if self.locations.current_location().type() != 'city' and slave_escape:
                 self.slave_escape()
             self.food -= 1
             if self.food < 0:
