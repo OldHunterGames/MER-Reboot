@@ -4,16 +4,23 @@ init python:
     slavercaravan_quests = ['beggar', 'donation', 'virgin', 'bunch', 'perfect']
 
 label lbl_slavercaravan_quest_beggar(world):
+    show expression world.path('bg/quest_beggar.png') as bg
+    "You see a starving woman in a torn clothes sitting on the street. She is begging for some food but people ingnore her."
     menu:
-        "Beggar asks for food"
-        "Give some" if world.food > 0:
+        "You can take advantage or save her..."
+        "{color=#0000ffff}(food > 0){/color} Give some food" if world.food > 0:
             $ world.food -= 1
-        "Give all you have" if world.food > 5:
+        "{color=#0000ffff}(food => 10){/color} Give all you have" if world.food > 9:
             "Beggar will pray for you. {color=#00ff00}Archon is pleased{/color}"
             $ world.food = 0
             $ world.quests_completed += 1
             $ world.locations.current_location().quest = None
-        "No way":
+        "Just ignor her as all people do":
+            "She'll probably die soon anyway... such a waste."
+            $ world.locations.current_location().quest = None
+        "Rape the beggar":
+            "Your state is impoved, but beggars now hate you..."
+            $ world.player.state += 1
             $ world.locations.current_location().quest = None
 
     return
@@ -41,14 +48,15 @@ label lbl_slavercaravan_quest_donation(world):
     return
 
 label lbl_slavercaravan_quest_virgin(world):
+    # $ girls = SlaverCaravanFilter.filter_by_gender(world.characters, 'female')
     image listvennik = 'extensions/Worlds/SlaverCaravan/character/oleysha.png'
     image whore = 'extensions/Worlds/SlaverCaravan/character/oldwhore.png'
     define listvennik = Character('Skinny Boy', color="#c8f0c8")
     define whore = Character('Old Whore', color="#800000")
     "Passing by the street you hear an angry woman voice in a dark alley."
     show whore at left with dissolve
-    show listvennik at right with dissolve
     whore "You are disgusting little brat. How dare you!"
+    show listvennik at right with dissolve
     listvennik "S-sorry m'eam, b-but you are... um... the p-pr..."
     whore "Who am I?!"
     listvennik "Uh. I mean y-you do it... with a man... f-for a money"
@@ -81,8 +89,11 @@ label lbl_slavercaravan_quest_virgin(world):
             listvennik "Oh now. Don't hurt me. This is all I have. 5 gold. Get it. Just don't hurt me, please!"
             $ world.food += 5
             "You got 5 food"
-        "Do quest":
-            "{color=#00ff00}Archon is pleased{/color}"
+        "{color=#0000ffff}(have a slavegirl){/color} I'll give you a slavegirl to play with, kid.":
+            # $ slave = PickSlave(girls, world).call()
+            # $ world.remove_character(slave)
+            listvennik "My own slavegirl? WOW! THANK YOU SO MUCH!!!"
+            "He will pray for your soul till the end of his days. {color=#00ff00}Archon is pleased{/color}"
             $ world.quests_completed += 1
             $ world.locations.current_location().quest = None
 
@@ -90,21 +101,25 @@ label lbl_slavercaravan_quest_virgin(world):
 
 label lbl_slavercaravan_quest_bunch(world):
     "You a farm destroyed by the fire. Farmer lose all his family and workers and now have no means to attend his land."
-    "He desperately need a bunch of ANY slaves. At least five of them in a bunch"
+    "He desperately need a bunch of ANY slaves. At least three of them in a bunch"
     menu:
-        "I have a plenty of slaves. You need them more than me, good man." if len(world.characters) > 4:
+        "I have a plenty of slaves. You need them more than me, good man." if len(world.characters) > 2:
             "You saved the farm and old man, so he will pray for you untill end of his days.\n {color=#00ff00}Archon is pleased{/color}"
             $ world.quests_completed += 1
             $ world.locations.current_location().quest = None
+            $ world.slaves_escape()
         "I can't help righ now":
             $ pass
 
     return
 
 label lbl_slavercaravan_quest_perfect(world):
+    # $ slaves = SlaverCaravanFilter.filter_by_attribute(world.characters, 5)
     "Local ruler seeks a mate. You can present a slave with a {color=#FFBF00}perect{/color} attribute to him."
     menu:
-        "I'll present a slave to ruler":
+        "I'll present a slave to ruler" if slaves:
+            # $ slave = PickSlave(slaves, world).call()
+            # $ world.remove_character(slave)
             "Slave is grateful to become a rulers concubine and will pray for you.\n {color=#00ff00}Archon is pleased{/color}"
             $ world.quests_completed += 1
             $ world.locations.current_location().quest = None
