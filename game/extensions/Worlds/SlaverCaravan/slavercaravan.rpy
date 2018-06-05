@@ -261,7 +261,7 @@ init 1 python:
 
     class PickSlave(object):
 
-        def __init__(self, world, slaves):
+        def __init__(self, slaves, world):
             self.world = world
             self.slaves = slaves
             self.selected = None
