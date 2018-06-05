@@ -493,7 +493,7 @@ class SlaverCaravanPerson(object):
         return self._wrapped_person.gender
 
 
-class SlaverCaravarFilter(object):
+class SlaverCaravanFilter(object):
 
     @staticmethod
     def filter_by_gender(items, gender):
