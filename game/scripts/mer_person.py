@@ -20,9 +20,6 @@ class CoreFeature(object):
     def count_modifiers(self, attr):
         return self._data.get(attr, 0)
 
-    def chance_weight(self):
-        return self._data.get('chance_weight', 1)
-
     @classmethod
     def register_feature(cls, id, feature):
         cls.FEATURES[id] = feature
@@ -41,8 +38,6 @@ class CoreFeature(object):
     
     @classmethod
     def random_by_slot(cls, slot, weighted=False):
-        if weighted:
-            return cls._weighted_random(slot)
         try:
             feature = random.choice(cls.get_by_slot(slot))
         except IndexError:
@@ -51,14 +46,15 @@ class CoreFeature(object):
         else:
             return feature
 
-    @classmethod
-    def _weighted_random(cls, slot):
-        features = [(i, i.chance_weight()) for i in cls.get_by_slot(slot)]
-        return weighted_random(features)
-
-
 
 class PersonCreator(object):
+
+    AGE_SLOTS = {
+        'junior': 1,
+        'elder': 2,
+        'adolescent': 3,
+        'mature': 4,
+    }
 
     ALIGNMENT_SLOTS = [
         'nutrition',
@@ -79,6 +75,28 @@ class PersonCreator(object):
         'smile',
         'skin',
     ]
+
+    GENDER_SLOTS = {
+        'male': [
+            'dick',
+        ],
+        'female': [
+            'boobs',
+        ],
+        'shemale': [
+            'boobs',
+            'dick',
+        ]
+    }
+
+    MASCULINE_SLOTS = [
+        'dick', 
+    ]
+
+    FEMINIE_SLOTS = [
+        'boobs',
+    ]
+
 
     @staticmethod
     def names_data():
@@ -106,13 +124,20 @@ class PersonCreator(object):
         if genus is None:
             genus = random.choice(store.person_genuses)
         if age is None:
-            age = CoreFeature.random_by_slot('age', weighted=True)
+            age = weighted_random(cls.AGE_SLOTS)
+            age = CoreFeature.get_feature(age)
         name = kwargs.get('name', PersonCreator.get_name(gender.id))
         person = CorePerson(name, gender, age, genus)
         for i in cls.make_features():
             person.add_feature(i)
+        for i in cls.gender_features(gender.id):
+            person.add_feature(i)
         person.set_avatar(PersonCreator.gen_avatar(gender.id, age.id, genus))
         return person
+
+    @classmethod
+    def gender_features(cls, gender):
+        return [CoreFeature.random_by_slot(slot) for slot in cls.GENDER_SLOTS[gender]]
 
     @staticmethod
     def appearance_type(gender):

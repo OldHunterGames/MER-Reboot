@@ -114,7 +114,6 @@ init python:
         'junior': {
             'slot': 'age',
             'name': __("Junior"),
-            'chance_weight': 1,
             'might': -1,
             'knowledge': -1,
             'charisma': 1,
@@ -122,14 +121,12 @@ init python:
         'elder': {
             'slot': 'age',
             'name': __("Elder"),
-            'chance_weight': 2,
             'might': -1,
             'knowledge': 1,
         },
         'adolescent': {
             'slot': 'age',
             'name': __("Adolescent"),
-            'chance_weight': 3,
             'knowledge': -1,
             'subtlety': 1,
             'charisma': 1,
@@ -137,7 +134,6 @@ init python:
         'mature': {
             'slot': 'age',
             'name': __("Mature"),
-            'chance_weight': 4,
             'might': 1,
         },
     }
@@ -159,6 +155,10 @@ init python:
         'firm_gaze': {'slot': 'eyes', 'name': __('Firm gaze'), 'might': 1},
         'bright_eyes': {'slot': 'eyes', 'name': __('Bright eyes'), 'charisma': 1},
         'enigmatic_gaze': {'slot': 'eyes', 'name': __('Enigmatic gaze'), 'knowledge': 1},
+        'flat_chest': {'slot': 'boobs', 'name': __('Flat chest'), 'charisma': -1, 'subtlety': 1},
+        'gazongas': {'slot': 'boobs', 'name': __('Gazongas'), 'charisma': 1, 'subtlety': -1},
+        'small_wiener': {'slot': 'dick', 'name': __('Small wiener'), 'might': -1, 'subtlety': 1},
+        'big_dick': {'slot': 'boobs', 'name': __('Big dick'), 'might': 1, 'subtlety': -1},
     }
 
     core_alignment_features = {
