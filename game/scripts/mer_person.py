@@ -2,10 +2,83 @@
 import random
 import renpy.store as store
 import renpy.exports as renpy
-from mer_utilities import default_avatar
+from mer_utilities import default_avatar, weighted_random, encolor_text
+
+
+class CoreFeature(object):
+    
+    FEATURES = dict()
+
+    def __init__(self, id, data):
+        self.id = id
+        self._data = data
+    
+    @property
+    def slot(self):
+        return self._data.get('slot')
+    
+    def count_modifiers(self, attr):
+        return self._data.get(attr, 0)
+
+    def chance_weight(self):
+        return self._data.get('chance_weight', 1)
+
+    @classmethod
+    def register_feature(cls, id, feature):
+        cls.FEATURES[id] = feature
+    
+    @classmethod
+    def get_feature(cls, id):
+        return cls.FEATURES[id]
+    
+    @classmethod
+    def get_by_slot(cls, slot):
+        features = list()
+        for value in cls.FEATURES.values():
+            if value.slot == slot:
+                features.append(value)
+        return features
+    
+    @classmethod
+    def random_by_slot(cls, slot, weighted=False):
+        if weighted:
+            return cls._weighted_random(slot)
+        try:
+            feature = random.choice(cls.get_by_slot(slot))
+        except IndexError:
+            print(slot)
+            raise
+        else:
+            return feature
+
+    @classmethod
+    def _weighted_random(cls, slot):
+        features = [(i, i.chance_weight()) for i in cls.get_by_slot(slot)]
+        return weighted_random(features)
+
 
 
 class PersonCreator(object):
+
+    ALIGNMENT_SLOTS = [
+        'nutrition',
+        'authority',
+        'comfort',
+        'communication',
+        'eros',
+        'ambition',
+        'prosperity',
+        'safety',
+    ]
+
+    PHYSICAL_SLOTS = [
+        'height',
+        'constitution',
+        'voice',
+        'eyes',
+        'smile',
+        'skin',
+    ]
 
     @staticmethod
     def names_data():
@@ -19,22 +92,26 @@ class PersonCreator(object):
             raise Exception('Invalid data')
         return random.choice(names)
 
-    @staticmethod
-    def gen_person(**kwargs):
+    @classmethod
+    def gen_person(cls, **kwargs):
         gender = kwargs.get('gender')
         genus = kwargs.get('genus')
         age = kwargs.get('age')
         # temporary genus is always human
         genus = 'human'
         if gender is None:
-            gender = random.choice(store.person_genders)
+            gender = CoreFeature.random_by_slot('gender')
+        else:
+            gender = CoreFeature.get_feature(gender)
         if genus is None:
             genus = random.choice(store.person_genuses)
         if age is None:
-            age = random.choice(store.person_ages)
-        name = kwargs.get('name', PersonCreator.get_name(gender))
+            age = CoreFeature.random_by_slot('age', weighted=True)
+        name = kwargs.get('name', PersonCreator.get_name(gender.id))
         person = CorePerson(name, gender, age, genus)
-        person.set_avatar(PersonCreator.gen_avatar(gender, age, genus))
+        for i in cls.make_features():
+            person.add_feature(i)
+        person.set_avatar(PersonCreator.gen_avatar(gender.id, age.id, genus))
         return person
 
     @staticmethod
@@ -72,6 +149,44 @@ class PersonCreator(object):
         avas = [str_ for str_ in all_ if str_.startswith(path)]
         return avas
 
+    @classmethod
+    def make_alignments(cls):
+        slots = [i for i in cls.ALIGNMENT_SLOTS]
+        chances = [1 for i in range(5)]
+        chances.append(0)
+        random.shuffle(chances)
+        features = list()
+        for i in chances:
+            if i == 0:
+                break
+            slot = random.choice(slots)
+            slots.remove(slot)
+            feature = CoreFeature.random_by_slot(slot)
+            features.append(feature)
+        return features
+    
+    @classmethod
+    def make_physical(cls):
+        slots = [i for i in cls.PHYSICAL_SLOTS]
+        chances = [1 for i in range(5)]
+        chances.append(0)
+        random.shuffle(chances)
+        features = list()
+        for i in chances:
+            if i == 0:
+                break
+            slot = random.choice(slots)
+            slots.remove(slot)
+            feature = CoreFeature.random_by_slot(slot)
+            features.append(feature)
+        return features
+
+    @classmethod
+    def make_features(cls):
+        features = cls.make_alignments()
+        features.extend(cls.make_physical())
+        return features
+
 
 class CorePerson(object):
 
@@ -79,14 +194,63 @@ class CorePerson(object):
     def __init__(self, firstname, gender, age, genus):
 
         self._firstname = firstname
-        self.gender = gender
-        self.age = age
         self.genus = genus
         self._avatar = None
         self._renpy_character = store.Character(firstname)
         self._host = list()
         self._sparks = 100
         self._successors = list()
+        self.features = dict()
+        self.slotless_features = list()
+        self.add_feature(age)
+        self.add_feature(gender)
+
+    @property
+    def gender(self):
+        return self.features['gender'].id
+
+    @property
+    def age(self):
+        return self.features['age'].id
+
+    def attribute(self, attr):
+        return self.count_modifiers(attr)
+    
+    def count_modifiers(self, attr):
+        value = 0
+        for i in self.features.values():
+            value += i.count_modifiers(attr)
+        for i in self.slotless_features:
+            value += i.count_modifiers(attr)
+        return max(-2, min(value, 5))
+
+    def attributes(self):
+        attrs = dict()
+        for key in store.core_attributes.keys():
+            attrs[key] = self.attribute(key)
+        return attrs
+    
+    def show_attributes(self):
+        attrs = dict()
+        for key, value in store.core_attributes.items():
+            attr = self.attribute(key)
+            if attr < -1:
+                attrs[value['name']] = encolor_text(value['low'], 'red')
+            elif attr > 0:
+                attrs[value['name']] = encolor_text(value['high'], attr)
+        return attrs
+
+    def add_feature(self, feature):
+        if feature.slot is None:
+            self.slotless_features.append(feature)
+            return
+        self.features[feature.slot] = feature
+    
+    def remove_feature(self, feature):
+        if feature.slot is None:
+            self.slotless_features.remove(feature)
+        else:
+            del self.features[feature.slot]
     
     def income(self):
         return sum([i.produce_sparks() for i in self.get_host()])

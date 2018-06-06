@@ -13,6 +13,18 @@ init -10 python:
     from mer_core import *
     from mer_command import *
 
+init 1 python:
+    for key, value in core_features.items():
+        CoreFeature.register_feature(key, CoreFeature(key, value))
+
+    for key, value in core_physical_features.items():
+        CoreFeature.register_feature(key, CoreFeature(key, value))
+
+    for key, value in core_alignment_features.items():
+        CoreFeature.register_feature(key, CoreFeature(key, value))
+
+    for key, value in core_age_features.items():
+        CoreFeature.register_feature(key, CoreFeature(key, value))
 # The game starts here.
 
 label start:

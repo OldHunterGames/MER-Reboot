@@ -4,14 +4,6 @@ init python:
 
 init 1 python:
     from slavercaravan import *
-    for key, value in slavercaravan_features.items():
-        Feature.register_feature(key, Feature(value))
-
-    for key, value in slavercaravan_physical_features.items():
-        Feature.register_feature(key, Feature(value))
-
-    for key, value in slavercaravan_alignment_features.items():
-        Feature.register_feature(key, Feature(value))
 
     for key, value in slavercaravan_items.items():
         Item.register_item(key, Item(key, value))

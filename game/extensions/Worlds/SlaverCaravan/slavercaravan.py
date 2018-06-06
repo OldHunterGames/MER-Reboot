@@ -260,124 +260,20 @@ class Item(object):
         return tag in self._data.get('tags', list())
 
 
-class Feature(object):
-    
-    FEATURES = dict()
-
-    def __init__(self, data):
-        self._data = data
-    
-    @property
-    def slot(self):
-        return self._data.get('slot')
-    
-    def count_modifiers(self, attr):
-        return self._data.get(attr, 0)
-
-    @classmethod
-    def register_feature(cls, id, feature):
-        cls.FEATURES[id] = feature
-    
-    @classmethod
-    def get_feature(cls, id):
-        return cls.FEATURES[id]
-    
-    @classmethod
-    def get_by_slot(cls, slot):
-        features = list()
-        for value in cls.FEATURES.values():
-            if value.slot == slot:
-                features.append(value)
-        return features
-    
-    @classmethod
-    def random_by_slot(cls, slot):
-        try:
-            feature = random.choice(cls.get_by_slot(slot))
-        except IndexError:
-            print(slot)
-            raise
-        else:
-            return feature
-
 class SlaverCaravanPersonMaker(object):
-    ALIGNMENT_SLOTS = [
-        'nutrition',
-        'authority',
-        'comfort',
-        'communication',
-        'eros',
-        'ambition',
-        'prosperity',
-        'safety',
-    ]
-
-    PHYSICAL_SLOTS = [
-        'height',
-        'constitution',
-        'voice',
-        'eyes',
-        'smile',
-        'skin',
-    ]
     
     @classmethod
     def make_person(cls, person=None, person_maker=None):
         if person_maker is not None:
             person = person_maker.gen_person(genus='human')
-        gender = Feature.get_feature(person.gender)
         world_person = SlaverCaravanPerson(person)
-        world_person.add_feature(gender)
-        features = cls.make_features()
-        for i in features:
-            world_person.add_feature(i)
         return world_person
-    
-    @classmethod
-    def make_alignments(cls):
-        slots = [i for i in cls.ALIGNMENT_SLOTS]
-        chances = [1 for i in range(5)]
-        chances.append(0)
-        random.shuffle(chances)
-        features = list()
-        for i in chances:
-            if i == 0:
-                break
-            slot = random.choice(slots)
-            slots.remove(slot)
-            feature = Feature.random_by_slot(slot)
-            features.append(feature)
-        return features
-    
-    @classmethod
-    def make_physical(cls):
-        slots = [i for i in cls.PHYSICAL_SLOTS]
-        chances = [1 for i in range(5)]
-        chances.append(0)
-        random.shuffle(chances)
-        features = list()
-        for i in chances:
-            if i == 0:
-                break
-            slot = random.choice(slots)
-            slots.remove(slot)
-            feature = Feature.random_by_slot(slot)
-            features.append(feature)
-        return features
-
-    @classmethod
-    def make_features(cls):
-        features = cls.make_alignments()
-        features.extend(cls.make_physical())
-        return features
 
 class SlaverCaravanPerson(object):
     
 
     def __init__(self, coreperson):
         self._wrapped_person = coreperson
-        self.features = dict()
-        self.slotless_features = list()
         self.applied_item = None
         self._items = Counter()
         self._state = 5
@@ -435,44 +331,17 @@ class SlaverCaravanPerson(object):
             return [i for i in self._items.keys() if i.has_tag(tag)]
         return self._items.keys()
     
-    def add_feature(self, feature):
-        if feature.slot is None:
-            self.slotless_features.append(feature)
-            return
-        self.features[feature.slot] = feature
-    
-    def remove_feature(self, feature):
-        if feature.slot is None:
-            self.slotless_features.remove(feature)
-        else:
-            del self.features[feature.slot]
-    
     def attribute(self, attr):
         return self.count_modifiers(attr)
     
     def count_modifiers(self, attr):
-        value = 0
-        for i in self.features.values():
-            value += i.count_modifiers(attr)
-        for i in self.slotless_features:
-            value += i.count_modifiers(attr)
-        return max(-2, min(value, 5))
+        return self._wrapped_person.count_modifiers(attr)
     
     def attributes(self):
-        attrs = dict()
-        for key in store.slavercaravan_attributes.keys():
-            attrs[key] = self.attribute(key)
-        return attrs
+        return self._wrapped_person.attributes()
     
     def show_attributes(self):
-        attrs = dict()
-        for key, value in store.slavercaravan_attributes.items():
-            attr = self.attribute(key)
-            if attr < -1:
-                attrs[value['name']] = encolor_text(value['low'], 'red')
-            elif attr > 0:
-                attrs[value['name']] = encolor_text(value['high'], attr)
-        return attrs
+        return self._wrapped_person.show_attributes()
     
     @property
     def avatar(self):
