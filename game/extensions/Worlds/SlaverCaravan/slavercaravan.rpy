@@ -16,6 +16,7 @@ init 1 python:
         SLAVE_GUT_FOOD = 5
         FOOD_TO_WIN = 100
         MAX_DAYS = 90
+        QUESTS_TO_WIN = 3
 
         def get_event(self, loc=None):
             if loc is None:
@@ -296,7 +297,7 @@ label lbl_pray_archon(world):
             "What is thou pray, mortal?"
             "How can I please you?":
                 "Make 3 people of the world pray with a true heart for your soul before the summer passes (90 days) and I'll make you my apostole."
-            "Become apostol" if world.quests_completed > 2:
+            "Become apostol" if world.quests_completed >= world.QUESTS_TO_WIN:
                 $ world.sync()
                 $ world.leave()
             "That's it. I'm going back to Eternal Rome":
