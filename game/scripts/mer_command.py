@@ -312,21 +312,18 @@ class NpcActionCommand(Command):
         self.action.act(self.npc)
 
 
-class SuccessorChallenge(Command):
+class BecomeSuccessor(Command):
 
-    def __init__(self, person1, person2):
-        self.person1 = person1
-        self.person2 = person2
-        self.winner = None
+    def __init__(self, parent, successor, cost):
+
+        self.parent = parent
+        self.successor = successor
+        self.cost = cost
 
     def run(self):
-        weights = {self.person1: 1, self.person2: 1}
-        self.winner = weighted_random(weights)
-        looser = weights.keys()
-        looser.remove(self.winner)
-        looser = looser[0]
-        looser.add_successor(self.winner)
-        renpy.call_in_new_context('lbl_successor_challenge_result', winner=self.winner, looser=looser)
+        self.successor.sparks -= self.cost
+        self.parent.add_successor(self.successor)
+        self.parent.sparks += self.cost
 
 
 class SetAngelApostol(Command):

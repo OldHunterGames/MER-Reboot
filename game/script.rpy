@@ -12,6 +12,7 @@ init -10 python:
     from mer_utilities import *
     from mer_core import *
     from mer_command import *
+    from mer_sparks_festival import *
 
 init 1 python:
     for key, value in core_features.items():

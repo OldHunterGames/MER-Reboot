@@ -35,7 +35,7 @@ screen sc_cis(info, relations=None):
     $ person = info.person
     $ controlled = info.controlled
     python:
-        if person == player:
+        if person == core.player:
             controlled = True
     modal True
     zorder 10
@@ -60,8 +60,11 @@ screen sc_cis(info, relations=None):
                 textbutton 'Heir: %s' % person.heir().firstname:
                     action Function(ContactsInfo(person.successors()).show)
             if not controlled:
-                if not person.is_successor(player) and not player.is_successor(person):
-                    textbutton 'Challenge' action Function(SuccessorChallenge(person, player).run)
+                $ cost = SparksFestival.default_bonus(person, Hierarchy)
+                if not person.is_successor(core.player) and not core.player.is_successor(person):
+                    textbutton 'Become successor (%s sparks)' % cost:
+                        action Function(BecomeSuccessor(person, core.player, cost).run)
+                        sensitive (core.player.sparks >= cost)
             if controlled:
                 textbutton 'Ensembles':
                     action Function(EnsembleMaker(person).show)
