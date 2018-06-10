@@ -36,7 +36,8 @@ class MERCore(object):
         for i in hierarchy.get_clientelas():
             income += i.income() // 10
         return income
-        
+    
+    @Observable
     def skip_turn(self):
         self.player.sparks += self.calc_income(self.player)
         self.player.sparks -= 5

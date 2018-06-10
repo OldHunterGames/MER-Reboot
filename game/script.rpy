@@ -13,6 +13,7 @@ init -10 python:
     from mer_core import *
     from mer_command import *
     from mer_sparks_festival import *
+    from mer_sexuality import *
 
 init 1 python:
     for key, value in core_features.items():
@@ -26,12 +27,16 @@ init 1 python:
 
     for key, value in core_age_features.items():
         CoreFeature.register_feature(key, CoreFeature(key, value))
+
+    for key, value in sex_cards_data.items():
+            CoreSexCard.register_card(key, CoreSexCard(key, value))
 # The game starts here.
 
 label start:
     $ player = PersonCreator.gen_person(name='Player', gender='male', genus='human')
     $ core = MERCore()
     $ core.player = player
+    $ core.skip_turn.add_callback(CoreAddCards(player).run)
     python:
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters

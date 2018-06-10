@@ -3,6 +3,7 @@ import random
 import renpy.store as store
 import renpy.exports as renpy
 from mer_utilities import default_avatar, weighted_random, encolor_text
+from mer_sexuality import CorePersonSexuality
 
 
 class CoreFeature(object):
@@ -133,7 +134,16 @@ class PersonCreator(object):
         for i in cls.gender_features(gender.id):
             person.add_feature(i)
         person.set_avatar(PersonCreator.gen_avatar(gender.id, age.id, genus))
+        cls.gen_initial_hand(person)
         return person
+
+    @classmethod
+    def gen_initial_hand(cls, person):
+        cards = person.sexuality.deck.get_cards()
+        random.shuffle(cards)
+        for card in cards[0:person.sexuality.deck.initial_hand_length()]:
+            person.sexuality.deck.add_to_hand(card)
+
 
     @classmethod
     def gender_features(cls, gender):
@@ -229,6 +239,7 @@ class CorePerson(object):
         self.slotless_features = list()
         self.add_feature(age)
         self.add_feature(gender)
+        self.sexuality = CorePersonSexuality()
 
     @property
     def gender(self):
@@ -276,6 +287,11 @@ class CorePerson(object):
             self.slotless_features.remove(feature)
         else:
             del self.features[feature.slot]
+
+    def get_features(self):
+        features = self.features.values()
+        features.extend(self.slotless_features)
+        return features
     
     def income(self):
         return sum([i.produce_sparks() for i in self.get_host()])

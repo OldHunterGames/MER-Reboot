@@ -41,7 +41,7 @@ def empty_card():
 
 
 def card_back():
-    return 'images/tarot/card_back.jpg'
+    return 'images/cards/card_back.jpg'
 
 
 def empty_sex_image():
