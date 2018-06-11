@@ -37,6 +37,17 @@ init python:
         5: __('EXTASY'),
     }
 
+    sexual_orientations_data = {'asexual': {'name': __('asexual'), 'male': -1, 'female': -1, 'description': __('finds sexual inrecourse disgusting.')}, 
+    'omisexual': {'name': __('omisexual'), 'male': 0, 'female': 0, 'description': __("has no preference for a partner's gender.")}, 
+    'straight_female': {'name': __('straight'), 'male': 1, 'female': -1, 'description': __('loves males, and turned off by females.')}, 
+    'straight_male': {'name': __('straight'), 'male': -1, 'female': 1, 'description': __('loves females, and turned off by males.')}, 
+    'gay': {'name': __('gay'), 'male': 1, 'female': -1, 'description': __('loves males, and turned off by females.')}, 
+    'lesbian': {'name': __('lesbian'), 'male': -1, 'female': 1, 'description': __('loves females, and turned off by males.')}, 
+    'bicurious_male': {'name': __('bi-curious'), 'male': 0, 'female': 1, 'description': __('prefers females more than a males.')}, 
+    'bicurious_female': {'name': __('bi-curious'), 'male': 1, 'female': 0, 'description': __('prefers males more than a females.')}, 
+    'bisexual': {'name': __('bisexual'), 'male': 1, 'female': 1, 'description': __('loves both males and females.')}, 
+    }
+
     sexual_types_data = {
         'dissolute': {'name': __("dissolute"), 'description': __("loves anything as long as it is even remotely sexy!"), 
             'active': {'rough': 1, 'tender': 1, 'passionate': 1, 'bizarre': 1}, 

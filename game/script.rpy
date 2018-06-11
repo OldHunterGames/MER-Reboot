@@ -33,6 +33,9 @@ init 1 python:
 
     for key, value in sexual_types_data.items():
         SexualType.register_type(key, SexualType(key, value))
+
+    for key, value in sexual_orientations_data.items():
+        SexualOrientation.register_orientation(key, SexualOrientation(key, value))
 # The game starts here.
 
 label start:

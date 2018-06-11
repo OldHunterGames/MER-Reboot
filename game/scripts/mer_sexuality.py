@@ -39,10 +39,41 @@ class SexualType(object):
         return self.data.get('evolution', list())
 
 
+class SexualOrientation(object):
+
+    _SEX_ORIENTATIONS = dict()
+
+    @classmethod
+    def register_orientation(cls, id, sex_orientation):
+        cls._SEX_ORIENTATIONS[id] = sex_orientation
+
+    @classmethod
+    def get_type(cls, id):
+        return cls._SEX_ORIENTATIONS[id]
+
+    @classmethod
+    def random_orientation(cls):
+        return random.choice(cls._SEX_ORIENTATIONS.values())
+
+    def __init__(self, id, data):
+        self.id = id
+        self.data = data
+
+    def like(self, person):
+        return self.data.get(person.gender) > 0
+
+    def name(self):
+        return self.data.get('name', 'No name')
+
+    def description(self):
+        return self.data.get('description', 'No description')
+
+
 class CorePersonSexuality(object):
 
     def __init__(self, *args, **kwargs):
         self._sexual_type = SexualType.random_type()
+        self._sexual_orientation = SexualOrientation.random_orientation()
         self.fetishes = set()
         self.taboos = set()
         self.deck = CoreSexDeck()
@@ -51,6 +82,14 @@ class CorePersonSexuality(object):
     @property
     def sexual_type(self):
         return self._sexual_type
+
+    @property
+    def sexual_orientation(self):
+        return self._sexual_orientation
+
+    @sexual_orientation.setter
+    def sexual_orientation(self, value):
+        self._sexual_orientation = value
 
     @sexual_type.setter
     def sexual_type(self, value):
@@ -77,6 +116,8 @@ class CorePersonSexuality(object):
 
         features = {i.id for i in person.get_features()}
         if not features.isdisjoint(self.taboos):
+            return 0
+        if not self._sexual_orientation.like(person):
             return 0
         value = 0
 
