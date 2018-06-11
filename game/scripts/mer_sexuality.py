@@ -203,6 +203,10 @@ class CoreSexMinigame(object):
         self.person = person
         self.player_played_cards = list()
 
+    def can_start(self):
+        return self.player.sexuality.attractivness(self.person) > 0 and \
+            self.person.sexuality.attractivness(self.player) > 0
+
     @property
     def person_pleasure(self):
         return max(0, min(5, self._calc_person_pleasure()))
@@ -229,17 +233,21 @@ class CoreSexMinigame(object):
     def player_pleasure(self):
         return max(0, min(self._calc_player_pleasure(), 5))
 
-    def start(self):
+    def start(self, return_result=False):
         self.player_card_slots = self.player.sexuality.attractivness(self.person)
         self.person_card_slots = self.person.sexuality.attractivness(self.player)
         person_cards = self.person.sexuality.deck.get_cards()
         random.shuffle(person_cards)
         self.person_cards = person_cards[0:self.person_card_slots]
-        renpy.call_screen('sc_sex_minigame', sex_game=self)
-        if self._person_pleasure <= self._calc_player_pleasure():
-            return self.NPC_WIN
+        renpy.call_in_new_context('lbl_sex_minigame', sex_game=self)
+        if self._calc_person_pleasure() <= self._calc_player_pleasure():
+            result = self.NPC_WIN
+            renpy.call_in_new_context('lbl_sex_minigame_end', text='You came first - you lose')
         else:
-            return self.PLAYER_WIN
+            result = self.PLAYER_WIN
+            renpy.call_in_new_context('lbl_sex_minigame_end', text='%s came first - you win' % self.person.name)
+        if return_result:
+            return result
 
     def get_card_slots(self):
         slots = list()

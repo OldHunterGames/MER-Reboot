@@ -46,7 +46,6 @@ label start:
     python:
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
-    $ CoreSexMinigame(player, core.characters[0]).start()
     call _main from _call__main
 
     return

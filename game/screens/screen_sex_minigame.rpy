@@ -1,3 +1,10 @@
+label lbl_sex_minigame(sex_game):
+    call screen sc_sex_minigame(sex_game)
+    return
+
+label lbl_sex_minigame_end(text):
+    '[text]'
+    return
 
 screen sc_sex_minigame(sex_game):
     zorder 10

@@ -34,6 +34,8 @@ init python:
 screen sc_cis(info, relations=None):
     $ person = info.person
     $ controlled = info.controlled
+    $ sex = CoreSexMinigame(player, person)
+    $ print(person.name)
     python:
         if person == core.player:
             controlled = True
@@ -65,6 +67,9 @@ screen sc_cis(info, relations=None):
                     textbutton 'Become successor (%s sparks)' % cost:
                         action Function(BecomeSuccessor(person, core.player, cost).run)
                         sensitive (core.player.sparks >= cost)
+                textbutton 'Sex':
+                    sensitive sex.can_start()
+                    action Function(sex.start)
             if controlled:
                 textbutton 'Ensembles':
                     action Function(EnsembleMaker(person).show)
