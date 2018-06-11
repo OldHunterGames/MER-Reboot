@@ -24,12 +24,13 @@ screen sc_sex_minigame(sex_game):
                 spacing 10
                 yalign 0.5
                 vbox:
-                    image im.Scale(sex_game.person.avatar, 160, 160)
+                    image im.Scale(sex_game.person.avatar, 130, 130)
                     text sex_game.person.name:
                         xalign 0.5
-                    # TODO: orientation, fetishes
+                    text sex_game.person.sexuality.sexual_type.name():
+                        xalign 0.5
                 for card in sex_game.person_cards:
-                    use sc_sexcard_repr(card, 150, 190)
+                    use sc_sexcard_repr(card, 150, 170)
 
         imagebutton:
             idle im.Scale('gui/button_ok.png', 100, 100)
@@ -47,9 +48,9 @@ screen sc_sex_minigame(sex_game):
                 xalign 0.5
                 for card in sex_game.get_card_slots():
                     if card is None:
-                        image im.Scale(card_back(), 150, 190)
+                        image im.Scale(card_back(), 150, 170)
                     else:
-                        use sc_sexcard_repr(card, 150, 190)
+                        use sc_sexcard_repr(card, 150, 170)
 
         frame:
             ypos 445
@@ -60,15 +61,17 @@ screen sc_sex_minigame(sex_game):
                 spacing 10
                 yalign 0.5
                 vbox:
-                    image im.Scale(sex_game.player.avatar, 160, 160)
+                    image im.Scale(sex_game.player.avatar, 130, 130)
                     text sex_game.player.name:
+                        xalign 0.5
+                    text sex_game.player.sexuality.sexual_type.name():
                         xalign 0.5
                 for card in sex_game.get_player_hand():
                     if sex_game.can_play():
                         $ action=(Function(sex_game.play_card, card), "Play")
                     else:
                         $ action = None
-                    use sc_sexcard_repr(card, 150, 190, action=action)
+                    use sc_sexcard_repr(card, 150, 170, action=action)
 
         frame:
             xalign 0.5

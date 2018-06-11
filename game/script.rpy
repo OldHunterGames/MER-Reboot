@@ -29,7 +29,10 @@ init 1 python:
         CoreFeature.register_feature(key, CoreFeature(key, value))
 
     for key, value in sex_cards_data.items():
-            CoreSexCard.register_card(key, CoreSexCard(key, value))
+        CoreSexCard.register_card(key, CoreSexCard(key, value))
+
+    for key, value in sexual_types_data.items():
+        SexualType.register_type(key, SexualType(key, value))
 # The game starts here.
 
 label start:

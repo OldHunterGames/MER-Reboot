@@ -8,6 +8,20 @@ from mer_command import Command
 
 class SexualType(object):
 
+    _SEX_TYPES = dict()
+
+    @classmethod
+    def register_type(cls, id, sex_type):
+        cls._SEX_TYPES[id] = sex_type
+
+    @classmethod
+    def get_type(cls, id):
+        return cls._SEX_TYPES[id]
+
+    @classmethod
+    def random_type(cls):
+        return random.choice(cls._SEX_TYPES.values())
+
     def __init__(self, id, data):
         self.id = id
         self.data = data
@@ -28,7 +42,7 @@ class SexualType(object):
 class CorePersonSexuality(object):
 
     def __init__(self, *args, **kwargs):
-        self._sexual_type = None
+        self._sexual_type = SexualType.random_type()
         self.fetishes = set()
         self.taboos = set()
         self.deck = CoreSexDeck()
@@ -46,7 +60,7 @@ class CorePersonSexuality(object):
     def interaction_value(self, activity, type):
         if self.sexual_type is None:
             return 0
-        return self.sexual_type.intersection_value(activity, type)
+        return self.sexual_type.interaction_value(activity, type)
 
     def make_initial_cards(self):
         cards = CoreSexCard.get_cards()
@@ -100,6 +114,7 @@ class CoreSexCard(object):
     def __init__(self, id, data):
         self.id = id
         self.data = data
+        self.value = 0
 
     def activity(self):
         return self.data['activity']
@@ -145,16 +160,33 @@ class CoreSexMinigame(object):
     def __init__(self, player, person):
         self.player = player
         self.person = person
-        self._person_pleasure = 0
-        self.person_played_cards = list()
+        self.player_played_cards = list()
 
     @property
     def person_pleasure(self):
-        return max(0, min(5, self._person_pleasure))
+        return max(0, min(5, self._calc_person_pleasure()))
+
+    def _calc_person_pleasure(self):
+        total = 0
+        for card in self.player_played_cards:
+            if self.person.sexuality.interaction_value(card.activity(), card.type()) > 0:
+                total += 1
+            else:
+                total -= 1
+        return total
+
+    def _calc_player_pleasure(self):
+        total = 0
+        for card in self.person_cards:
+            if self.player.sexuality.interaction_value(card.activity(), card.type()) > 0:
+                total += 1
+            else:
+                total -= 1
+        return total
 
     @property
     def player_pleasure(self):
-        return 3
+        return max(0, min(self._calc_player_pleasure(), 5))
 
     def start(self):
         self.player_card_slots = self.player.sexuality.attractivness(self.person)
@@ -163,7 +195,7 @@ class CoreSexMinigame(object):
         random.shuffle(person_cards)
         self.person_cards = person_cards[0:self.person_card_slots]
         renpy.call_screen('sc_sex_minigame', sex_game=self)
-        if self._person_pleasure <= self.player_pleasure:
+        if self._person_pleasure <= self._calc_player_pleasure():
             return self.NPC_WIN
         else:
             return self.PLAYER_WIN
@@ -172,7 +204,7 @@ class CoreSexMinigame(object):
         slots = list()
         for i in range(self.player_card_slots):
             try:
-                card = self.person_played_cards[i]
+                card = self.player_played_cards[i]
             except IndexError:
                 card = None
             slots.append(card)
@@ -186,7 +218,7 @@ class CoreSexMinigame(object):
 
     def play_card(self, card):
         self.player.sexuality.deck.remove_from_hand(card)
-        self.person_played_cards.append(card)
+        self.player_played_cards.append(card)
 
 class CoreAddCards(Command):
 
