@@ -58,6 +58,7 @@ class CorePersonSexuality(object):
 
     def attractivness(self, person):
         # Temporary return person charm as attractivness
+        return 3
         return person.attribute('charisma')
 
         features = {i.id for i in person.get_features()}
@@ -137,12 +138,55 @@ class CoreSexDeck(object):
         return 3
 
 
-class CoreSexMiniGame(object):
+class CoreSexMinigame(object):
 
-    def __init__(self, person1, person2):
-        self.person1 = person1
-        self.person2 = person2
+    NPC_WIN, PLAYER_WIN = range(2)
 
+    def __init__(self, player, person):
+        self.player = player
+        self.person = person
+        self._person_pleasure = 0
+        self.person_played_cards = list()
+
+    @property
+    def person_pleasure(self):
+        return max(0, min(5, self._person_pleasure))
+
+    @property
+    def player_pleasure(self):
+        return 3
+
+    def start(self):
+        self.player_card_slots = self.player.sexuality.attractivness(self.person)
+        self.person_card_slots = self.person.sexuality.attractivness(self.player)
+        person_cards = self.person.sexuality.deck.get_cards()
+        random.shuffle(person_cards)
+        self.person_cards = person_cards[0:self.person_card_slots]
+        renpy.call_screen('sc_sex_minigame', sex_game=self)
+        if self._person_pleasure <= self.player_pleasure:
+            return self.NPC_WIN
+        else:
+            return self.PLAYER_WIN
+
+    def get_card_slots(self):
+        slots = list()
+        for i in range(self.player_card_slots):
+            try:
+                card = self.person_played_cards[i]
+            except IndexError:
+                card = None
+            slots.append(card)
+        return slots
+
+    def can_play(self):
+        return any([i is None for i in self.get_card_slots()])
+
+    def get_player_hand(self):
+        return self.player.sexuality.deck.get_hand()
+
+    def play_card(self, card):
+        self.player.sexuality.deck.remove_from_hand(card)
+        self.person_played_cards.append(card)
 
 class CoreAddCards(Command):
 

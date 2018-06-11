@@ -28,4 +28,11 @@ init python:
     }
 
 
-    
+    sex_minigame_pleasure = {
+        0: __('boring'),
+        1: __('not impressed'),
+        2: __('satisfactory'),
+        3: __('feels so good'),
+        4: __('multiorgasm'),
+        5: __('EXTASY'),
+    }

@@ -46,13 +46,7 @@ screen sc_sex_deck(info):
                 spacing 10
                 xalign 0.5
                 for i in info.get_page():
-                    frame:
-                        xsize 200
-                        ysize 250
-                        vbox:
-                            text i.id
-                            text i.type()
-                            text i.activity()
+                    use sc_sexcard_repr(i)
             textbutton 'Previous':
                 xalign 0.0
                 yalign 1.0
@@ -74,15 +68,24 @@ screen sc_sex_deck(info):
                 spacing 10
                 xalign 0.5
                 for i in info.deck.get_hand():
-                    frame:
-                        xsize 200
-                        ysize 250
-                        vbox:
-                            text i.id
-                            text i.type()
-                            text i.activity()
+                    use sc_sexcard_repr(i)
                 for i in range(info.free_slots()):
                     image im.Scale(card_back(), 200, 250)
 
         textbutton "Leave":
             action Hide('sc_sex_deck')
+
+
+screen sc_sexcard_repr(card, xsize=200, ysize=250, action=None):
+    frame:
+        xsize xsize
+        ysize ysize
+        vbox:
+            text card.id
+            text card.type()
+            text card.activity()
+        if action is not None:
+            textbutton action[1]:
+                xalign 0.5
+                yalign 1.0
+                action action[0]
