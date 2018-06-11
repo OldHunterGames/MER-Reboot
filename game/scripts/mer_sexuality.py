@@ -211,6 +211,19 @@ class CoreSexMinigame(object):
     def person_pleasure(self):
         return max(0, min(5, self._calc_person_pleasure()))
 
+    def calc_bonus(self, cards):
+        value = 0
+        bonuses = dict()
+        for card in cards:
+            if card.type() in bonuses:
+                if card.activity() not in bonuses[card.type()]:
+                    value += 1
+                else:
+                    bonuses[card.type()].append(card.activity())
+            else:
+                bonuses[card.type()] = [card.activity()]
+        return value
+
     def _calc_person_pleasure(self):
         total = 0
         for card in self.player_played_cards:
@@ -218,6 +231,7 @@ class CoreSexMinigame(object):
                 total += 1
             else:
                 total -= 1
+        total += self.calc_bonus(self.player_played_cards)
         return total
 
     def _calc_player_pleasure(self):
@@ -227,6 +241,7 @@ class CoreSexMinigame(object):
                 total += 1
             else:
                 total -= 1
+        total += self.calc_bonus(self.person_cards)
         return total
 
     @property
