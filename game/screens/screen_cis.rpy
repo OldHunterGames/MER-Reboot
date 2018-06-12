@@ -35,7 +35,7 @@ screen sc_cis(info, relations=None):
     $ person = info.person
     $ controlled = info.controlled
     $ sex = CoreSexMinigame(player, person)
-    $ print(person.name)
+    $ duel = CoreDuel(player, person)
     python:
         if person == core.player:
             controlled = True
@@ -70,6 +70,8 @@ screen sc_cis(info, relations=None):
                 textbutton 'Sex':
                     sensitive sex.can_start()
                     action Function(sex.start)
+                textbutton 'Duel':
+                    action Function(duel.start)
             if controlled:
                 textbutton 'Ensembles':
                     action Function(EnsembleMaker(person).show)

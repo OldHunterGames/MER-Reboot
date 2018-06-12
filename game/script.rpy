@@ -14,6 +14,7 @@ init -10 python:
     from mer_command import *
     from mer_sparks_festival import *
     from mer_sexuality import *
+    from mer_duel import *
 
 init 1 python:
     for key, value in core_features.items():
@@ -36,6 +37,14 @@ init 1 python:
 
     for key, value in sexual_orientations_data.items():
         SexualOrientation.register_orientation(key, SexualOrientation(key, value))
+
+    for key, value in core_duel_suits_data.items():
+        CoreDuelSuit.register_suit(key, CoreDuelSuit(key, value))
+
+    for suit in CoreDuelSuit.get_suits():
+        data = {'suit': suit}
+        CoreDuelCard.register_card(suit.id, CoreDuelCard(suit.id, data))
+
 # The game starts here.
 
 label start:
