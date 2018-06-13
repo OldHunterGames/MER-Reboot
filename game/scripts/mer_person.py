@@ -17,6 +17,9 @@ class CoreFeature(object):
     @property
     def slot(self):
         return self._data.get('slot')
+
+    def name(self):
+        return self._data.get('name')
     
     def count_modifiers(self, attr):
         return self._data.get(attr, 0)
