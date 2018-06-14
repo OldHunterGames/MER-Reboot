@@ -52,6 +52,7 @@ label start:
     $ core = MERCore()
     $ core.player = player
     $ core.skip_turn.add_callback(CoreAddCards(player).run)
+    $ core.skip_turn.add_callback(CoreDuel.drop_skulls_callback)
     python:
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters

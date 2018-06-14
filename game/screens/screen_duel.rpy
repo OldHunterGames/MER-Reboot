@@ -25,7 +25,10 @@ screen sc_duel_drop_card(cards):
         xalign 0.5
         yalign 0.5
         xsize 400
-        ysize 170
+        ysize 200
+        text 'Drop a card':
+            xalign 0.5
+
         hbox:
             spacing 10
             yalign 0.5
@@ -47,7 +50,7 @@ screen sc_core_duel(duel):
             xalign 0.5
             spacing 5
             yalign 0.5
-            for i in duel.cards[duel.person]:
+            for i in duel.hand[duel.person]:
                 use sc_duel_card_repr(i)
 
     fixed:
@@ -76,7 +79,7 @@ screen sc_core_duel(duel):
             xalign 0.5
             spacing 5
             yalign 0.5
-            for i in duel.cards[duel.player]:
+            for i in duel.hand[duel.player]:
                 use sc_duel_card_repr(i):
                     textbutton 'Play':
                         action Function(duel.player_play_card, i)
