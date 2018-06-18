@@ -89,7 +89,7 @@ label lbl_slavercaravan_quest_virgin(world):
             listvennik "Oh now. Don't hurt me. This is all I have. 5 gold. Get it. Just don't hurt me, please!"
             $ world.food += 5
             "You got 5 food"
-        "{color=#0000ffff}(have a slavegirl){/color} I'll give you a slavegirl to play with, kid.":
+        "{color=#0000ffff}(have a slavegirl){/color} I'll give you a slavegirl to play with, kid." if girls:
             $ slave = PickSlave(girls, world).call()
             $ world.remove_character(slave)
             listvennik "My own slavegirl? WOW! THANK YOU SO MUCH!!!"
