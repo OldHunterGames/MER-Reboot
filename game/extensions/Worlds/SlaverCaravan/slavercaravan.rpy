@@ -510,6 +510,7 @@ label lbl_slavercaravan_artisan_city(world):
             'Buy items':
                 call lbl_buy_item(world) from _call_lbl_buy_item_4
             'Rent a room':
+                $ world.player.state += 1
                 $ world.halt = True
                 call lbl_slavercaravan_halt(world) from _call_lbl_slavercaravan_halt_5
             'Quest' if loc.quest is not None:

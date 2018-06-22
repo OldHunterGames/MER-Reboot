@@ -1,6 +1,6 @@
 Mists of Ethernal Rome
 (very) early access
-v 0.10.0 unstable
+v 0.10.1 unstable
 
 ----Disclaimer----
 
