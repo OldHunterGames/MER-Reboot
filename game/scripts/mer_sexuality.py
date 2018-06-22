@@ -197,13 +197,22 @@ class CoreSexDeck(object):
 class CoreSexMinigame(object):
 
     NPC_WIN, PLAYER_WIN = range(2)
+    NPC_HAD_SEX = list()
 
     def __init__(self, player, person):
         self.player = player
         self.person = person
         self.player_played_cards = list()
 
+    @classmethod
+    def decade_skip_callback(cls, *args, **kwargs):
+        cls.NPC_HAD_SEX = list()
+
     def can_start(self):
+        if self.person in self.NPC_HAD_SEX:
+            return False
+        if len(self.player.sexuality.deck.get_hand()) < 0:
+            return False
         return self.player.sexuality.attractivness(self.person) > 0 and \
             self.person.sexuality.attractivness(self.player) > 0
 
@@ -249,6 +258,7 @@ class CoreSexMinigame(object):
         return max(0, min(self._calc_player_pleasure(), 5))
 
     def start(self, return_result=False):
+        self.NPC_HAD_SEX.append(self.person)
         self.player_card_slots = self.player.sexuality.attractivness(self.person)
         self.person_card_slots = self.person.sexuality.attractivness(self.player)
         person_cards = self.person.sexuality.deck.get_cards()

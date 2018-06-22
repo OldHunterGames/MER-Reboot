@@ -171,6 +171,10 @@ class Hierarchy(object):
     def add_clientela(self, person):
         self.HIERARCHY[self.person].append(person)
         self.PATRONS[person] = self.person
+        patrons_patron = self.PATRONS.get(self.person)
+        while patrons_patron is not None:
+            person.add_successor(patrons_patron)
+            patrons_patron = self.PATRONS.get(patrons_patron)
         person.add_successor(self.person)
         self.person.add_successor(person)
 
@@ -185,6 +189,11 @@ class Hierarchy(object):
         return self.HIERARCHY[self.person]
 
     def can_be_clientela(self, person):
+        patron = self.PATRONS.get(self.person)
+        while patron is not None:
+            if patron == person:
+                return False
+            patron = self.PATRONS.get(patron)
         return self.status() > Hierarchy(person).status()
 
     def assembly(self, exclude_self=False):
