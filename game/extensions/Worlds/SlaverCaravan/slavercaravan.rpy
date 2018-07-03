@@ -34,9 +34,10 @@ init 1 python:
 
         def call_event(self):
             event = self.get_event()
-            if event is None:
+            if event is None or self.last_event_loc == self.locations.current:
                 return
             else:
+                self.last_event_loc = self.locations.current
                 return renpy.call_in_new_context(event, world=self)
 
         def __init__(self, *args, **kwargs):
@@ -49,6 +50,7 @@ init 1 python:
             self.is_at_halt = False
             self.halt_acted = False
             self.quests_completed = 0
+            self.last_event_loc = None
 
         def critical_state_callback(self, person):
             renpy.call_in_new_context('lbl_slavercaravan_criticalstate', world=self, person=person)
@@ -607,6 +609,12 @@ label lbl_slavercaravan_slave_escape_prevented(world, person):
     return
 
 label lbl_slavercaravan_change_location(world):
+    python:
+        loc = renpy.call_screen('sc_slavercaravan_compas', world=world)
+        print(loc)
+        if loc != 'stay':
+            world.change_location(loc)
+    return
     python:
         available_locations = world.locations.locs_to_go()
     menu:

@@ -81,6 +81,61 @@ screen sc_slavercaravan_map(world):
             action Return()
 
 
+screen sc_slavercaravan_compas(world):
+    python:
+        available_locations = world.locations.locs_to_go()
+    window:
+        xfill True
+        yfill True
+        ysize 720
+        xsize 1280
+        background '#00000000'        
+        imagebutton:
+            xcenter 638
+            ycenter 320
+            focus_mask True
+            idle im.Scale(world.path('resources/img/map/btn_cross_e.png'), 200, 200)
+            hover im.Scale(world.path('resources/img/map/btn_cross_e_hover.png'), 200, 200)
+            insensitive im.Scale(world.path('resources/img/map/btn_cross_e_inactive.png'), 200, 200)
+            action Return(available_locations['left'])
+            sensitive (available_locations['left'] is not None)
+        imagebutton:
+            xcenter 460
+            ycenter 320
+            focus_mask True
+            idle im.Scale(world.path('resources/img/map/btn_cross_w.png'), 200, 200)
+            hover im.Scale(world.path('resources/img/map/btn_cross_w_hover.png'), 200, 200)
+            insensitive im.Scale(world.path('resources/img/map/btn_cross_w_inactive.png'), 200, 200)
+            action Return(available_locations['right'])
+            sensitive (available_locations['right'] is not None)
+        imagebutton:
+            xcenter 550
+            ycenter 236
+            focus_mask True
+            idle im.Scale(world.path('resources/img/map/btn_cross_n.png'), 200, 200)
+            hover im.Scale(world.path('resources/img/map/btn_cross_n_hover.png'), 200, 200)
+            insensitive im.Scale(world.path('resources/img/map/btn_cross_n_inactive.png'), 200, 200)
+            action Return(available_locations['top'])
+            sensitive (available_locations['top'] is not None)
+        imagebutton:
+            xcenter 551
+            ycenter 405
+            focus_mask True
+            idle im.Scale(world.path('resources/img/map/btn_cross_s.png'), 200, 200)
+            hover im.Scale(world.path('resources/img/map/btn_cross_s_hover.png'), 200, 200)
+            insensitive im.Scale(world.path('resources/img/map/btn_cross_s_inactive.png'), 200, 200)
+            action Return(available_locations['bot'])
+            sensitive (available_locations['bot'] is not None)
+
+        imagebutton:
+            xcenter 550
+            ycenter 320
+            focus_mask True
+            idle im.Scale(world.path('resources/img/map/btn_cross_center.png'), 70, 70)
+            hover im.Scale(world.path('resources/img/map/btn_cross_center_hover.png'), 70, 70)
+            action Return('stay')
+
+
 screen sc_slavercaravan_sell_slaves(market):
     modal True
     zorder 10
