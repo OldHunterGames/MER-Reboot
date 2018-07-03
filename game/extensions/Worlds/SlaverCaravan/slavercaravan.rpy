@@ -52,6 +52,15 @@ init 1 python:
             self.quests_completed = 0
             self.last_event_loc = None
 
+        def get_menu_item_bg(self):
+            return self.path('resources/img/gui/menu_item.png')
+
+        def get_menu_item_bg_hover(self):
+            return self.path('resources/img/gui/menu_item_hover.png')
+
+        def menu_item_ysize(self):
+            return 70
+
         def critical_state_callback(self, person):
             renpy.call_in_new_context('lbl_slavercaravan_criticalstate', world=self, person=person)
 

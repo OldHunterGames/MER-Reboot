@@ -15,6 +15,7 @@ class MERCore(object):
         self._player = None
         self.characters = list()
         self.decade = 1
+        self.world = None
 
     def add_character(self, person):
         self.characters.append(person)
@@ -147,7 +148,9 @@ class MistTravel(object):
         self.core = core
     
     def run(self):
+        self.core.world = self.world
         self.world.visit(self.visitor)
+        self.core.world = None
         self.core.skip_turn()
 
 

@@ -238,11 +238,34 @@ style input:
 ## https://www.renpy.org/doc/html/screen_special.html#choice
 
 screen choice(items):
+    $ mer_core = getattr(renpy.store, 'core', None)
+    python:
+        if mer_core is not None:
+            world = mer_core.world
+        else:
+            world = None
+        if world is not None:
+            item_bg = world.get_menu_item_bg()
+            item_bg_hover = world.get_menu_item_bg_hover()
+            ysize = world.menu_item_ysize()
+        else:
+            item_bg = None
+            item_bg_hover = None
+            ysize = None
+        
     style_prefix "choice"
 
     vbox:
         for i in items:
-            textbutton i.caption action i.action
+            textbutton i.caption action i.action:
+                text_yalign 0.5
+                if ysize is not None:
+                    ysize ysize
+                if item_bg is not None:
+                    background im.Scale(item_bg, 760, 70)
+                if item_bg_hover is not None:
+                    hover_background im.Scale(item_bg_hover, 760, 70)
+
             
 
 ## When this is true, menu captions will be spoken by the narrator. When false,
