@@ -22,9 +22,6 @@ screen sc_slavercaravan_stats(world):
             xsize 180
             image im.Scale(world.player.avatar, 188, 170):
                 xalign 0.5
-            text world.player.name:
-                xalign 0.5
-                color '#ffffff'
 
             text 'Food: %s' % world.food color '#ffffff'
             text 'Day: %s' % world.day color '#ffffff'
