@@ -81,6 +81,9 @@ class CoreDuelCard(object):
             return False
         return card.id in self.data.get('suit').beats()
 
+    def __str__(self):
+        return '(card: %s, %s, %s)' % (self.name(), self.attribute(), self.action())
+
 
 class CoreDuel(object):
 
@@ -118,7 +121,7 @@ class CoreDuel(object):
         for card in CoreDuelCard.get_cards():
             attr = card.attribute()
             attr_value = self.player.attribute(attr)
-            if card.action != 'no_action':
+            if card.action() != 'no_action':
                 for i in range(2):
                     self.cards[self.player].append(card)
                     self.cards[self.person].append(card)
@@ -147,13 +150,17 @@ class CoreDuel(object):
         self.max_cards[self.player] = len(self.hand[self.player]) + 1
         self.max_cards[self.person] = len(self.hand[self.person]) + 1
         self.played_cards[self.player] = None
+        if len(self.hand[self.person]) < 1:
+            raise Exception('npc got 0 cards for his hand')
+        if len(self.hand[self.player]) < 1:
+            raise Exception('player got 0 cards for his hand')
 
     def get_card(self, who):
         if len(self.hand[who]) < self.max_cards[who]:
             self.hand[who].append(random.choice(self.cards[who]))
 
     def drop_card(self, who):
-        if len(self.cards[who]) > 0:
+        if len(self.hand[who]) > 0:
             if who == self.player:
                 cards = [i for i in self.hand[who]]
                 random.shuffle(cards)

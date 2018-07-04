@@ -81,6 +81,9 @@ class CoreAngel(object):
     CHERUB_GRADE = AngelGrade('cherub_grade', 4)
     SERAPH_GRADE = AngelGrade('separh_grade', 5)
 
+    def __str__(self):
+        return '%s | %s' % (self.name, self.grade.name)
+
     def __init__(self, name, avatar=None, *args, **kwargs):
         self.name = name
         self._avatar = avatar

@@ -15,6 +15,7 @@ init -10 python:
     from mer_sparks_festival import *
     from mer_sexuality import *
     from mer_duel import *
+    from mer_legacy_system import CoreRiteOfLegacy
 
 init 1 python:
     for key, value in core_features.items():
@@ -57,6 +58,10 @@ label start:
     python:
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
+    # python:
+    #     core.characters[-1].add_successor(core.characters[0])
+    #     core.characters[-1].add_successor(player)
+    #     CoreRiteOfLegacy(core.characters[-1], core, SparksFestival, Hierarchy).run()
     call _main from _call__main
 
     return

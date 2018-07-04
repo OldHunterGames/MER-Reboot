@@ -228,6 +228,8 @@ class PersonCreator(object):
 
 class CorePerson(object):
 
+    def __str__(self):
+        return 'person: %s' % self.name
 
     def __init__(self, firstname, gender, age, genus):
 
