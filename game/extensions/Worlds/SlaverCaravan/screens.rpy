@@ -9,18 +9,18 @@ style slavercaravan_button:
 screen sc_slavercaravan_stats(world):
 
     window:
-        background Color((32, 32, 32, 100))
+        background im.Scale(world.path('resources/img/gui/main_screen.png'), 1280, 720)
         xfill True
         yfill True
         ysize 720
-        xsize 192
-        xpos 1188
+        xsize 1280
 
         vbox:
+            xpos 1084
+            ypos 8
             spacing 10
-            xalign 0.5
             xsize 180
-            image im.Scale(world.player.avatar, 180, 180):
+            image im.Scale(world.player.avatar, 188, 170):
                 xalign 0.5
             text world.player.name:
                 xalign 0.5
