@@ -78,12 +78,13 @@ class CoreRiteOfLegacy(object):
         successors = {successor: 1 for successor in self.dead_person.successors()}
         print(successors)
         angels = self.dead_person.get_host()
-        archons = [i for i in angels if i.level() == 3]
+        archons = [i for i in angels if i.level() == 2]
+        ellochims = [i for i in angels if len(i.ensemble) > 0 and i.level() == 3]
         cherubs = [i for i in angels if len(i.ensemble) > 0 and i.level() == 4]
         seraphs = [i for i in angels if len(i.ensemble) > 0 and i.level() == 5]
-        print('archons: %s' % archons)
-        print('cherubs: %s' % cherubs)
-        print('seraphs: %s' % seraphs)
+        ellochim_points = {
+            kanonarch: defaultdict(int) for kanonarch in ellochims
+        }
         cherubs_points = {
             kanonarch: defaultdict(int) for kanonarch in cherubs
         }
@@ -91,30 +92,58 @@ class CoreRiteOfLegacy(object):
             kanonarch: defaultdict(int) for kanonarch in seraphs
         }
         # TODO: archons for leader of house when we'll implement house
-        self._distribute_angles(archons, cherubs_points, successors)
-        for key, value in cherubs_points.items():
-            self.dead_person.remove_angel(key)
-            max_points = max(value.values())
+        self._distribute_angels(archons, ellochim_points, successors)
+
+        for key, value in ellochim_points.items():
+            try:
+                max_points = max(value.values())
+            except ValueError:
+                key.apostol = None
+                self.dead_person.remove_angel(key)
+                continue
             applicants = [person for person, points in value.items() if points == max_points]
             if len(applicants) > 1:
                 key.apostol = None
-                dead_person.remove_angel(key)
+                self.dead_person.remove_angel(key)
+            else:
+                SetAngelApostol(key, applicants[0]).run()
+                print('%s got angel: %s' % (applicants[0], key))
+                if key.kanonarch is not None:
+                    cherubs_points[key.kanonarch][applicants[0]] += 1
+
+        for key, value in cherubs_points.items():
+            try:
+                max_points = max(value.values())
+            except ValueError:
+                key.apostol = None
+                self.dead_person.remove_angel(key)
+                continue
+            applicants = [person for person, points in value.items() if points == max_points]
+            if len(applicants) > 1:
+                key.apostol = None
+                self.dead_person.remove_angel(key)
             else:
                 SetAngelApostol(key, applicants[0]).run()
                 print('%s got angel: %s' % (applicants[0], key))
                 if key.kanonarch is not None:
                     seraphs_points[key.kanonarch][applicants[0]] += 1
+
         for key, value in seraphs_points.items():
-            max_points = max(value.values())
+            try:
+                max_points = max(value.values())
+            except ValueError:
+                key.apostol = None
+                self.dead_person.remove_angel(key)
+                continue
             applicants = [person for person, points in value.items() if points == max_points]
             if len(applicants) > 1:
                 key.apostol = None
-                dead_person.remove_angel(key)
+                self.dead_person.remove_angel(key)
             else:
                 SetAngelApostol(key, applicants[0]).run()
                 print('%s got angel: %s' % (applicants[0], key))
 
-    def _distribute_angles(self, angels, points, successors):
+    def _distribute_angels(self, angels, points, successors):
         for archon in angels:
             if len(successors.keys()) < 2:
                 successors.keys()[0].add_angel(archon)
