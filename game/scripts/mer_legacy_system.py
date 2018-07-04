@@ -5,9 +5,10 @@ from collections import defaultdict
 import renpy.store as store
 import renpy.exports as renpy
 
-from mer_command import Command
+from mer_command import Command, SetAngelApostol
 from mer_duel import CoreDuel
 from mer_sexuality import CoreSexMinigame
+
 
 class RiteOfLegacyDispute(object):
 
@@ -92,12 +93,14 @@ class CoreRiteOfLegacy(object):
         # TODO: archons for leader of house when we'll implement house
         self._distribute_angles(archons, cherubs_points, successors)
         for key, value in cherubs_points.items():
+            self.dead_person.remove_angel(key)
             max_points = max(value.values())
             applicants = [person for person, points in value.items() if points == max_points]
             if len(applicants) > 1:
-                pass
+                key.apostol = None
+                dead_person.remove_angel(key)
             else:
-                applicants[0].add_angel(key)
+                SetAngelApostol(key, applicants[0]).run()
                 print('%s got angel: %s' % (applicants[0], key))
                 if key.kanonarch is not None:
                     seraphs_points[key.kanonarch][applicants[0]] += 1
@@ -105,9 +108,10 @@ class CoreRiteOfLegacy(object):
             max_points = max(value.values())
             applicants = [person for person, points in value.items() if points == max_points]
             if len(applicants) > 1:
-                pass
+                key.apostol = None
+                dead_person.remove_angel(key)
             else:
-                applicants[0].add_angel(key)
+                SetAngelApostol(key, applicants[0]).run()
                 print('%s got angel: %s' % (applicants[0], key))
 
     def _distribute_angles(self, angels, points, successors):
@@ -124,8 +128,8 @@ class CoreRiteOfLegacy(object):
                     winner = self.dispute(self.core.player, person)
                 else:
                     winner = random.choice(applicants)
-                winner.add_angel(archon)
                 print('%s got angel: %s' % (winner, archon))
+                SetAngelApostol(archon, winner).run()
                 kanonarch = archon.kanonarch
                 if kanonarch is not None:
                     try:
