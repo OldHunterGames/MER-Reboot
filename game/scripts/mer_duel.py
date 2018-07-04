@@ -122,11 +122,11 @@ class CoreDuel(object):
                 for i in range(2):
                     self.cards[self.player].append(card)
                     self.cards[self.person].append(card)
-            for i in range(attr_value):
-                self.cards[self.player].append(card)
-            attr_value = self.person.attribute(attr)
-            for i in range(attr_value):
-                self.cards[self.person].append(card)
+                for i in range(attr_value):
+                    self.cards[self.player].append(card)
+                attr_value = self.person.attribute(attr)
+                for i in range(attr_value):
+                    self.cards[self.person].append(card)
 
         player_might = self.player.attribute('might')
         person_might = self.person.attribute('might')
