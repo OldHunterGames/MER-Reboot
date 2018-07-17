@@ -38,7 +38,7 @@ init 1 python:
                 return
             else:
                 self.last_event_loc = self.locations.current
-                return renpy.call_in_new_context(event, world=self)
+                return renpy.call(event, world=self)
 
         def __init__(self, *args, **kwargs):
             super(SlaverCaravan, self).__init__(*args, **kwargs)
