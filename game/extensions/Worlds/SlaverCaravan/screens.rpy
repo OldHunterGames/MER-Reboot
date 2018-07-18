@@ -7,13 +7,14 @@ style slavercaravan_button:
     hover_background '#405a0e'
 
 screen sc_slavercaravan_stats(world):
-
+    zorder 10
     window:
         background im.Scale(world.path('resources/img/gui/main_screen.png'), 1280, 720)
         xfill True
         yfill True
         ysize 720
         xsize 1280
+        
 
         vbox:
             xpos 1084
