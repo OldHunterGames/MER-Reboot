@@ -42,7 +42,7 @@ init 1 python:
 
         def __init__(self, *args, **kwargs):
             super(SlaverCaravan, self).__init__(*args, **kwargs)
-            self.characters = list()
+            self.characters = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
             self.locations = Locations(world=self, quests=SlaverCaravanQuest.get_quests())
             self.food = 0
             self.day = 1
@@ -120,7 +120,8 @@ init 1 python:
 
         def escape_chance(self, person):
             value = max(person.attributes().values())
-            value = int(person.applied_item.escape_chance(value))
+            if person.applied_item is not None:
+                value = int(person.applied_item.escape_chance(value))
             if person.has_status('tamed'):
                 value -= 1
             return ['escape' for i in range(value)]

@@ -14,7 +14,7 @@ screen sc_slavercaravan_stats(world):
         yfill True
         ysize 720
         xsize 1280
-        
+
 
         vbox:
             xpos 1084
@@ -179,61 +179,99 @@ screen sc_slavercaravan_sell_slaves(market):
             action Hide('sc_slavercaravan_sell_slaves')
 
 
+style slaves_button_text:
+    xalign 0.5
+
+
+init python:
+    slavercaravan_slave_ava_xpos = 945
+    slavercaravan_slave_ava_ypos = 90
+    slavercaravan_slave_ava_size = (275, 575)
+    slavercaravan_slave_btn_xsize = 385
+    slavercaravan_slave_btn_ysize = 40
+    slavercaravan_slave_list1_xpos = 250
+    slavercaravan_slave_list1_ypos = 90
+    slavercaravan_slave_list1_xsize = 300
+    slavercaravan_slave_list2_xpos = 550
+    slavercaravan_slave_list2_ypos = 90
+
 screen sc_slavercaravan_slaves(manager):
     modal True
     zorder 10
+    $ button_bg = im.Scale(world.path('resources/img/gui/slave_screen_btn.png'), slavercaravan_slave_btn_xsize, slavercaravan_slave_btn_ysize)
+    $ button_bg_hover = im.Scale(world.path('resources/img/gui/slave_screen_btn_hover.png'), slavercaravan_slave_btn_xsize, slavercaravan_slave_btn_ysize)
+    $ list1_button_bg = im.Scale(world.path('resources/img/gui/slave_screen_btn.png'), 295, slavercaravan_slave_btn_ysize)
     window:
         xfill True
         yfill True
         ysize 720
         xsize 1280
-        background '#C0FDFB'
+        background im.Scale(world.path('resources/img/gui/slaves_screen.png'), 1280, 720)
+        image im.Scale(world.player.avatar, 190, 170):
+            ypos 8
+            xpos 8
         vbox:
-            for i in manager.slaves:
-                hbox:
-                    spacing 5
-                    xmaximum 350
-                    image im.Scale(i.avatar, 32, 32)
-                    textbutton i.name:
-                        action Function(manager.select, i)
-                        selected manager.selected == i
-
-        if manager.selected is not None:
-            frame:
-                xalign 0.5
-                xsize 500
-                ysize 720
-                hbox:
-                    spacing 5
-                    vbox:
-                        image im.Scale(manager.selected.avatar, 200, 200)
-                        text manager.selected.name:
-                            xalign 0.5
-                        vbox:
-                            xalign 0.5
-                            for value in manager.selected.show_attributes().values():
-                                text value
-                            for value in manager.selected.statuses():
-                                text value
-                        if manager.can_make_food():
-                            textbutton 'Butcher for food':
-                                action Function(manager.make_food)
-                        if manager.can_rape():
-                            textbutton 'Rape':
-                                action Function(manager.rape)
-                        if manager.can_tame():
-                            textbutton 'Tame':
-                                action Function(manager.tame)
-                    vbox:
-                        text manager.selected.gender
-                        text 'escape chance: %s' % manager.escape_chance():
-                            color '#ff0000'
-
+            xpos 8
+            ypos 200
+            text 'Food: %s' % world.food color '#ffffff'
+            text 'Day: %s' % world.day color '#ffffff'
+            text 'State: %s' % world.player.state color value_color(world.player.state)
+            vbox:
+                for value in world.player.show_attributes().values():
+                    text value
 
         textbutton 'Leave':
-            xalign 1.0
+            xpos 8
             yalign 1.0
             action Hide('sc_slavercaravan_slaves')
+
+        vbox:
+            xpos slavercaravan_slave_list2_xpos
+            ypos slavercaravan_slave_list2_ypos
+            for i in manager.slaves:
+                textbutton i.name:
+                    text_style 'slaves_button_text'
+                    action Function(manager.select, i)
+                    selected manager.selected == i
+                    xsize slavercaravan_slave_btn_xsize
+                    ysize slavercaravan_slave_btn_ysize
+                    background button_bg
+                    hover_background button_bg_hover
+
+        if manager.selected is not None:
+            $ slave = manager.selected
+            image im.Scale(slave.avatar, *slavercaravan_slave_ava_size):
+                xpos slavercaravan_slave_ava_xpos
+                ypos slavercaravan_slave_ava_ypos
+            vbox:
+                xpos slavercaravan_slave_list1_xpos
+                ypos slavercaravan_slave_list1_ypos
+                xsize slavercaravan_slave_list1_xsize
+                for value in manager.selected.show_attributes().values():
+                    text value:
+                        xalign 0.5
+                for value in manager.selected.statuses():
+                    text value:
+                        xalign 0.5
+                vbox:
+                    if manager.can_make_food():
+                        textbutton 'Butcher for food':
+                            background list1_button_bg
+                            xsize 295
+                            ysize slavercaravan_slave_btn_ysize
+                            action Function(manager.make_food)
+                    if manager.can_rape():
+                        textbutton 'Rape':
+                            background list1_button_bg
+                            xsize 295
+                            ysize slavercaravan_slave_btn_ysize
+                            action Function(manager.rape)
+                    if manager.can_tame():
+                        textbutton 'Tame':
+                            background list1_button_bg
+                            xsize 295
+                            ysize slavercaravan_slave_btn_ysize
+                            action Function(manager.tame)
 
 
 screen sc_slavercaravan_catch_slave(manager):

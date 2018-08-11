@@ -58,10 +58,6 @@ label start:
     python:
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
-    # python:
-    #     core.characters[-1].add_successor(core.characters[0])
-    #     core.characters[-1].add_successor(player)
-    #     CoreRiteOfLegacy(core.characters[-1], core, SparksFestival, Hierarchy).run()
     call _main from _call__main
 
     return
