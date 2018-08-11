@@ -247,10 +247,10 @@ screen sc_slavercaravan_slaves(manager):
                 xpos slavercaravan_slave_list1_xpos
                 ypos slavercaravan_slave_list1_ypos
                 xsize slavercaravan_slave_list1_xsize
-                for value in manager.selected.show_attributes().values():
+                for value in slave.show_attributes().values():
                     text value:
                         xalign 0.5
-                for value in manager.selected.statuses():
+                for value in slave.statuses():
                     text value:
                         xalign 0.5
                 vbox:
@@ -272,79 +272,153 @@ screen sc_slavercaravan_slaves(manager):
                             xsize 295
                             ysize slavercaravan_slave_btn_ysize
                             action Function(manager.tame)
+        else:
+            image im.Scale(world.path('resources/img/gui/slave_screen_bg.png'), *slavercaravan_slave_ava_size):
+                xpos slavercaravan_slave_ava_xpos
+                ypos slavercaravan_slave_ava_ypos
 
 
 screen sc_slavercaravan_catch_slave(manager):
     modal True
     zorder 10
+    $ button_bg = im.Scale(world.path('resources/img/gui/slave_screen_btn.png'), slavercaravan_slave_btn_xsize, slavercaravan_slave_btn_ysize)
+    $ button_bg_hover = im.Scale(world.path('resources/img/gui/slave_screen_btn_hover.png'), slavercaravan_slave_btn_xsize, slavercaravan_slave_btn_ysize)
+    $ list1_button_bg = im.Scale(world.path('resources/img/gui/slave_screen_btn.png'), 295, slavercaravan_slave_btn_ysize)
     window:
         xfill True
         yfill True
         ysize 720
         xsize 1280
-        background '#C0FDFB'
-        frame:
-            xalign 0.5
-            xsize 500
-            ysize 720
-            hbox:
-                spacing 5
-                vbox:
-                    image im.Scale(manager.slave.avatar, 200, 200)
-                    textbutton 'Butcher for food':
-                        action Function(manager.make_food), Return()
-                    for i in manager.items:
-                        textbutton i.name:
-                            action Function(manager.catch, i), Return()
-                    if manager.tries > 1:
-                        textbutton 'Try again':
-                            action Return()
-                    else:
-                        textbutton 'End for today':
-                            action Return()
-                vbox:
-                    text slave.gender
-                    for value in manager.slave.show_attributes().values():
-                        text value
+        background im.Scale(world.path('resources/img/gui/slaves_screen.png'), 1280, 720)
+        image im.Scale(world.player.avatar, 190, 170):
+            ypos 8
+            xpos 8
+        vbox:
+            xpos 8
+            ypos 200
+            text 'Food: %s' % world.food color '#ffffff'
+            text 'Day: %s' % world.day color '#ffffff'
+            text 'State: %s' % world.player.state color value_color(world.player.state)
+            vbox:
+                for value in world.player.show_attributes().values():
+                    text value
+
+        # textbutton 'Leave':
+        #     xpos 8
+        #     yalign 1.0
+        #     action Hide('sc_slavercaravan_slaves')
+
+        vbox:
+            xpos slavercaravan_slave_list2_xpos
+            ypos slavercaravan_slave_list2_ypos
+            textbutton 'Butcher for food':
+                action Function(manager.make_food), Return()
+                text_style 'slaves_button_text'
+                xsize slavercaravan_slave_btn_xsize
+                ysize slavercaravan_slave_btn_ysize
+                background button_bg
+                hover_background button_bg_hover
+            for i in manager.items:
+                textbutton i.name:
+                    action Function(manager.catch, i), Return()
+                    text_style 'slaves_button_text'
+                    xsize slavercaravan_slave_btn_xsize
+                    ysize slavercaravan_slave_btn_ysize
+                    background button_bg
+                    hover_background button_bg_hover
+            if manager.tries > 1:
+                textbutton 'Try again':
+                    action Return()
+                    text_style 'slaves_button_text'
+                    xsize slavercaravan_slave_btn_xsize
+                    ysize slavercaravan_slave_btn_ysize
+                    background button_bg
+                    hover_background button_bg_hover
+            else:
+                textbutton 'End for today':
+                    action Return()
+                    text_style 'slaves_button_text'
+                    xsize slavercaravan_slave_btn_xsize
+                    ysize slavercaravan_slave_btn_ysize
+                    background button_bg
+                    hover_background button_bg_hover
+
+        $ slave = manager.slave
+        image im.Scale(slave.avatar, *slavercaravan_slave_ava_size):
+            xpos slavercaravan_slave_ava_xpos
+            ypos slavercaravan_slave_ava_ypos
+        vbox:
+            xpos slavercaravan_slave_list1_xpos
+            ypos slavercaravan_slave_list1_ypos
+            xsize slavercaravan_slave_list1_xsize
+            for value in slave.show_attributes().values():
+                text value:
+                    xalign 0.5
+            for value in slave.statuses():
+                text value:
+                    xalign 0.5
 
 
 screen sc_slavercaravan_pick_slave(manager):
     modal True
     zorder 10
+    $ button_bg = im.Scale(world.path('resources/img/gui/slave_screen_btn.png'), slavercaravan_slave_btn_xsize, slavercaravan_slave_btn_ysize)
+    $ button_bg_hover = im.Scale(world.path('resources/img/gui/slave_screen_btn_hover.png'), slavercaravan_slave_btn_xsize, slavercaravan_slave_btn_ysize)
+    $ list1_button_bg = im.Scale(world.path('resources/img/gui/slave_screen_btn.png'), 295, slavercaravan_slave_btn_ysize)
     window:
         xfill True
         yfill True
         ysize 720
         xsize 1280
-        background '#C0FDFB'
+        background im.Scale(world.path('resources/img/gui/slaves_screen.png'), 1280, 720)
+        image im.Scale(world.player.avatar, 190, 170):
+            ypos 8
+            xpos 8
         vbox:
-            for i in manager.slaves:
-                hbox:
-                    spacing 5
-                    xmaximum 350
-                    image im.Scale(i.avatar, 32, 32)
-                    textbutton i.name:
-                        action Function(manager.select, i)
-                        selected manager.selected == i
+            xpos 8
+            ypos 200
+            text 'Food: %s' % world.food color '#ffffff'
+            text 'Day: %s' % world.day color '#ffffff'
+            text 'State: %s' % world.player.state color value_color(world.player.state)
+            vbox:
+                for value in world.player.show_attributes().values():
+                    text value
 
-        if manager.selected is not None:
-            frame:
-                xalign 0.5
-                xsize 500
-                ysize 720
-                hbox:
-                    spacing 5
-                    vbox:
-                        image im.Scale(manager.selected.avatar, 200, 200)
-                        text manager.selected.name:
-                            xalign 0.5
-                        text manager.selected.gender:
-                            xalign 0.5
-                        vbox:
-                            xalign 0.5
-                            for value in manager.selected.show_attributes().values():
-                                text value
-                            for value in manager.selected.statuses():
-                                text value
-                        textbutton 'Pick':
-                            action Function(manager.pick), Return()
+        # textbutton 'Leave':
+        #     xpos 8
+        #     yalign 1.0
+        #     action Hide('sc_slavercaravan_slaves')
+
+        vbox:
+            xpos slavercaravan_slave_list2_xpos
+            ypos slavercaravan_slave_list2_ypos
+            for i in manager.slaves:
+                textbutton i.name:
+                    text_style 'slaves_button_text'
+                    action Function(manager.select, i)
+                    selected manager.selected == i
+                    xsize slavercaravan_slave_btn_xsize
+                    ysize slavercaravan_slave_btn_ysize
+                    background button_bg
+                    hover_background button_bg_hover
+
+    if manager.selected is not None:
+        $ slave = manager.selected
+        image im.Scale(slave.avatar, *slavercaravan_slave_ava_size):
+            xpos slavercaravan_slave_ava_xpos
+            ypos slavercaravan_slave_ava_ypos
+        vbox:
+            xpos slavercaravan_slave_list1_xpos
+            ypos slavercaravan_slave_list1_ypos
+            xsize slavercaravan_slave_list1_xsize
+            for value in slave.show_attributes().values():
+                text value:
+                    xalign 0.5
+            for value in slave.statuses():
+                text value:
+                    xalign 0.5
+            textbutton 'Pick':
+                background list1_button_bg
+                xsize 295
+                ysize slavercaravan_slave_btn_ysize
+                action Function(manager.pick), Return()

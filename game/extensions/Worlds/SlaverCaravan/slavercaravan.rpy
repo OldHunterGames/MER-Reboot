@@ -42,7 +42,7 @@ init 1 python:
 
         def __init__(self, *args, **kwargs):
             super(SlaverCaravan, self).__init__(*args, **kwargs)
-            self.characters = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
+            self.characters = []
             self.locations = Locations(world=self, quests=SlaverCaravanQuest.get_quests())
             self.food = 0
             self.day = 1
