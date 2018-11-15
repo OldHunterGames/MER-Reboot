@@ -619,6 +619,7 @@ label lbl_slavercaravan_slave_escape_prevented(world, person):
     return
 
 label lbl_slavercaravan_change_location(world):
+    call screen sc_slavercaravan_map(world)
     python:
         loc = renpy.call_screen('sc_slavercaravan_compas', world=world)
         print(loc)

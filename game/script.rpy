@@ -58,6 +58,7 @@ label start:
     python:
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
+    call lbl_zombieworld_tutorial_main(None)
     call _main from _call__main
 
     return

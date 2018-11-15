@@ -4,6 +4,7 @@ import renpy.store as store
 import renpy.exports as renpy
 from mer_utilities import default_avatar, weighted_random, encolor_text
 from mer_sexuality import CorePersonSexuality
+from mer_relations import Relations
 
 
 class CoreFeature(object):
@@ -245,6 +246,51 @@ class CorePerson(object):
         self.add_feature(age)
         self.add_feature(gender)
         self.sexuality = CorePersonSexuality()
+        self.player_relations = Relations()
+    
+    def calc_influence(self, influence):
+        value = 2
+        if self.has_feature(influence.positive_connection()):
+            value += 1
+        if self.has_feature(influence.negative_connection()):
+            value -= 1
+        return value
+
+    def player_influence(self):
+        influence = self.player_relations.get_influence()
+        value = 0
+        for i in influence:
+            value += self.calc_influence(i)
+        return value
+
+    def player_relations_sum(self):
+        return self.player_influence() - self.player_relations.tension()
+
+    def get_last_influence(self):
+        value = 0
+        influence = None
+        for i in self.player_relations.get_influence():
+            if self.calc_influence(i) >= value:
+                value = self.calc_influence(i)
+                influence = i
+        return influence
+
+    def player_relations_nature(self):
+        if self.player_relations.tension() == 0 and self.player_influence() == 0:
+            return 2
+        if self.player_relations_sum() <= 0:
+            if self.player_influence() == 0:
+                return 1
+            else:
+                return 0
+    
+    def show_player_relations_nature(self):
+        if self.player_relations_nature() == 0:
+            return self.get_last_influence().conflict
+        elif self.player_relations_nature() == 5:
+            return self.get_last_influence().harmony
+        return 
+
 
     @property
     def gender(self):
@@ -376,3 +422,39 @@ class CorePerson(object):
 
     def predict(self, what):
         self._renpy_character.predict(what)
+
+
+class PersonWrapper(object):
+
+    def __init__(self, coreperson, *args, **kwargs):
+        self._wrapped_person = coreperson
+
+    def attribute(self, attr):
+        return self.count_modifiers(attr)
+    
+    def count_modifiers(self, attr):
+        return self._wrapped_person.count_modifiers(attr)
+    
+    def attributes(self):
+        return self._wrapped_person.attributes()
+    
+    def show_attributes(self):
+        return self._wrapped_person.show_attributes()
+    
+    @property
+    def avatar(self):
+        return self._wrapped_person.avatar
+    
+    def __call__(self, *args, **kwargs):
+        return self._wrapped_person.__call__(*args, **kwargs)
+    
+    def predict(self, *args, **kwargs):
+        return self._wrapped_person.predict(*args, **kwargs)
+    
+    @property
+    def name(self):
+        return self._wrapped_person.firstname
+    
+    @property
+    def gender(self):
+        return self._wrapped_person.gender
