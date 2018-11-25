@@ -129,6 +129,14 @@ class World(object):
     def get_random_world(cls):
         return random.choice(cls.get_worlds())
 
+    def get_menu_item_bg(self):
+        return None
+
+    def get_menu_item_bg_hover(self):
+        return None
+
+    def menu_item_ysize(self):
+        return None
 
 class DummyWorld(World):
     

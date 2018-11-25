@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 import renpy.store as store
 import renpy.exports as renpy
 
@@ -40,18 +42,11 @@ class ZombieWorldEvent(object):
     def price_description(self):
         return self._data.get('price_description', '')
 
-    def price_lbl(self):
-        return self._data.get('price_lbl')
-
     def can_call(self):
         return True
 
-    def call_price(self, person):
-        if self.price_lbl() is not None:
-            renpy.call_in_new_context(self.price_lbl(), event=self, person=person)
-
-    def call(self, person):
-        renpy.call_in_new_context(self.label(), event=self, person=person)
+    def call(self, person, world):
+        renpy.call_in_new_context(self.label(), event=self, person=person, world=world)
 
 
 class ZombieWorldLocation(object):
@@ -59,7 +54,7 @@ class ZombieWorldLocation(object):
     def __init__(self, id, data):
         self.id = id
         self._data = data
-        self._events = list()
+        self._events = dict()
         self.selected_event = None
         self._description = None
 
@@ -70,13 +65,20 @@ class ZombieWorldLocation(object):
         self.selected_event = event
 
     def add_event(self, event):
-        self._events.append(event)
+        self._events[event.id] = event
 
     def remove_event(self, event):
-        self._events.remove(event)
+        if event == self.selected_event:
+            self.selected_event = None
+        del self._events[event.id]
+
+    def remove_event_by_id(self, id):
+        if self._events[id] == self.selected_event:
+            self.selected_event = None
+        del self._events[id]
 
     def events(self):
-        return [i for i in self._events]
+        return [i for i in self._events.values()]
 
     def description(self):
         if self._description is not None:
@@ -96,6 +98,13 @@ class ZombieWorldPersonMaker(object):
         world_person = ZombieWorldPerson(person)
         return world_person
 
+
+class ZombieWorldItem(object):
+
+    def __init__(self, id):
+        self.id = id
+
+
 class ZombieWorldPerson(PersonWrapper):
     
 
@@ -104,6 +113,8 @@ class ZombieWorldPerson(PersonWrapper):
         self.male_filth = 0
         self.female_filth = 0
         self._vitality = 100
+        self._items = list()
+        self._events = defaultdict(list)
 
     @property
     def vitality(self):
@@ -112,15 +123,40 @@ class ZombieWorldPerson(PersonWrapper):
     @vitality.setter
     def vitality(self, value):
         self._vitality = max(0, min(100, value))
+        for ev in self._events['vitality_changed']:
+            ev(self.vitality)
+
+    def add_eventlistener(self, event, callback):
+        self._events[event].append(callback)
+
+    def remove_eventlistener(self, event, callback):
+        self._events[event].remove(callback)
+
+    def add_item(self, item):
+        self._items.append(item)
+
+    def items(self):
+        return [i for i in self._items]
+
+    def remove_item(self, item):
+        self._items.remove(item)
+
+    def has_item(self, id):
+        return True if self.find_item(id) is not None else False
+
+    def find_item(self, id):
+        for i in self._items:
+            if i.id == id:
+                return i
 
 
 class ZombieWorldActivateEvent(Command):
 
-    def __init__(self, person, event):
+    def __init__(self, person, event, world):
         self.person = person
         self.event = event
+        self.world = world
 
     def run(self):
-        self.event.call_price(self.person)
-        self.event.call(self.person)
+        self.event.call(self.person, self.world)
     

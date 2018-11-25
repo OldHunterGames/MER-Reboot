@@ -11,149 +11,149 @@ init 1 python:
     for key in slavercaravan_quests:
         SlaverCaravanQuest.register_quest(key, SlaverCaravanQuest(key))
 
-    class SlaverCaravan(World):
-        PLAYER = None
-        SLAVE_GUT_FOOD = 5
-        FOOD_TO_WIN = 100
-        MAX_DAYS = 90
-        QUESTS_TO_WIN = 3
+    # class SlaverCaravan(World):
+    #     PLAYER = None
+    #     SLAVE_GUT_FOOD = 5
+    #     FOOD_TO_WIN = 100
+    #     MAX_DAYS = 90
+    #     QUESTS_TO_WIN = 3
 
-        def get_event(self, loc=None):
-            if loc is None:
-                loc = self.locations.current_location()
-            events = loc.events()
-            if events is None:
-                return None
-            pool = list()
-            for key, value in events.items():
-                if isinstance(value, int):
-                    pool.append((key, value))
-                else:
-                    pool.append((key, renpy.call_in_new_context(value, world=self)))
-            return weighted_random(pool)
+    #     def get_event(self, loc=None):
+    #         if loc is None:
+    #             loc = self.locations.current_location()
+    #         events = loc.events()
+    #         if events is None:
+    #             return None
+    #         pool = list()
+    #         for key, value in events.items():
+    #             if isinstance(value, int):
+    #                 pool.append((key, value))
+    #             else:
+    #                 pool.append((key, renpy.call_in_new_context(value, world=self)))
+    #         return weighted_random(pool)
 
-        def call_event(self):
-            event = self.get_event()
-            if event is None or self.last_event_loc == self.locations.current:
-                return
-            else:
-                self.last_event_loc = self.locations.current
-                return renpy.call(event, world=self)
+    #     def call_event(self):
+    #         event = self.get_event()
+    #         if event is None or self.last_event_loc == self.locations.current:
+    #             return
+    #         else:
+    #             self.last_event_loc = self.locations.current
+    #             return renpy.call(event, world=self)
 
-        def __init__(self, *args, **kwargs):
-            super(SlaverCaravan, self).__init__(*args, **kwargs)
-            self.characters = []
-            self.locations = Locations(world=self, quests=SlaverCaravanQuest.get_quests())
-            self.food = 0
-            self.day = 1
-            self.halt = False
-            self.is_at_halt = False
-            self.halt_acted = False
-            self.quests_completed = 0
-            self.last_event_loc = None
+    #     def __init__(self, *args, **kwargs):
+    #         super(SlaverCaravan, self).__init__(*args, **kwargs)
+    #         self.characters = []
+    #         self.locations = Locations(world=self, quests=SlaverCaravanQuest.get_quests())
+    #         self.food = 0
+    #         self.day = 1
+    #         self.halt = False
+    #         self.is_at_halt = False
+    #         self.halt_acted = False
+    #         self.quests_completed = 0
+    #         self.last_event_loc = None
 
-        def get_menu_item_bg(self):
-            return self.path('resources/img/gui/menu_item.png')
+    #     def get_menu_item_bg(self):
+    #         return self.path('resources/img/gui/menu_item.png')
 
-        def get_menu_item_bg_hover(self):
-            return self.path('resources/img/gui/menu_item_hover.png')
+    #     def get_menu_item_bg_hover(self):
+    #         return self.path('resources/img/gui/menu_item_hover.png')
 
-        def menu_item_ysize(self):
-            return 70
+    #     def menu_item_ysize(self):
+    #         return 70
 
-        def critical_state_callback(self, person):
-            renpy.call_in_new_context('lbl_slavercaravan_criticalstate', world=self, person=person)
+    #     def critical_state_callback(self, person):
+    #         renpy.call_in_new_context('lbl_slavercaravan_criticalstate', world=self, person=person)
 
-        def entry_label(self):
-            return 'lbl_slavercaravan'
+    #     def entry_label(self):
+    #         return 'lbl_slavercaravan'
 
-        def get_path(self):
-            return 'SlaverCaravan/'
+    #     def get_path(self):
+    #         return 'SlaverCaravan/'
 
-        def on_visit(self, person):
-            if getattr(SlaverCaravan, 'PLAYER', None) is None:
-                self.player = SlaverCaravanPersonMaker.make_person(person)
-                SlaverCaravan.PLAYER = self.player
-                self.player.add_event('critical_state', self.critical_state_callback)
-            else:
-                self.player = SlaverCaravan.PLAYER
+    #     def on_visit(self, person):
+    #         if getattr(SlaverCaravan, 'PLAYER', None) is None:
+    #             self.player = SlaverCaravanPersonMaker.make_person(person)
+    #             SlaverCaravan.PLAYER = self.player
+    #             self.player.add_event('critical_state', self.critical_state_callback)
+    #         else:
+    #             self.player = SlaverCaravan.PLAYER
 
 
-        def add_character(self, person):
-            self.characters.append(person)
+    #     def add_character(self, person):
+    #         self.characters.append(person)
 
-        def change_location(self, pos):
-            self.halt = True
-            self.locations.current = pos
+    #     def change_location(self, pos):
+    #         self.halt = True
+    #         self.locations.current = pos
 
-        def skip_turn(self, slave_escape=True):
-            if self.locations.current_location().type() != 'city' and slave_escape:
-                self.slave_escape()
-            self.food -= 1
-            if self.food < 0:
-                self.food = 0
-                self.player.state -= 1
-                renpy.call_in_new_context("lbl_slavercaravan_player_starving", world=self)
-            for i in self.characters:
-                self.food -= i.applied_item.food_consumption(1)
-                if self.food < 0:
-                    self.characters.remove(i)
-                    renpy.call_in_new_context('lbl_slavercaravan_slave_starving', world=self, slave=i)
-                    break
-            self.day += 1
-            self.halt_acted = False
-            if self.day > self.MAX_DAYS:
-                renpy.call_in_new_context('lbl_slavercaravan_archon_end_screen', world=self, condition='loose')
+    #     def skip_turn(self, slave_escape=True):
+    #         if self.locations.current_location().type() != 'city' and slave_escape:
+    #             self.slave_escape()
+    #         self.food -= 1
+    #         if self.food < 0:
+    #             self.food = 0
+    #             self.player.state -= 1
+    #             renpy.call_in_new_context("lbl_slavercaravan_player_starving", world=self)
+    #         for i in self.characters:
+    #             self.food -= i.applied_item.food_consumption(1)
+    #             if self.food < 0:
+    #                 self.characters.remove(i)
+    #                 renpy.call_in_new_context('lbl_slavercaravan_slave_starving', world=self, slave=i)
+    #                 break
+    #         self.day += 1
+    #         self.halt_acted = False
+    #         if self.day > self.MAX_DAYS:
+    #             renpy.call_in_new_context('lbl_slavercaravan_archon_end_screen', world=self, condition='loose')
 
-        def get_slaves(self, gender='all'):
-            if gender == 'all':
-                return [i for i in self.characters]
-            return [i for i in self.characters if i.gender == gender]
+    #     def get_slaves(self, gender='all'):
+    #         if gender == 'all':
+    #             return [i for i in self.characters]
+    #         return [i for i in self.characters if i.gender == gender]
 
-        def remove_character(self, person):
-            self.characters.remove(person)
+    #     def remove_character(self, person):
+    #         self.characters.remove(person)
 
-        def security_chance(self):
-            chances = ['catch' for i in range(self.player.state)]
-            chances.extend(['catch' for i in range(max(self.player.attributes().values()))])
-            return chances
+    #     def security_chance(self):
+    #         chances = ['catch' for i in range(self.player.state)]
+    #         chances.extend(['catch' for i in range(max(self.player.attributes().values()))])
+    #         return chances
 
-        def escape_chance(self, person):
-            value = max(person.attributes().values())
-            if person.applied_item is not None:
-                value = int(person.applied_item.escape_chance(value))
-            if person.has_status('tamed'):
-                value -= 1
-            return ['escape' for i in range(value)]
+    #     def escape_chance(self, person):
+    #         value = max(person.attributes().values())
+    #         if person.applied_item is not None:
+    #             value = int(person.applied_item.escape_chance(value))
+    #         if person.has_status('tamed'):
+    #             value -= 1
+    #         return ['escape' for i in range(value)]
 
-        def slave_to_loc(self, person):
-            closest_wild = self.locations.get_closest_wildness()
-            if hasattr(closest_wild, 'slaves'):
-                closest_wild.slaves.append(person)
-            else:
-                closest_wild.slaves = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
-                closest_wild.slaves.append(person)
+    #     def slave_to_loc(self, person):
+    #         closest_wild = self.locations.get_closest_wildness()
+    #         if hasattr(closest_wild, 'slaves'):
+    #             closest_wild.slaves.append(person)
+    #         else:
+    #             closest_wild.slaves = [SlaverCaravanPersonMaker.make_person(person_maker=PersonCreator) for i in range(10)]
+    #             closest_wild.slaves.append(person)
 
-        def slaves_escape(self, value=None):
-            if value is None:
-                value = len(self.characters)
-            for i in self.characters[0:value]:
-                self.slave_to_loc(i)
-                self.characters.remove(i)
-        def slave_escape(self):
-            for i in self.characters:
-                chances = self.escape_chance(i)
-                chances.extend(self.security_chance())
-                result = random.choice(chances)
-                if result == 'escape':
-                    self.remove_character(i)
-                    closest_wild = self.locations.get_closest_wildness()
-                    self.slave_to_loc(i)
-                    renpy.call_in_new_context('lbl_slavercaravan_slave_escaped', self, i)
-                    return
-                elif result == 'catch':
-                    pass
-                    # return renpy.call('lbl_slavercaravan_slave_escape_prevented', self, i)
+    #     def slaves_escape(self, value=None):
+    #         if value is None:
+    #             value = len(self.characters)
+    #         for i in self.characters[0:value]:
+    #             self.slave_to_loc(i)
+    #             self.characters.remove(i)
+    #     def slave_escape(self):
+    #         for i in self.characters:
+    #             chances = self.escape_chance(i)
+    #             chances.extend(self.security_chance())
+    #             result = random.choice(chances)
+    #             if result == 'escape':
+    #                 self.remove_character(i)
+    #                 closest_wild = self.locations.get_closest_wildness()
+    #                 self.slave_to_loc(i)
+    #                 renpy.call_in_new_context('lbl_slavercaravan_slave_escaped', self, i)
+    #                 return
+    #             elif result == 'catch':
+    #                 pass
+    #                 # return renpy.call('lbl_slavercaravan_slave_escape_prevented', self, i)
 
 
     class SlaverMarket(object):
