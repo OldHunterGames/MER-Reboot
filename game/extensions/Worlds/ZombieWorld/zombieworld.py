@@ -1,16 +1,18 @@
 from collections import defaultdict
+import ntpath
 
 import renpy.store as store
 import renpy.exports as renpy
 
 from mer_person import PersonWrapper
 from mer_command import Command
-from mer_utilities import card_back
+from mer_utilities import card_back, get_files
 
 
 class ZombieWorldEvent(object):
 
     EVENTS = dict()
+    _IMAGES = dict()
 
     def __init__(self, id, data):
         self.id = id
@@ -37,7 +39,17 @@ class ZombieWorldEvent(object):
         return self._data.get('description', 'No description')
 
     def image(self):
-        return self._data.get('image', card_back())
+        path = 'extensions/Worlds/ZombieWorld/resources/events'
+        images = get_files(path)
+        event_image = self._data.get('image')
+        if event_image is None:
+            event_image = self._IMAGES.get(self.id)
+        if event_image is None:
+            for image in images:
+                if ntpath.basename(image).split('.')[0] == self.id:
+                    ZombieWorldEvent._IMAGES[self.id] = image
+                    event_image = image
+        return card_back() if event_image is None else event_image
 
     def price_description(self):
         return self._data.get('price_description', '')
@@ -50,6 +62,8 @@ class ZombieWorldEvent(object):
 
 
 class ZombieWorldLocation(object):
+
+    _IMAGES = dict()
 
     def __init__(self, id, data):
         self.id = id
@@ -87,6 +101,19 @@ class ZombieWorldLocation(object):
 
     def name(self):
         return self._data.get('name', 'No name')
+
+    def image(self):
+        path = 'extensions/Worlds/ZombieWorld/resources/locations'
+        images = get_files(path)
+        location_image = self._data.get('image')
+        if location_image is None:
+            location_image = self._IMAGES.get(self.id)
+        if location_image is None:
+            for image in images:
+                if ntpath.basename(image).split('.')[0] == self.id:
+                    ZombieWorldLocation._IMAGES[self.id] = image
+                    location_image = image
+        return location_image
 
 
 class ZombieWorldPersonMaker(object):

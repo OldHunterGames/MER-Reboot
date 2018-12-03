@@ -1,4 +1,5 @@
 label lbl_zombieworld_tutorial(world):
+    show expression world.path('resources/forest01.png') as bg
     python:
         location_forest = ZombieWorldLocation(
             'forest',

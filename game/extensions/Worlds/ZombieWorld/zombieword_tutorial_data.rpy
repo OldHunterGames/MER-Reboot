@@ -69,6 +69,7 @@ init python:
     }
 
 label lbl_zombieworld_tutorial_zombie_rape_event(event, person, world):
+    show expression event.image() as bg
     "You see a girl in teared clothes, forcefully pinned down by a strangely looking man. He is more like a half-rotten corpse than a living man, but moves vigorously. Strangely, this zombie-like monster don't trying to eat the girls brains, but fucks her violently instead."
     "A large knife lies on the ground nearby. The girl desperately reaches out to him but she misses a few inches. Stunned by this scene you trying to figure out what you should do. Meanwhile the monster and growls in pleasure... He is cumming!"
     menu:

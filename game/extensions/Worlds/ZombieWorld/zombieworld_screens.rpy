@@ -1,7 +1,21 @@
-screen sc_zombieworld_event(event):
+style mer_window:
+    background '#FFFFFF'
+    color '#1C1E15'
+    xfill True
+    yfill True
 
-    window:
-        pass
+# window:
+#                 style 'mer_window'
+#                 ysize 220
+#                 xsize x_size
+#                 background Frame(
+#                     im.MatrixColor(
+#                         location.image(), 
+#                         im.matrix.brightness(0.1) 
+#                         * im.matrix.opacity(0.8)),
+#                     30, 
+#                     30
+#                 )
 
 
 screen sc_zombieworld_player_info(player, world):
@@ -18,16 +32,19 @@ screen sc_zombieworld_player_info(player, world):
                 
 
 screen sc_zombieworld_location(world):
-    $ x_size = 1059
+    $ x_size = 1060
     $ location = world.current_location
     $ events = world.current_location.events()
+    $ print(location.image())
     use sc_zombieworld_player_info(world.player, world)
     window:
         yfill True
         ysize 720
         xsize x_size
         xalign 0.0
-        
+        image im.Scale(location.image(), x_size, 500):
+            ypos 220
+        image Solid('ffffff30')
         frame:
             ysize 220
             xsize x_size
@@ -45,9 +62,10 @@ screen sc_zombieworld_location(world):
                             textbutton 'Select':
                                 action Function(location.select_event, event)
         frame:
-            ypos 221
+            ypos 220
             ysize 300
             xmaximum x_size
+            background '#00000000'
             if location.selected_event is not None:
                 vbox:
                     image im.Scale(location.selected_event.image(), 180, 250)
@@ -59,9 +77,13 @@ screen sc_zombieworld_location(world):
                 text location.selected_event.description():
                     xpos 185
                     xmaximum x_size-185
+                    color '#000000'
 
         frame:
+            background '#00000000'
             ypos 522
             ysize 198
             xsize x_size
-            text location.description()
+            text location.description() color 'ffffffc0'
+                
+            
