@@ -26,6 +26,7 @@ init 1 python:
         @Observable
         def skip_turn(self):
             self.turn += 1
+            renpy.call_in_new_context('lbl_zombieword_sleep', world=self)
             self.player.vitality += 10
 
         def entry_label(self):
@@ -59,4 +60,8 @@ label lbl_zombieworld(world):
 label lbl_zombieworld_loose(world, person):
     'You lost all your vitality. GG'
     $ renpy.quit()
+    return
+
+label lbl_zombieword_sleep(world):
+    'You sleep'
     return
