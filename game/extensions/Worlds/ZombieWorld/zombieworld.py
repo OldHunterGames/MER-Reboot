@@ -38,18 +38,27 @@ class ZombieWorldEvent(object):
     def description(self):
         return self._data.get('description', 'No description')
 
-    def image(self):
+    def _get_image(self, key, suffix):
         path = 'extensions/Worlds/ZombieWorld/resources/events'
         images = get_files(path)
-        event_image = self._data.get('image')
+        event_image = self._data.get(key)
         if event_image is None:
             event_image = self._IMAGES.get(self.id)
         if event_image is None:
             for image in images:
-                if ntpath.basename(image).split('.')[0] == self.id:
+                if ntpath.basename(image).split('.')[0] == self.id + suffix:
                     ZombieWorldEvent._IMAGES[self.id] = image
                     event_image = image
         return card_back() if event_image is None else event_image
+
+    def list_image(self):
+        return self._get_image('list_image', '_list')
+
+    def select_image(self):
+        return self._get_image('select_image', '_select')
+
+    def bg_image(self):
+        return self._get_image('bg_image', '_bg')
 
     def price_description(self):
         return self._data.get('price_description', '')

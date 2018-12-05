@@ -35,15 +35,15 @@ screen sc_zombieworld_location(world):
     $ x_size = 1060
     $ location = world.current_location
     $ events = world.current_location.events()
-    $ print(location.image())
     use sc_zombieworld_player_info(world.player, world)
     window:
         yfill True
         ysize 720
         xsize x_size
         xalign 0.0
-        image im.Scale(location.image(), x_size, 500):
-            ypos 220
+        if location.image() is not None:
+            image im.Scale(location.image(), x_size, 500):
+                ypos 220
         image Solid('ffffff30')
         frame:
             ysize 220
@@ -57,7 +57,7 @@ screen sc_zombieworld_location(world):
                     spacing 10
                     for event in events:
                         vbox:
-                            image im.Scale(event.image(), 120, 145)
+                            image im.Scale(event.list_image(), 120, 145)
                             text event.name()
                             textbutton 'Select':
                                 action Function(location.select_event, event)
@@ -68,7 +68,7 @@ screen sc_zombieworld_location(world):
             background '#00000000'
             if location.selected_event is not None:
                 vbox:
-                    image im.Scale(location.selected_event.image(), 180, 250)
+                    image im.Scale(location.selected_event.select_image(), 180, 250)
                     if not location.selected_event.is_pseudo():
                         textbutton 'Start event':
                             action [Function(ZombieWorldActivateEvent(world.player, location.selected_event, world).run),
