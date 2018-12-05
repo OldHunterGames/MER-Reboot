@@ -86,7 +86,7 @@ label lbl_zombieworld_tutorial_zombie_rape_event(event, person, world):
     return
 
 label lbl_zombieworld_tutorial_girl_event(event, person, world):
-    "You approach a girl raped by zombie. Her clothes is ruined so you can see her niked body and scratched, brised, dirty skin. The woman does not even look at you, instead she tries to scrape something out of her vagina. You see that it's not an ordinary cum on her fingers, but a hideous black slime."
+    "You approach a girl raped by zombie. Her clothes is ruined so you can see her naked body and scratched, brised, dirty skin. The woman does not even look at you, instead she tries to scrape something out of her vagina. You see that it's not an ordinary cum on her fingers, but a hideous black slime."
     "Girl - Fuck-fuck-fuck... this ghoul infested me. Not again. I'm so fucked, oh..."
     "Player - Hey! What the hell is going on here? Who are you? And what this thing is?"
     menu:
