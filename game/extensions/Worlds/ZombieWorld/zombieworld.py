@@ -43,11 +43,11 @@ class ZombieWorldEvent(object):
         images = get_files(path)
         event_image = self._data.get(key)
         if event_image is None:
-            event_image = self._IMAGES.get(self.id)
+            event_image = self._IMAGES.get(self.id + suffix)
         if event_image is None:
             for image in images:
                 if ntpath.basename(image).split('.')[0] == self.id + suffix:
-                    ZombieWorldEvent._IMAGES[self.id] = image
+                    ZombieWorldEvent._IMAGES[self.id + suffix] = image
                     event_image = image
         return card_back() if event_image is None else event_image
 
