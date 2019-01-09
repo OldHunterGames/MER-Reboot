@@ -146,9 +146,9 @@ class ZombieWorldPerson(PersonWrapper):
 
     def __init__(self, *args, **kwargs):
         super(ZombieWorldPerson, self).__init__(*args, **kwargs)
-        self.male_filth = 0
-        self.female_filth = 0
-        self._vitality = 100
+        self._vitality = self.max_vitality
+        self.filth = 0
+        self.zombification = 0
         self._items = list()
         self._events = defaultdict(list)
 
@@ -158,9 +158,11 @@ class ZombieWorldPerson(PersonWrapper):
 
     @vitality.setter
     def vitality(self, value):
-        self._vitality = max(0, min(100, value))
-        for ev in self._events['vitality_changed']:
-            ev(self.vitality)
+        self._vitality = min(self.max_vitality, value)
+
+    @property
+    def max_vitality(self):
+        return 3 + self.attribute('might')
 
     def add_eventlistener(self, event, callback):
         self._events[event].append(callback)
@@ -196,3 +198,27 @@ class ZombieWorldActivateEvent(Command):
     def run(self):
         self.event.call(self.person, self.world)
     
+class ZombieWorldConsumeVitality(Command):
+
+    def __init__(self, person, amount):
+        self.person = person
+        self.amount = amount
+
+    def run(self):
+        self.person.vitality -= self.amount
+        zombification = self.person.filth - self.pesron.vitality
+        if self.person.filth > 0 and zombification > 0:
+            self.person.zombification += zombification
+
+class ZombieWorldAddFilth(Command):
+
+    def __init__(self, person, amount, ingore_gender=False):
+        self.person = person
+        self.amount = amount
+        self.ingore_gender = ingore_gender
+
+    def run(self):
+        if not self.ingore_gender:
+            if self.person.gender == 'female':
+                self.person.zombification += self.amount
+        self.person.filth += self.amount

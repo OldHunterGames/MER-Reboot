@@ -51,6 +51,18 @@ init 1 python:
             if vitality <= 0:
                 renpy.call_in_new_context('lbl_zombieworld_loose', world=self, person=person)
 
+    class ZombieWorldUtilities(object):
+
+        def __init__(self, world):
+            self._world = world
+
+        def normal_heart_image(self):
+            return self._world.path('resources/icons/heart_normal.png')
+
+        def cursed_heart_image(self):
+            return self._world.path('resources/icons/heart_cursed.png')
+
+
 
 label lbl_zombieworld(world):
     'Zombieworld'
