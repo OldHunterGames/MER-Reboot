@@ -62,6 +62,11 @@ init 1 python:
         def cursed_heart_image(self):
             return self._world.path('resources/icons/heart_cursed.png')
 
+        def food_icon(self):
+            return self._world.path('resources/icons/item_food.png')
+
+        def drugs_icon(self):
+            return self._world.path('resources/icons/item_drugs.png')
 
 
 label lbl_zombieworld(world):
@@ -75,5 +80,25 @@ label lbl_zombieworld_loose(world, person):
     return
 
 label lbl_zombieword_sleep(world):
+    menu:
+        "Eat" if world.player.food > 0:
+            python:
+                ZombieWorldChangeVitality(world.player, 1).run()
+                world.player.food -= 1
+            if world.player.vitality < world.player.max_vitality:
+                menu:
+                    'Use drugs' if world.player.drugs > 0:
+                        python:
+                            ZombieWorldChangeVitality(world.player, 1).run()
+                            world.player.drugs -= 1
+                    'Go to sleep':
+                        $ pass
+        "Hungry sleep":
+            $ ZombieWorldChangeVitality(world.player, -1).run()
+        "I must go":
+            return
     'You sleep'
+    python:
+        if world.player.gender != 'female':
+            ZombieWorldChangeFilth(world.player, 1).run()
     return

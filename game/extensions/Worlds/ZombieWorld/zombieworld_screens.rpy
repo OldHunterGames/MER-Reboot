@@ -35,11 +35,19 @@ screen sc_zombieworld_player_info(player, world):
                         image im.Scale(utils.cursed_heart_image(), 25, 25)
                     else:
                         image im.Scale(utils.normal_heart_image(), 25, 25)
+            hbox:
+                image im.Scale(utils.food_icon(), 50, 50)
+                text ': %s' % player.food
+            hbox:
+                image im.Scale(utils.drugs_icon(), 50, 50)
+                text ': %s' % player.drugs
             text zombification_data[zombie_level]
             textbutton 'Sleep' action Function(world.skip_turn)
-            textbutton 'Add filth' action SetField(player, 'filth', player.filth + 1)
+            textbutton 'Add filth' action Function(ZombieWorldChangeFilth(player, 1).run)
+            textbutton 'Remove filth' action Function(ZombieWorldChangeFilth(player, -1).run)
+            textbutton 'Consume vitality' action Function(ZombieWorldChangeVitality(player, -1).run)
             textbutton 'Add zombification' action SetField(player, 'zombification', player.zombification + 1)
-                
+            textbutton 'Remove zombification' action SetField(player, 'zombification', player.zombification - 1)
 
 screen sc_zombieworld_location(world):
     $ x_size = 1060

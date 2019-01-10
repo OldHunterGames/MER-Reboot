@@ -154,6 +154,8 @@ class ZombieWorldPerson(PersonWrapper):
         self._vitality = self.max_vitality
         self.filth = 0
         self.zombification = 0
+        self.food = 0
+        self.drugs = 0
         self._items = list()
         self._equipment = {
             'melee_weapon': None,
@@ -229,28 +231,27 @@ class ZombieWorldActivateEvent(Command):
 
     def run(self):
         self.event.call(self.person, self.world)
-    
-class ZombieWorldConsumeVitality(Command):
+
+class ZombieWorldChangeVitality(Command):
 
     def __init__(self, person, amount):
         self.person = person
         self.amount = amount
 
     def run(self):
-        self.person.vitality -= self.amount
-        zombification = self.person.filth - self.pesron.vitality
-        if self.person.filth > 0 and zombification > 0:
-            self.person.zombification += zombification
+        self.person.vitality += self.amount
+        if self.amount < 0:
+            zombification = self.person.filth - self.person.vitality
+            if self.person.filth > 0 and zombification > 0:
+                self.person.zombification += zombification
 
-class ZombieWorldAddFilth(Command):
+class ZombieWorldChangeFilth(Command):
 
-    def __init__(self, person, amount, ingore_gender=False):
+    def __init__(self, person, amount):
         self.person = person
         self.amount = amount
-        self.ingore_gender = ingore_gender
 
     def run(self):
-        if not self.ingore_gender:
-            if self.person.gender == 'female':
-                self.person.zombification += self.amount
+        if self.person.gender == 'female' and self.amount > 0:
+            self.person.zombification += self.amount
         self.person.filth += self.amount
