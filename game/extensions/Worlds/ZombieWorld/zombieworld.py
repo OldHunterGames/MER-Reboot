@@ -1,5 +1,5 @@
 from collections import defaultdict
-import ntpath
+import os
 
 import renpy.store as store
 import renpy.exports as renpy
@@ -12,7 +12,6 @@ from mer_utilities import card_back, get_files
 class ZombieWorldEvent(object):
 
     EVENTS = dict()
-    _IMAGES = dict()
 
     def __init__(self, id, data):
         self.id = id
@@ -43,11 +42,8 @@ class ZombieWorldEvent(object):
         images = get_files(path)
         event_image = self._data.get(key)
         if event_image is None:
-            event_image = self._IMAGES.get(self.id + suffix)
-        if event_image is None:
             for image in images:
-                if ntpath.basename(image).split('.')[0] == self.id + suffix:
-                    ZombieWorldEvent._IMAGES[self.id + suffix] = image
+                if os.path.basename(image).split('.')[0] == self.id + suffix:
                     event_image = image
         return card_back() if event_image is None else event_image
 
@@ -71,8 +67,6 @@ class ZombieWorldEvent(object):
 
 
 class ZombieWorldLocation(object):
-
-    _IMAGES = dict()
 
     def __init__(self, id, data):
         self.id = id
@@ -115,12 +109,10 @@ class ZombieWorldLocation(object):
         path = 'extensions/Worlds/ZombieWorld/resources/locations'
         images = get_files(path)
         location_image = self._data.get('image')
-        if location_image is None:
-            location_image = self._IMAGES.get(self.id)
+
         if location_image is None:
             for image in images:
-                if ntpath.basename(image).split('.')[0] == self.id:
-                    ZombieWorldLocation._IMAGES[self.id] = image
+                if os.path.basename(image).split('.')[0] == self.id:
                     location_image = image
         return location_image
 
@@ -137,8 +129,21 @@ class ZombieWorldPersonMaker(object):
 
 class ZombieWorldItem(object):
 
-    def __init__(self, id):
+    def __init__(self, id, data=None):
         self.id = id
+        self._data = data if data is not None else {}
+
+    def combat_value(self):
+        return self._data.get('combat_value', 0)
+
+    def statuses(self):
+        return self._data.get('statuses', [])
+
+    def rate_of_fire(self):
+        return self._data.get('rate_of_fire', 0)
+
+    def ammo_consumption(self):
+        return self._data.get('ammo_consumption', 0)
 
 
 class ZombieWorldPerson(PersonWrapper):
@@ -150,7 +155,34 @@ class ZombieWorldPerson(PersonWrapper):
         self.filth = 0
         self.zombification = 0
         self._items = list()
+        self._equipment = {
+            'melee_weapon': None,
+            'armor': None,
+            'ranged_weapon': None
+        }
         self._events = defaultdict(list)
+
+    def statuses(self):
+        statuses = []
+        if self._equipment['armor']:
+            statuses.extend(self._equipment['armor'].statuses())
+        if self._equipment['melee_weapon']:
+            statuses.extend(self._equipment['melee_weapon'].statuses())
+
+    def armor_value(self):
+        return self._equipment['armor'].combat_value() if self._equipment['armor'] is not None else 0
+
+    def weapon_value(self):
+        return self._equipment['melee_weapon'].combat_value() if self._equipment['melee_weapon'] is not None else 0
+
+    def ranged_weapon(self):
+        return self._equipment['ranged_weapon']
+
+    def combat_value(self):
+        value = self.weapon_value()
+        if 'ignore_armor' not in self.statuses():
+            value += self.armor_value()
+        return value
 
     @property
     def vitality(self):
