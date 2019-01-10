@@ -42,18 +42,25 @@ screen sc_zombieworld_player_info(player, world):
                 image im.Scale(utils.drugs_icon(), 50, 50)
                 text ': %s' % player.drugs
             text zombification_data[zombie_level]
-            textbutton 'Sleep' action Function(world.skip_turn)
+            textbutton 'Sleep' action Function(world.sleep)
             textbutton 'Add filth' action Function(ZombieWorldChangeFilth(player, 1).run)
             textbutton 'Remove filth' action Function(ZombieWorldChangeFilth(player, -1).run)
             textbutton 'Consume vitality' action Function(ZombieWorldChangeVitality(player, -1).run)
             textbutton 'Add zombification' action SetField(player, 'zombification', player.zombification + 1)
             textbutton 'Remove zombification' action SetField(player, 'zombification', player.zombification - 1)
+            textbutton 'Test fight' action Function(ZombieWorldCombat(world, player, 3).start)
 
 screen sc_zombieworld_location(world):
     $ x_size = 1060
     $ location = world.current_location
     $ events = world.current_location.events()
+    python:
+        if location.image() is not None:
+            bgcolor = '#00000000'
+        else:
+            bgcolor = '#000000ff'
     use sc_zombieworld_player_info(world.player, world)
+    zorder 100
     window:
         yfill True
         ysize 720
@@ -98,7 +105,8 @@ screen sc_zombieworld_location(world):
                     color '#000000'
 
         frame:
-            background '#00000000'
+                
+            background bgcolor
             ypos 522
             ysize 198
             xsize x_size

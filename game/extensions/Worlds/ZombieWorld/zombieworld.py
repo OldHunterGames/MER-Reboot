@@ -152,10 +152,11 @@ class ZombieWorldPerson(PersonWrapper):
     def __init__(self, *args, **kwargs):
         super(ZombieWorldPerson, self).__init__(*args, **kwargs)
         self._vitality = self.max_vitality
-        self.filth = 0
+        self._filth = 0
         self.zombification = 0
         self.food = 0
         self.drugs = 0
+        self.ammo = 0
         self._items = list()
         self._equipment = {
             'melee_weapon': None,
@@ -170,6 +171,7 @@ class ZombieWorldPerson(PersonWrapper):
             statuses.extend(self._equipment['armor'].statuses())
         if self._equipment['melee_weapon']:
             statuses.extend(self._equipment['melee_weapon'].statuses())
+        return statuses
 
     def armor_value(self):
         return self._equipment['armor'].combat_value() if self._equipment['armor'] is not None else 0
@@ -186,6 +188,14 @@ class ZombieWorldPerson(PersonWrapper):
             value += self.armor_value()
         return value
 
+    @property
+    def filth(self):
+        return self._filth
+
+    @filth.setter
+    def filth(self, value):
+        self._filth = max(0, value)
+    
     @property
     def vitality(self):
         return self._vitality
@@ -221,6 +231,48 @@ class ZombieWorldPerson(PersonWrapper):
             if i.id == id:
                 return i
 
+
+class ZombieWorldCombat(object):
+
+    def __init__(self, world, player, ghoul_count, followers_count=0):
+        self.world = world
+        self.player = player
+        self.followers = followers_count
+        self.ghoul_power = ghoul_count
+        self.active = True
+        self.shots = player.ranged_weapon().rate_of_fire if player.ranged_weapon() is not None else 0
+
+    def player_power(self):
+        return self.player.vitality + self.player.combat_value() + self.followers
+
+    def start(self):
+        renpy.call_in_new_context('lbl_zombieworld_combat', combat=self, world=self.world)
+
+    def fight(self):
+        self.ghoul_power -= self.player_power()
+        ZombieWorldChangeVitality(self.player, -1).run()
+        if self.ghoul_power < 0:
+            self.active = False
+
+    def can_shoot(self):
+        if self.shots < 1 and not self.shots == 'auto':
+            return False
+
+        if self.player.ranged_weapon().ammo_consumption() >= self.player.ammo:
+            return True
+
+        return False
+
+    def shoot(self):
+        self.player.ammo -= self.player.ranged_weapon().ammo_consumption()
+        if self.shots != 'auto':
+            self.shots -= 1
+        self.ghoul_power -= 1
+
+    def ammo_consumption(self):
+        if self.player.ranged_weapon() is not None:
+            return self.player.ranged_weapon().ammo_consumption()
+        return 0
 
 class ZombieWorldActivateEvent(Command):
 

@@ -74,11 +74,14 @@ label lbl_zombieworld_tutorial_zombie_rape_event(event, person, world):
     "A large knife lies on the ground nearby. The girl desperately reaches out to him but she misses a few inches. Stunned by this scene you trying to figure out what you should do. Meanwhile the monster and growls in pleasure... He is cumming!"
     menu:
         "You finally decide to act and grab a knife. At the same moment, the zombie loses interest in the woman lying on the ground and his interested look rushes toward you. It's not very clear whether he wants to kill or rape you, but in any case it's time to fight."
-        'Fight! (Vitality -20\%)':
+        'Fight!':
+            
+            python:
+                ZombieWorldCombat(world, person, 1).start()
+                
             "The knife gets handy. A few intense strokes and zombies falls on the ground, leaving you a few scratches and aching muscles."
             "You loot knife"
             python:
-                person.vitality -= 20
                 person.add_item(ZombieWorldItem('knife'))
                 girl_event = ZombieWorldEvent('girl', zombieworld_tutorial_events['girl'])
                 world.current_location.add_event(girl_event)
@@ -101,12 +104,11 @@ label lbl_zombieworld_tutorial_girl_event(event, person, world):
 label lbl_zombieworld_tutorial_tent_event(event, person, world):
     menu:
         "Two ghouls are stumbling meaninglessly near the Masha's tent. There is no way to get inside without a fight."
-        "Fight ghouls (Knife, vitality -40\%)":
+        "Fight ghouls":
             python:
+                ZombieWorldCombat(world, person, 1).start()
                 person.add_item(ZombieWorldItem('cloth'))
-                [person.add_item(ZombieWorldItem('food')) for i in xrange(2)]
-                person.remove_item(person.find_item("knife"))
-                person.vitality -= 40
+                person.food += 2
                 tutorial_first_quest = ZombieWorldEvent('first_quest', zombieworld_tutorial_events['first_quest'])
                 world.current_location.add_event(tutorial_first_quest)
                 world.current_location.remove_event(girl_event_2)
@@ -120,7 +122,7 @@ label lbl_zombieworld_tutorial_cloth_event(event, person, world):
         "Give her food and cloth (cloth x1, food x1)":
             python:
                 person.remove_item(person.find_item('cloth'))
-                person.remove_item(person.find_item('food'))
+                person.food -= 1
                 tutorial_first_sleep = ZombieWorldEvent('first_sleep', zombieworld_tutorial_events['first_sleep'])
                 tutorial_first_sleep.sleep_callback = lambda *args, **kwargs: ZombieWorldActivateEvent(person, tutorial_first_sleep, world).run()
                 world.skip_turn.add_callback(tutorial_first_sleep.sleep_callback)
@@ -142,9 +144,9 @@ label lbl_zombieworld_tutorial_sleep_event(event, person, world):
 label lbl_zombieworld_tutorial_highway_event(event, person, world):
     menu:
         "I must get out of here."
-        "Let's go (vitality -20\%)":
+        "Let's go (vitality -1)":
             python:
-                person.vitality -= 20
+                person.vitality -= 1
                 location = world.get_available_location('highway')
                 if location is None:
                     location = ZombieWorldLocation('highway', zombieworld_tutorial_locations['highway'])
@@ -161,9 +163,9 @@ label lbl_zombieworld_tutorial_highway_event(event, person, world):
 label lbl_zombieworld_tutorial_go_east_event(event, person, world):
     menu:
         "The path to the east is clear."
-        "Go east (vitality -20\%)":
+        "Go east (vitality -1)":
             python:
-                person.vitality -= 20
+                person.vitality -= 1
                 location = world.get_available_location('hunters_encampment')
                 if location is None:
                     location = ZombieWorldLocation('hunters_encampment', zombieworld_tutorial_locations['hunters_encampment'])
@@ -196,7 +198,7 @@ label lbl_zombieworld_tutorial_encampment_male_event(event, person, world):
 label lbl_zombieworld_tutorial_encampment_female_event(event, person, world):
     menu:
         "Man - Hey! Are you a leech? [person.name] - What?! No. I'm normal. Please let me in. Man - You will not be safe here if no one will guard you. The camp is full of mans desperate to spunk of some filth in a cunt like you. But I can guarantee your safety if you let ME fuck you, babe. I need to drop some black goo off."
-        "Uh. Ok. (vitality -20\%, female_filth +20\%)":
+        "Uh. Ok. (vitality -1, female_filth +20)":
             "To be implemented"
             return
         "Reconsider":
@@ -209,7 +211,7 @@ label lbl_zombieworld_tutorial_mob_event(event, person, world):
         "You will need a considerable force to clear the path. It's risky..."
         "Fight the ghoul mob (follower x3, gun(x3 rounds), machete, motorcycle helmet, thick leather jacket, vitality -20\%)":
             python:
-                person.vitality -= 20
+                pass
             return
         "Reconsider":
             return
