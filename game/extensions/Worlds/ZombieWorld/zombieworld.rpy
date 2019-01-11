@@ -23,11 +23,14 @@ init 1 python:
         def get_available_location(self, id):
             return self.locations.get(id)
 
+        def sleep(self):
+            result = renpy.call_in_new_context('lbl_zombieword_sleep', world=self)
+            if result:
+                self.skip_turn()
+
         @Observable
         def skip_turn(self):
             self.turn += 1
-            renpy.call_in_new_context('lbl_zombieword_sleep', world=self)
-            self.player.vitality += 10
 
         def entry_label(self):
             if ZombieWorld._VISITS > 1:
@@ -51,6 +54,26 @@ init 1 python:
             if vitality <= 0:
                 renpy.call_in_new_context('lbl_zombieworld_loose', world=self, person=person)
 
+    class ZombieWorldUtilities(object):
+
+        def __init__(self, world):
+            self._world = world
+
+        def normal_heart_image(self):
+            return self._world.path('resources/icons/heart_normal.png')
+
+        def cursed_heart_image(self):
+            return self._world.path('resources/icons/heart_cursed.png')
+
+        def food_icon(self):
+            return self._world.path('resources/icons/item_food.png')
+
+        def drugs_icon(self):
+            return self._world.path('resources/icons/item_drugs.png')
+
+        def small_skull_icon(self):
+            return self._world.path('resources/icons/death-skull_small.png')
+
 
 label lbl_zombieworld(world):
     'Zombieworld'
@@ -63,5 +86,45 @@ label lbl_zombieworld_loose(world, person):
     return
 
 label lbl_zombieword_sleep(world):
+    menu:
+        "Eat" if world.player.food > 0:
+            python:
+                ZombieWorldChangeVitality(world.player, 1).run()
+                world.player.food -= 1
+            if world.player.vitality < world.player.max_vitality:
+                menu:
+                    'Use drugs' if world.player.drugs > 0:
+                        python:
+                            ZombieWorldChangeVitality(world.player, 1).run()
+                            world.player.drugs -= 1
+                    'Go to sleep':
+                        $ pass
+        "Hungry sleep":
+            $ ZombieWorldChangeVitality(world.player, -1).run()
+        "I must go":
+            return False
     'You sleep'
-    return
+    python:
+        if world.player.gender != 'female':
+            ZombieWorldChangeFilth(world.player, 1).run()
+    return True
+
+
+label lbl_zombieworld_combat(combat, world):
+    $ normal_heart = ZombieWorldUtilities(world).normal_heart_image()
+    $ black_heart = ZombieWorldUtilities(world).cursed_heart_image()
+    $ skull = ZombieWorldUtilities(world).small_skull_icon()
+    while combat.active:
+        python:
+            icon = normal_heart if combat.player.vitality > combat.player.filth else black_heart
+            if combat.player.vitality < 1:
+                icon = skull
+            power = combat.player_power()
+            ghouls = combat.ghoul_power
+            ammo_cons = combat.ammo_consumption()
+        menu:
+            'Ghouls: [ghouls]'
+            'Fight ([power], {image=[icon]})':
+                $ combat.fight()
+            'Shoot the ghoul ([ammo_cons])' if combat.can_shoot():
+                $ combat.shoot()

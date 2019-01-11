@@ -19,6 +19,8 @@ style mer_window:
 
 
 screen sc_zombieworld_player_info(player, world):
+    $ utils = ZombieWorldUtilities(world)
+    $ zombie_level = min(3, player.zombification)
     frame:
         xpos 1060
         xsize 220
@@ -27,15 +29,38 @@ screen sc_zombieworld_player_info(player, world):
             xalign 0.5
             image im.Scale(player.avatar, 200, 200)
             text 'Turns: %s' % world.turn
-            text 'Vitality: {}%'.format(player.vitality)
-            textbutton 'Sleep' action Function(world.skip_turn)
-                
+            hbox:
+                for i in range(1, player.vitality + 1):
+                    if i <= player.filth:
+                        image im.Scale(utils.cursed_heart_image(), 25, 25)
+                    else:
+                        image im.Scale(utils.normal_heart_image(), 25, 25)
+            hbox:
+                image im.Scale(utils.food_icon(), 50, 50)
+                text ': %s' % player.food
+            hbox:
+                image im.Scale(utils.drugs_icon(), 50, 50)
+                text ': %s' % player.drugs
+            text zombification_data[zombie_level]
+            textbutton 'Sleep' action Function(world.sleep)
+            textbutton 'Add filth' action Function(ZombieWorldChangeFilth(player, 1).run)
+            textbutton 'Remove filth' action Function(ZombieWorldChangeFilth(player, -1).run)
+            textbutton 'Consume vitality' action Function(ZombieWorldChangeVitality(player, -1).run)
+            textbutton 'Add zombification' action SetField(player, 'zombification', player.zombification + 1)
+            textbutton 'Remove zombification' action SetField(player, 'zombification', player.zombification - 1)
+            textbutton 'Test fight' action Function(ZombieWorldCombat(world, player, 3).start)
 
 screen sc_zombieworld_location(world):
     $ x_size = 1060
     $ location = world.current_location
     $ events = world.current_location.events()
+    python:
+        if location.image() is not None:
+            bgcolor = '#00000000'
+        else:
+            bgcolor = '#000000ff'
     use sc_zombieworld_player_info(world.player, world)
+    zorder 100
     window:
         yfill True
         ysize 720
@@ -80,7 +105,8 @@ screen sc_zombieworld_location(world):
                     color '#000000'
 
         frame:
-            background '#00000000'
+                
+            background bgcolor
             ypos 522
             ysize 198
             xsize x_size
