@@ -60,10 +60,10 @@ init 1 python:
             self._world = world
 
         def normal_heart_image(self):
-            return self._world.path('resources/icons/heart_normal.png')
+            return self._world.path('resources/icons/heart_normal_intext.png')
 
         def cursed_heart_image(self):
-            return self._world.path('resources/icons/heart_cursed.png')
+            return self._world.path('resources/icons/heart_cursed_intext.png')
 
         def food_icon(self):
             return self._world.path('resources/icons/food_icon.png')

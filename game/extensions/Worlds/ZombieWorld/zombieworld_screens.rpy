@@ -90,6 +90,15 @@ screen sc_zombieworld_location(world):
         background location.image()
         image utils.main_screen()
 
+        hbox:
+            xpos 25
+            ypos 640
+            for i in range(1, player.vitality + 1):
+                if i <= player.filth:
+                    image utils.cursed_heart_image()
+                else:
+                    image utils.normal_heart_image()
+
         viewport:
             scrollbars 'horizontal'
             draggable True
