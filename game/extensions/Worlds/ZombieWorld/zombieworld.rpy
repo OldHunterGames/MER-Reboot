@@ -66,13 +66,43 @@ init 1 python:
             return self._world.path('resources/icons/heart_cursed.png')
 
         def food_icon(self):
-            return self._world.path('resources/icons/item_food.png')
+            return self._world.path('resources/icons/food_icon.png')
 
         def drugs_icon(self):
-            return self._world.path('resources/icons/item_drugs.png')
+            return self._world.path('resources/icons/drugs_icon.png')
+
+        def fuel_icon(self):
+            return self._world.path('resources/icons/fuel_icon.png')
+
+        def ammo_icon(self):
+            return self._world.path('resources/icons/ammo_icon.png')
 
         def small_skull_icon(self):
             return self._world.path('resources/icons/death-skull_small.png')
+
+        def scrollbar_top(self):
+            return self._world.path('resources/interface/sliders/slider_arrow_top.png')
+
+        def scrollbar_bottom(self):
+            return self._world.path('resources/interface/sliders/slider_arrow_bottom.png')
+
+        def scrollbar(self):
+            return self._world.path('resources/interface/sliders/slider_bg_v_merged.png')
+
+        def scrollbar_thumb(self):
+            return self._world.path('resources/interface/sliders/slider_slider_v.png')
+
+        def main_screen(self):
+            return self._world.path('resources/interface/interface_base.png')
+
+        def event_screen(self):
+            return self._world.path('resources/interface/Eventscreen_1.png')
+
+        def button_1(self):
+            return self._world.path('resources/interface/buttons/button_1.png')
+
+        def button_1_hover(self):
+            return self._world.path('resources/interface/buttons/button_1_hover.png')
 
 
 label lbl_zombieworld(world):

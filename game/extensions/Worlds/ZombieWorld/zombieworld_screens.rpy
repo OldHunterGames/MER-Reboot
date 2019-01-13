@@ -4,6 +4,13 @@ style mer_window:
     xfill True
     yfill True
 
+style zw_button_text:
+    drop_shadow (1, 1)
+    drop_shadow_color '#000'
+    color "#FFF" 
+    hover_color "#F00" 
+    insensitive_color "#999"
+
 # window:
 #                 style 'mer_window'
 #                 ysize 220
@@ -50,66 +57,119 @@ screen sc_zombieworld_player_info(player, world):
             textbutton 'Remove zombification' action SetField(player, 'zombification', player.zombification - 1)
             textbutton 'Test fight' action Function(ZombieWorldCombat(world, player, 3).start)
 
+
+screen sc_zombieworld_event(event, person, world):
+    $ context = object()
+    $ context.player = person
+    $ utils = ZombieWorldUtilities(world)
+    modal True
+    zorder 100
+    frame:
+        ysize 444
+        xsize 700
+        xalign 0.5
+        yalign 0.5
+        background utils.event_screen()
+        image im.Scale(event.select_image(), 260, 444):
+            yalign 0.5
+        side ("c r"):
+            xpos 265
+            ypos 75
+            area(0, 0, 430, 280)
+
+            viewport id "zombieworld_event_text":
+                mousewheel "vertical"
+                vbox:
+                    xsize 430
+                    ysize 280
+                    spacing 10
+                    text event.description()
+            vbar value YScrollValue("zombieworld_event_text"):
+                top_gutter 10
+                bottom_gutter 10
+                base_bar im.Scale(utils.scrollbar(), 10, 280)
+                thumb utils.scrollbar_thumb()
+        button:
+
+            xpos 255
+            yalign 1.0
+            xsize 157
+            ysize 57
+            action Hide('sc_zombieworld_event')
+            background utils.button_1()
+            hover_background utils.button_1_hover()
+            text 'Leave':
+                style 'zw_button_text'
+                xalign 0.5
+                yalign 0.5
+            # button 'Start' action NullAction():
+            #     xalign 1.0
+
+        button:
+
+            xpos 530
+            yalign 1.0
+            xsize 157
+            ysize 57
+            action Function(ZombieWorldActivateEvent(world.player, event, world).run), Hide('sc_zombieworld_event')
+            background utils.button_1()
+            hover_background utils.button_1_hover()
+            text 'Start':
+                style 'zw_button_text'
+                xalign 0.5
+                yalign 0.5
+            # button 'Start' action NullAction():
+            #     xalign 1.0
+
 screen sc_zombieworld_location(world):
-    $ x_size = 1060
+    $ x_size = 1280
     $ location = world.current_location
     $ events = world.current_location.events()
-    python:
-        if location.image() is not None:
-            bgcolor = '#00000000'
-        else:
-            bgcolor = '#000000ff'
-    use sc_zombieworld_player_info(world.player, world)
-    zorder 100
+    $ utils = ZombieWorldUtilities(world)
+    $ player = world.player
+
     window:
         yfill True
         ysize 720
         xsize x_size
         xalign 0.0
-        if location.image() is not None:
-            image im.Scale(location.image(), x_size, 500):
-                ypos 220
-        image Solid('ffffff30')
-        frame:
-            ysize 220
-            xsize x_size
-            viewport:
-                scrollbars 'horizontal'
-                draggable True
-                mousewheel "horizontal"
-                xmaximum x_size
-                hbox:
-                    spacing 10
-                    for event in events:
-                        vbox:
-                            image im.Scale(event.list_image(), 120, 145)
-                            text event.name()
-                            textbutton 'Select':
-                                action Function(location.select_event, event)
-        frame:
-            ypos 220
-            ysize 300
+        background location.image()
+        image utils.main_screen()
+
+        viewport:
+            scrollbars 'horizontal'
+            draggable True
+            mousewheel "horizontal"
             xmaximum x_size
-            background '#00000000'
-            if location.selected_event is not None:
-                vbox:
-                    image im.Scale(location.selected_event.select_image(), 180, 250)
-                    if not location.selected_event.is_pseudo():
-                        textbutton 'Start event':
-                            action [Function(ZombieWorldActivateEvent(world.player, location.selected_event, world).run),
-                                Function(location.select_event, None)]
+            ypos 200
+            hbox:
+                spacing 10
+                for event in events:
+                    vbox:
+                        imagebutton:
+                            idle im.Scale(event.list_image(), 120, 145)
+                            action Function(ZombieWorldShowEvent(world.player, event, world).run)
+                        text event.name()                            
 
-                text location.selected_event.description():
-                    xpos 185
-                    xmaximum x_size-185
-                    color '#000000'
-
-        frame:
-                
-            background bgcolor
-            ypos 522
-            ysize 198
-            xsize x_size
-            text location.description() color 'ffffffc0'
+        vbox:
+            xpos 1070
+            ypos 460
+            hbox:
+                image im.Scale(utils.food_icon(), 50, 50)
+                text ': %s' % player.food
+            hbox:
+                image im.Scale(utils.drugs_icon(), 50, 50)
+                text ': %s' % player.drugs
+            hbox:
+                image im.Scale(utils.ammo_icon(), 50, 50)
+                text ': %s' % player.ammo
+            hbox:
+                image im.Scale(utils.fuel_icon(), 50, 50)
+                text ': %s' % player.fuel
+        text location.description():
+            color '#000000'
+            ypos 480
+            xmaximum 820
+            xpos 220
                 
             

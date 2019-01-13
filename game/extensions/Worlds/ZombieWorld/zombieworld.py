@@ -37,6 +37,9 @@ class ZombieWorldEvent(object):
     def description(self):
         return self._data.get('description', 'No description')
 
+    def texts(self):
+        return self._data.get('texts', [])
+
     def _get_image(self, key, suffix):
         path = 'extensions/Worlds/ZombieWorld/resources/events'
         images = get_files(path)
@@ -64,6 +67,9 @@ class ZombieWorldEvent(object):
 
     def call(self, person, world):
         renpy.call_in_new_context(self.label(), event=self, person=person, world=world)
+
+    def show(self, person, world):
+        renpy.show_screen('sc_zombieworld_event', event=self, person=person, world=world)
 
 
 class ZombieWorldLocation(object):
@@ -157,6 +163,7 @@ class ZombieWorldPerson(PersonWrapper):
         self.food = 0
         self.drugs = 0
         self.ammo = 0
+        self.fuel = 0
         self._items = list()
         self._equipment = {
             'melee_weapon': None,
@@ -279,10 +286,27 @@ class ZombieWorldActivateEvent(Command):
     def __init__(self, person, event, world):
         self.person = person
         self.event = event
-        self.world = world
+        self.world = world 
 
     def run(self):
+        world = self.world
+        person = self.person
+        event = self.event
         self.event.call(self.person, self.world)
+
+
+class ZombieWorldShowEvent(Command):
+
+    def __init__(self, person, event, world):
+        self.person = person
+        self.event = event
+        self.world = world 
+
+    def run(self):
+        world = self.world
+        person = self.person
+        event = self.event
+        self.event.show(self.person, self.world)
 
 class ZombieWorldChangeVitality(Command):
 
