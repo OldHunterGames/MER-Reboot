@@ -115,7 +115,7 @@ screen sc_zombieworld_location(world):
                         text event.name()                            
 
         vbox:
-            xpos 1070
+            xpos 1078
             ypos 460
             hbox:
                 image utils.food_icon()
