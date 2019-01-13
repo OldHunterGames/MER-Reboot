@@ -114,6 +114,9 @@ screen sc_zombieworld_location(world):
                             action Function(ZombieWorldShowEvent(world.player, event, world).run)
                         text event.name()                            
 
+        image utils.venchile_placeholder():
+            xpos 1085
+            ypos 295
         vbox:
             xpos 1082
             ypos 460

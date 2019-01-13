@@ -104,6 +104,9 @@ init 1 python:
         def button_1_hover(self):
             return self._world.path('resources/interface/buttons/button_1_hover.png')
 
+        def venchile_placeholder(self):
+            return self._world.path('resources/icons/Bike_icon.png')
+
 
 label lbl_zombieworld(world):
     'Zombieworld'
