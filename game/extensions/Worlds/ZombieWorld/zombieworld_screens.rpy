@@ -19,16 +19,18 @@ screen sc_zombieworld_event(event, person, world):
     modal True
     zorder 100
     frame:
+        background '#00000000'
         ysize 444
         xsize 700
         xalign 0.5
         yalign 0.5
-        background utils.event_screen()
         image im.Scale(event.select_image(), 260, 444):
             yalign 0.5
+        image utils.event_screen()
+        
         side ("c r"):
-            xpos 265
-            ypos 75
+            xpos 273
+            ypos 80
             area(0, 0, 430, 280)
 
             viewport id "zombieworld_event_text":
@@ -45,7 +47,7 @@ screen sc_zombieworld_event(event, person, world):
                 thumb utils.scrollbar_thumb()
         button:
 
-            xpos 255
+            xpos 260
             yalign 1.0
             xsize 157
             ysize 57
@@ -56,8 +58,6 @@ screen sc_zombieworld_event(event, person, world):
                 style 'zw_button_text'
                 xalign 0.5
                 yalign 0.5
-            # button 'Start' action NullAction():
-            #     xalign 1.0
 
         button:
 
@@ -72,8 +72,6 @@ screen sc_zombieworld_event(event, person, world):
                 style 'zw_button_text'
                 xalign 0.5
                 yalign 0.5
-            # button 'Start' action NullAction():
-            #     xalign 1.0
 
 screen sc_item_icon_frame(bg, img, x_size=50, y_size=50):
     frame:
