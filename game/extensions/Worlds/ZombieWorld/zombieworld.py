@@ -53,6 +53,9 @@ class ZombieWorldEvent(object):
     def list_image(self):
         return self._get_image('list_image', '_list')
 
+    def card_image(self):
+        return self._get_image('select_image', '_card')
+
     def select_image(self):
         return self._get_image('select_image', '_select')
 

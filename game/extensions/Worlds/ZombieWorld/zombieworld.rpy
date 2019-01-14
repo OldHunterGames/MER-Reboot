@@ -126,6 +126,12 @@ init 1 python:
         def resource_text_bg(self):
             return self._world.path('resources/icons/resource_counter_background.png')
 
+        def event_card_border(self):
+            return self._world.path('resources/events/event_card_border.png')
+
+        def event_card_border_hover(self):
+            return self._world.path('resources/events/event_card_border_hover.png')
+
 
 label lbl_zombieworld(world):
     'Zombieworld'

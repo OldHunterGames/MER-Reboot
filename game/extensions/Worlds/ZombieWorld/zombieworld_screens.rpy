@@ -150,11 +150,19 @@ screen sc_zombieworld_location(world):
             hbox:
                 spacing 10
                 for event in events:
-                    vbox:
+                    frame:
+                        background '#00000000'
+                        image event.card_image():
+                            xalign 0.5
+                            yalign 0.5
+                        xsize 190
+                        ysize 260
                         imagebutton:
-                            idle event.select_image()
+                            xalign 0.5
+                            yalign 0.5
+                            idle utils.event_card_border()
+                            hover utils.event_card_border_hover()
                             action Function(ZombieWorldShowEvent(world.player, event, world).run)
-                        text event.name()                            
 
         if location.venchile is not None:
             image location.venchile.image():
@@ -166,7 +174,7 @@ screen sc_zombieworld_location(world):
             background utils.main_screen_right_block()
             vbox:
                 xpos 6
-                ypos 5
+                ypos 10
                 spacing 2
                 hbox:
                     use sc_item_icon_frame(utils.resource_bg(), utils.food_icon())
