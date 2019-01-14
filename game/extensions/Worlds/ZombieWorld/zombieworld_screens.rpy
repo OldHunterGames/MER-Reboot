@@ -92,9 +92,9 @@ screen sc_zombieworld_location(world):
 
         frame:
             background utils.main_screen_turns_counter()
-            text '%s' % world.turn:
-                xpos 5
-                ypos 2
+            text 'Days: %s' % world.turn:
+                xpos 12
+                ypos 5
 
         frame:
             background utils.main_screen_left_block()
