@@ -75,6 +75,25 @@ screen sc_zombieworld_event(event, person, world):
             # button 'Start' action NullAction():
             #     xalign 1.0
 
+screen sc_item_icon_frame(bg, img, x_size=50, y_size=50):
+    frame:
+        xsize x_size
+        ysize y_size
+        background bg
+        image img:
+            xalign 0.5
+            yalign 0.5
+
+screen sc_resource_count_frame(utils, amount, x_size=97, y_size=27, y_align=0.5):
+    frame:
+        xsize x_size
+        ysize y_size
+        yalign y_align
+        background utils.resource_text_bg()
+        text '%s' % amount:
+            xalign 0.5
+            yalign 0.5
+        transclude
 screen sc_zombieworld_location(world):
     $ x_size = 1280
     $ location = world.current_location
@@ -100,8 +119,20 @@ screen sc_zombieworld_location(world):
             background utils.main_screen_left_block()
             xpos 15
             ypos 445
+            xsize 190
+            image utils.equip_icon_bg():
+                xpos 12
+                ypos 10
+
+            image utils.equip_icon_bg():
+                xpos 95
+                ypos 10
+
+            image utils.equip_icon_bg():
+                xalign 0.5
+                ypos 90
             hbox:
-                ypos 190
+                ypos 182
                 xpos 8
                 for i in range(1, player.vitality + 1):
                     if i <= player.filth:
@@ -113,14 +144,15 @@ screen sc_zombieworld_location(world):
             scrollbars 'horizontal'
             draggable True
             mousewheel "horizontal"
-            xmaximum x_size
-            ypos 200
+            ypos 150
+            xmaximum 825
+            xpos 190
             hbox:
                 spacing 10
                 for event in events:
                     vbox:
                         imagebutton:
-                            idle im.Scale(event.list_image(), 120, 145)
+                            idle event.select_image()
                             action Function(ZombieWorldShowEvent(world.player, event, world).run)
                         text event.name()                            
 
@@ -133,20 +165,21 @@ screen sc_zombieworld_location(world):
             ypos 445
             background utils.main_screen_right_block()
             vbox:
-                xpos 5
+                xpos 6
                 ypos 5
+                spacing 2
                 hbox:
-                    image utils.food_icon()
-                    text ': %s' % player.food
+                    use sc_item_icon_frame(utils.resource_bg(), utils.food_icon())
+                    use sc_resource_count_frame(utils, player.food)
                 hbox:
-                    image utils.drugs_icon()
-                    text ': %s' % player.drugs
+                    use sc_item_icon_frame(utils.resource_bg(), utils.drugs_icon())
+                    use sc_resource_count_frame(utils, player.drugs)
                 hbox:
-                    image utils.ammo_icon()
-                    text ': %s' % player.ammo
+                    use sc_item_icon_frame(utils.resource_bg(), utils.ammo_icon())
+                    use sc_resource_count_frame(utils, player.ammo)
                 hbox:
-                    image utils.fuel_icon()
-                    text ': %s' % player.fuel
+                    use sc_item_icon_frame(utils.resource_bg(), utils.fuel_icon())
+                    use sc_resource_count_frame(utils, player.fuel)
 
         frame:
             ypos 450

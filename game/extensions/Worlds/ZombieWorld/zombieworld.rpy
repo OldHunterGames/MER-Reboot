@@ -117,6 +117,15 @@ init 1 python:
         def button_1_hover(self):
             return self._world.path('resources/interface/buttons/button_1_hover.png')
 
+        def equip_icon_bg(self):
+            return self._world.path('resources/icons/equip_icon_background.png')
+
+        def resource_bg(self):
+            return self._world.path('resources/icons/resource_icon_background.png')
+
+        def resource_text_bg(self):
+            return self._world.path('resources/icons/resource_counter_background.png')
+
 
 label lbl_zombieworld(world):
     'Zombieworld'
