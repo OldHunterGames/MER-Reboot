@@ -5,6 +5,7 @@ label lbl_zombieworld_tutorial(world):
             'forest',
             zombieworld_tutorial_locations['forest']
         )
+        location_forest.venchile = ZombieWorldVenchile('bike', zombie_world_venchiles_data['bike'])
         rape_event = ZombieWorldEvent('rape', zombieworld_tutorial_events['rape'])
         location_forest.add_event(rape_event)
         world.set_location(location_forest)

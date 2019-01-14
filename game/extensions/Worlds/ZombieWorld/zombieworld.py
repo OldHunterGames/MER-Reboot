@@ -79,6 +79,7 @@ class ZombieWorldLocation(object):
         self._data = data
         self._events = dict()
         self.selected_event = None
+        self.venchile = None
         self._description = None
 
     def set_description(self, text):
@@ -121,6 +122,27 @@ class ZombieWorldLocation(object):
                 if os.path.basename(image).split('.')[0] == self.id:
                     location_image = image
         return location_image
+
+
+class ZombieWorldVenchile(object):
+
+    def __init__(self, id, data):
+        self.id = id
+        self._data = data
+
+    def name(self):
+        return self._data.get('name', '')
+
+    def image(self):
+        path = 'extensions/Worlds/ZombieWorld/resources/venchiles'
+        images = get_files(path)
+        venchile_image = self._data.get('image')
+
+        if venchile_image is None:
+            for image in images:
+                if os.path.basename(image).split('.')[0] == self.id:
+                    venchile_image = image
+        return venchile_image
 
 
 class ZombieWorldPersonMaker(object):

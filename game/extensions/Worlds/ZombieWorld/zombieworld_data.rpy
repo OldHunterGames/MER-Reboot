@@ -5,3 +5,11 @@ init python:
         __('Black eyes'),
         __('Shriveled')
     ]
+
+    zombie_world_venchiles_data = {
+        'bike': {
+            'name': __('Bike'),
+            'size': 2,
+            'fuel_tank': 1
+        }
+    }

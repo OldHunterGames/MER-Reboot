@@ -90,14 +90,24 @@ screen sc_zombieworld_location(world):
         background location.image()
         image utils.main_screen()
 
-        hbox:
-            xpos 25
-            ypos 640
-            for i in range(1, player.vitality + 1):
-                if i <= player.filth:
-                    image utils.cursed_heart_image()
-                else:
-                    image utils.normal_heart_image()
+        frame:
+            background utils.main_screen_turns_counter()
+            text '%s' % world.turn:
+                xpos 5
+                ypos 2
+
+        frame:
+            background utils.main_screen_left_block()
+            xpos 15
+            ypos 445
+            hbox:
+                ypos 190
+                xpos 8
+                for i in range(1, player.vitality + 1):
+                    if i <= player.filth:
+                        image utils.cursed_heart_image()
+                    else:
+                        image utils.normal_heart_image()
 
         viewport:
             scrollbars 'horizontal'
@@ -114,28 +124,39 @@ screen sc_zombieworld_location(world):
                             action Function(ZombieWorldShowEvent(world.player, event, world).run)
                         text event.name()                            
 
-        image utils.venchile_placeholder():
-            xpos 1085
-            ypos 295
-        vbox:
-            xpos 1082
-            ypos 460
-            hbox:
-                image utils.food_icon()
-                text ': %s' % player.food
-            hbox:
-                image utils.drugs_icon()
-                text ': %s' % player.drugs
-            hbox:
-                image utils.ammo_icon()
-                text ': %s' % player.ammo
-            hbox:
-                image utils.fuel_icon()
-                text ': %s' % player.fuel
-        text location.description():
-            color '#000000'
-            ypos 480
-            xmaximum 820
-            xpos 220
+        if location.venchile is not None:
+            image location.venchile.image():
+                xpos 1085
+                ypos 295
+        frame:
+            xpos 1065
+            ypos 445
+            background utils.main_screen_right_block()
+            vbox:
+                xpos 5
+                ypos 5
+                hbox:
+                    image utils.food_icon()
+                    text ': %s' % player.food
+                hbox:
+                    image utils.drugs_icon()
+                    text ': %s' % player.drugs
+                hbox:
+                    image utils.ammo_icon()
+                    text ': %s' % player.ammo
+                hbox:
+                    image utils.fuel_icon()
+                    text ': %s' % player.fuel
+
+        frame:
+            ypos 450
+            xmaximum 825
+            xpos 190
+            background utils.main_screen_text_bg()
+            text location.description():
+                ypos 20
+                xpos 25
+                color '#000000'
+                
                 
             

@@ -38,7 +38,8 @@ init 1 python:
             else:
                 return 'lbl_zombieworld_tutorial'
 
-        def get_path(self):
+        @classmethod
+        def get_path(cls):
             return 'ZombieWorld/'
 
         def on_visit(self, person):
@@ -95,6 +96,18 @@ init 1 python:
         def main_screen(self):
             return self._world.path('resources/interface/interface_base.png')
 
+        def main_screen_text_bg(self):
+            return self._world.path('resources/interface/text_field.png')
+
+        def main_screen_right_block(self):
+            return self._world.path('resources/interface/resources_window.png')
+
+        def main_screen_left_block(self):
+            return self._world.path('resources/interface/character_window.png')
+
+        def main_screen_turns_counter(self):
+            return self._world.path('resources/interface/turns_counter.png')
+
         def event_screen(self):
             return self._world.path('resources/interface/Eventscreen_1.png')
 
@@ -103,9 +116,6 @@ init 1 python:
 
         def button_1_hover(self):
             return self._world.path('resources/interface/buttons/button_1_hover.png')
-
-        def venchile_placeholder(self):
-            return self._world.path('resources/icons/Bike_icon.png')
 
 
 label lbl_zombieworld(world):

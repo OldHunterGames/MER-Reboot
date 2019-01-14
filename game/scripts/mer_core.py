@@ -111,10 +111,12 @@ class World(object):
         SetAngelApostol(self.archon, self.visitor).run()
         self.visitor.sparks -= self.archon.apostol_cost()
     
-    def path(self, name):
-        return 'extensions/Worlds/' + self.get_path() + name
+    @classmethod
+    def path(cls, name):
+        return 'extensions/Worlds/' + cls.get_path() + name
 
-    def get_path(self):
+    @classmethod
+    def get_path(cls):
         raise NotImplementedError()
     
     @classmethod
