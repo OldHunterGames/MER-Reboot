@@ -15,7 +15,7 @@ style zw_button_text:
 screen sc_zombieworld_event(event, person, world):
     $ context = object()
     $ context.player = person
-    $ utils = ZombieWorldUtilities(world)
+    $ utils = ZombieWorldUtilities
     modal True
     zorder 100
     frame:
@@ -28,10 +28,17 @@ screen sc_zombieworld_event(event, person, world):
             yalign 0.5
         image utils.event_screen()
         
+        frame:
+            xpos 340
+            xsize 280
+            background '#00000000'
+            text event.name():
+                xalign 0.5
+                
         side ("c r"):
             xpos 273
             ypos 80
-            area(0, 0, 430, 280)
+            area(0, 0, 420, 280)
 
             viewport id "zombieworld_event_text":
                 mousewheel "vertical"
@@ -96,7 +103,7 @@ screen sc_zombieworld_location(world):
     $ x_size = 1280
     $ location = world.current_location
     $ events = world.current_location.events()
-    $ utils = ZombieWorldUtilities(world)
+    $ utils = ZombieWorldUtilities
     $ player = world.player
 
     window:

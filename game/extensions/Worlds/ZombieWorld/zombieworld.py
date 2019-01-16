@@ -40,7 +40,7 @@ class ZombieWorldEvent(object):
     def texts(self):
         return self._data.get('texts', [])
 
-    def _get_image(self, key, suffix):
+    def _get_image(self, key, suffix, alternate=None):
         path = 'extensions/Worlds/ZombieWorld/resources/events'
         images = get_files(path)
         event_image = self._data.get(key)
@@ -48,16 +48,24 @@ class ZombieWorldEvent(object):
             for image in images:
                 if os.path.basename(image).split('.')[0] == self.id + suffix:
                     event_image = image
-        return card_back() if event_image is None else event_image
+        return alternate if event_image is None else event_image
 
     def list_image(self):
         return self._get_image('list_image', '_list')
 
     def card_image(self):
-        return self._get_image('select_image', '_card')
+        return self._get_image(
+            'select_image',
+            '_card',
+            store.ZombieWorldUtilities.card_empty_image()
+        )
 
     def select_image(self):
-        return self._get_image('select_image', '_select')
+        return self._get_image(
+            'select_image',
+            '_select',
+            store.ZombieWorldUtilities.event_empty_image()
+        )
 
     def bg_image(self):
         return self._get_image('bg_image', '_bg')
