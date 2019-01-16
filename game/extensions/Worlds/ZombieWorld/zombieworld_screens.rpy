@@ -25,7 +25,8 @@ screen sc_zombieworld_event(event, person, world):
         xalign 0.5
         yalign 0.5
         image im.Scale(event.select_image(), 260, 444):
-            yalign 0.5
+            ypos 0
+
         image utils.event_screen()
         
         frame:
@@ -37,8 +38,8 @@ screen sc_zombieworld_event(event, person, world):
                 
         side ("c r"):
             xpos 273
-            ypos 80
-            area(0, 0, 420, 280)
+            ypos 79
+            area(0, 0, 420, 298)
 
             viewport id "zombieworld_event_text":
                 mousewheel "vertical"
@@ -50,7 +51,7 @@ screen sc_zombieworld_event(event, person, world):
             vbar value YScrollValue("zombieworld_event_text"):
                 top_gutter 10
                 bottom_gutter 10
-                base_bar im.Scale(utils.scrollbar(), 10, 280)
+                base_bar im.Scale(utils.scrollbar(), 10, 298)
                 thumb utils.scrollbar_thumb()
         button:
 
