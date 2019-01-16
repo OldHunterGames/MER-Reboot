@@ -52,7 +52,7 @@ init 1 python:
                 self.player = ZombieWorld.PLAYER
 
         def vitality_change_callback(self, vitality):
-            if vitality <= 0:
+            if vitality < 0:
                 renpy.call_in_new_context('lbl_zombieworld_loose', world=self, person=person)
 
     class ZombieWorldUtilities(object):

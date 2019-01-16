@@ -243,6 +243,8 @@ class ZombieWorldPerson(PersonWrapper):
     @vitality.setter
     def vitality(self, value):
         self._vitality = min(self.max_vitality, value)
+        for i in self._events['vitality_changed']:
+            i(self.vitality)
 
     @property
     def max_vitality(self):
@@ -291,7 +293,7 @@ class ZombieWorldCombat(object):
     def fight(self):
         self.ghoul_power -= self.player_power()
         ZombieWorldChangeVitality(self.player, -1).run()
-        if self.ghoul_power < 0:
+        if self.ghoul_power <= 0:
             self.active = False
 
     def can_shoot(self):
