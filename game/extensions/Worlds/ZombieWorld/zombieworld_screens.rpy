@@ -180,7 +180,7 @@ screen sc_zombieworld_location(world):
             background utils.main_screen_right_block()
             vbox:
                 xpos 6
-                ypos 10
+                ypos 6
                 spacing 2
                 hbox:
                     use sc_item_icon_frame(utils.resource_bg(), utils.food_icon())
