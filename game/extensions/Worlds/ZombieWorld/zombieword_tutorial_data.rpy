@@ -3,7 +3,15 @@ init python:
         'rape': {
             'name': __('Rape'),
             'description': __("Suddenly you hear the girl cry and some fussy noises nearby."),
-            'label': 'lbl_zombieworld_tutorial_zombie_rape_event'
+            'label': 'lbl_zombieworld_tutorial_zombie_rape_event',
+            'texts': [
+                "You see a girl in teared clothes, forcefully pinned down by a strangely looking man. He is more like a half-rotten corpse than a living man, but moves vigorously. Strangely, this zombie-like monster don't trying to eat the girls brains, but fucks her violently instead.",
+                "A large knife lies on the ground nearby. The girl desperately reaches out to him but she misses a few inches. Stunned by this scene you trying to figure out what you should do. Meanwhile the monster and growls in pleasure... He is cumming!",
+                "You finally decide to act and grab a knife. At the same moment, the zombie loses interest in the woman lying on the ground and his interested look rushes toward you. It's not very clear whether he wants to kill or rape you, but in any case it's time to fight."
+            ],
+            'options': [
+                ('lbl_zombieworld_tutorial_zombie_rape_event_fight', __('Fight!'))
+            ]
         },
         'girl': {
             'name': __('Girl'),
@@ -68,24 +76,18 @@ init python:
         }
     }
 
-label lbl_zombieworld_tutorial_zombie_rape_event(event, person, world):
-    show expression event.bg_image() as bg
-    "You see a girl in teared clothes, forcefully pinned down by a strangely looking man. He is more like a half-rotten corpse than a living man, but moves vigorously. Strangely, this zombie-like monster don't trying to eat the girls brains, but fucks her violently instead."
-    "A large knife lies on the ground nearby. The girl desperately reaches out to him but she misses a few inches. Stunned by this scene you trying to figure out what you should do. Meanwhile the monster and growls in pleasure... He is cumming!"
-    menu:
-        "You finally decide to act and grab a knife. At the same moment, the zombie loses interest in the woman lying on the ground and his interested look rushes toward you. It's not very clear whether he wants to kill or rape you, but in any case it's time to fight."
-        'Fight!':
-            
-            python:
-                ZombieWorldCombat(world, person, 1).start()
-                
-            "The knife gets handy. A few intense strokes and zombies falls on the ground, leaving you a few scratches and aching muscles."
+label lbl_zombieworld_tutorial_zombie_rape_event_fight(event, person, world):    
+    python:
+        ZombieWorldCombat(world, person, 1).start()
+    python:
+        person.add_item(ZombieWorldItem('knife'))
+        girl_event = ZombieWorldEvent('girl', zombieworld_tutorial_events['girl'])
+        world.current_location.add_event(girl_event)
+        world.current_location.remove_event_by_id('rape')
+        event.replace_texts([
+            "The knife gets handy. A few intense strokes and zombies falls on the ground, leaving you a few scratches and aching muscles.",
             "You loot knife"
-            python:
-                person.add_item(ZombieWorldItem('knife'))
-                girl_event = ZombieWorldEvent('girl', zombieworld_tutorial_events['girl'])
-                world.current_location.add_event(girl_event)
-                world.current_location.remove_event_by_id('rape')
+        ])
     return
 
 label lbl_zombieworld_tutorial_girl_event(event, person, world):

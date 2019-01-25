@@ -11,19 +11,18 @@ from mer_utilities import card_back, get_files
 
 class ZombieWorldEvent(object):
 
-    EVENTS = dict()
-
     def __init__(self, id, data):
         self.id = id
         self._data = data
-
-    @classmethod
-    def register_event(cls, id, event):
-        cls.EVENTS[id] = event
+        self._replaced_texts = []
+        self._options_done = []
 
     @classmethod
     def get_events(cls):
         return [i for i in cls.EVENTS.values()]
+
+    def replace_texts(self, texts):
+        self._replaced_texts = texts
 
     def is_pseudo(self):
         return self._data.get('pseudo', False)
@@ -38,7 +37,15 @@ class ZombieWorldEvent(object):
         return self._data.get('description', 'No description')
 
     def texts(self):
+        if len(self._replaced_texts) > 0:
+            return self._replaced_texts
         return self._data.get('texts', [])
+
+    def options(self):
+        return [i for i in self._data.get('options', []) if i[0] not in self._options_done]
+
+    def do_option(self, option):
+        self._options_done.append(option)
 
     def _get_image(self, key, suffix, alternate=None):
         path = 'extensions/Worlds/ZombieWorld/resources/events'
@@ -328,6 +335,19 @@ class ZombieWorldActivateEvent(Command):
         person = self.person
         event = self.event
         self.event.call(self.person, self.world)
+
+
+class ZombieWorldEventAction(Command):
+
+    def __init__(self, person, event, world, label):
+        self.person = person
+        self.event = event
+        self.world = world
+        self.label = label
+
+    def run(self):
+        self.event.do_option(self.label)
+        renpy.call_in_new_context(self.label, self.event, self.person, self.world)
 
 
 class ZombieWorldShowEvent(Command):

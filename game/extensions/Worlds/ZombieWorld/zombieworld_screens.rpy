@@ -47,7 +47,12 @@ screen sc_zombieworld_event(event, person, world):
                     xsize 430
                     ysize 280
                     spacing 10
-                    text event.description()
+                    for i in event.texts():
+                        text i
+                    for i in event.options():
+                        hbox:
+                            textbutton i[1]:
+                                action Function(ZombieWorldEventAction(person, event, world, i[0]).run)
             vbar value YScrollValue("zombieworld_event_text"):
                 top_gutter 10
                 bottom_gutter 10
@@ -67,19 +72,19 @@ screen sc_zombieworld_event(event, person, world):
                 xalign 0.5
                 yalign 0.5
 
-        button:
+        # button:
 
-            xpos 530
-            yalign 1.0
-            xsize 157
-            ysize 57
-            action Function(ZombieWorldActivateEvent(world.player, event, world).run), Hide('sc_zombieworld_event')
-            background utils.button_1()
-            hover_background utils.button_1_hover()
-            text 'Start':
-                style 'zw_button_text'
-                xalign 0.5
-                yalign 0.5
+        #     xpos 530
+        #     yalign 1.0
+        #     xsize 157
+        #     ysize 57
+        #     action Function(ZombieWorldActivateEvent(world.player, event, world).run), Hide('sc_zombieworld_event')
+        #     background utils.button_1()
+        #     hover_background utils.button_1_hover()
+        #     text 'Start':
+        #         style 'zw_button_text'
+        #         xalign 0.5
+        #         yalign 0.5
 
 screen sc_item_icon_frame(bg, img, x_size=50, y_size=50):
     frame:
@@ -168,6 +173,8 @@ screen sc_zombieworld_location(world):
                             yalign 0.5
                             idle utils.event_card_border()
                             hover utils.event_card_border_hover()
+                            hovered SetField(location, 'selected_event', event)
+                            unhovered SetField(location, 'selected_event', None)
                             action Function(ZombieWorldShowEvent(world.player, event, world).run)
 
         if location.venchile is not None:
@@ -200,10 +207,16 @@ screen sc_zombieworld_location(world):
             xmaximum 825
             xpos 190
             background utils.main_screen_text_bg()
-            text location.description():
-                ypos 20
-                xpos 25
-                color '#000000'
+            if location.selected_event is not None:
+                text location.selected_event.description():
+                    ypos 20
+                    xpos 25
+                    color '#000000'
+            else:
+                text location.description():
+                    ypos 20
+                    xpos 25
+                    color '#000000'
                 
                 
             
