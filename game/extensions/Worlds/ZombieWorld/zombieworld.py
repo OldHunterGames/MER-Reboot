@@ -16,6 +16,7 @@ class ZombieWorldEvent(object):
         self._data = data
         self._replaced_texts = []
         self._options_done = []
+        self.fight = None
 
     @classmethod
     def get_events(cls):
@@ -283,13 +284,15 @@ class ZombieWorldPerson(PersonWrapper):
 
 class ZombieWorldCombat(object):
 
-    def __init__(self, world, player, ghoul_count, followers_count=0):
+    def __init__(self, world, player, ghoul_count, label, event, followers_count=0,):
         self.world = world
         self.player = player
+        self.event = event
         self.followers = followers_count
         self.ghoul_power = ghoul_count
         self.active = True
         self.shots = player.ranged_weapon().rate_of_fire if player.ranged_weapon() is not None else 0
+        self.label = label
 
     def player_power(self):
         return self.player.vitality + self.player.combat_value() + self.followers
@@ -301,7 +304,8 @@ class ZombieWorldCombat(object):
         self.ghoul_power -= self.player_power()
         ZombieWorldChangeVitality(self.player, -1).run()
         if self.ghoul_power <= 0:
-            self.active = False
+            self.event.fight = None
+            renpy.call_in_new_context(self.label, self.event, self.player, self.world)
 
     def can_shoot(self):
         if self.shots < 1 and not self.shots == 'auto':
@@ -317,6 +321,9 @@ class ZombieWorldCombat(object):
         if self.shots != 'auto':
             self.shots -= 1
         self.ghoul_power -= 1
+        if self.ghoul_power <= 0:
+            self.event.fight = None
+            renpy.call_in_new_context(self.label, self.event, self.player, self.world)
 
     def ammo_consumption(self):
         if self.player.ranged_weapon() is not None:
@@ -339,15 +346,25 @@ class ZombieWorldActivateEvent(Command):
 
 class ZombieWorldEventAction(Command):
 
-    def __init__(self, person, event, world, label):
+    def __init__(self, person, event, world, action):
         self.person = person
         self.event = event
         self.world = world
-        self.label = label
+        self.action = action
 
     def run(self):
-        self.event.do_option(self.label)
-        renpy.call_in_new_context(self.label, self.event, self.person, self.world)
+        self.event.do_option(self.action)
+        if self.action['type'] == 'fight':
+            renpy.call_in_new_context(
+                'lbl_zombieworld_event_start_fight',
+                self.event,
+                self.person,
+                self.world,
+                self.action['ghouls'],
+                self.action['win_label']
+            )
+        else:
+            renpy.call_in_new_context(self.action['label'], self.event, self.person, self.world)
 
 
 class ZombieWorldShowEvent(Command):

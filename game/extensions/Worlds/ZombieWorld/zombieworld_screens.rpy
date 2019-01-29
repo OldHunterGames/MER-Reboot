@@ -44,15 +44,44 @@ screen sc_zombieworld_event(event, person, world):
             viewport id "zombieworld_event_text":
                 mousewheel "vertical"
                 vbox:
-                    xsize 430
+                    xsize 410
                     ysize 280
                     spacing 10
-                    for i in event.texts():
-                        text i
-                    for i in event.options():
+                    if event.fight is None:
+                        for i in event.texts():
+                            text i
+                        for i in event.options():
+                            hbox:
+                                textbutton i[1]:
+                                    action Function(ZombieWorldEventAction(person, event, world, i[0]).run)
+                    else:
+                        python:
+                            combat = event.fight
+                            normal_heart = ZombieWorldUtilities.normal_heart_image()
+                            black_heart = ZombieWorldUtilities.cursed_heart_image()
+                            skull = ZombieWorldUtilities.small_skull_icon()
+                            icon = normal_heart if combat.player.vitality > combat.player.filth else black_heart
+                            if combat.player.vitality < 1:
+                                icon = skull
+                            power = combat.player_power()
+                            ghouls = combat.ghoul_power
+                            ammo_cons = combat.ammo_consumption()
+            
+                        text 'Ghouls: %s' % ghouls
+                            
                         hbox:
-                            textbutton i[1]:
-                                action Function(ZombieWorldEventAction(person, event, world, i[0]).run)
+                            button:
+                                hbox:
+                                    text 'Fight (%s, ' % power:
+                                        style 'zw_button_text'
+                                    image icon
+                                    text ')':
+                                        style 'zw_button_text'
+                                action Function(event.fight.fight)
+                            if combat.can_shoot():
+                                textbutton 'Shoot the ghoul (%s)' % ammo_cons:
+                                    action Function(event.fight.shoot)
+
             vbar value YScrollValue("zombieworld_event_text"):
                 top_gutter 10
                 bottom_gutter 10

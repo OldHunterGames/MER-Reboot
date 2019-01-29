@@ -3,25 +3,37 @@ init python:
         'rape': {
             'name': __('Rape'),
             'description': __("Suddenly you hear the girl cry and some fussy noises nearby."),
-            'label': 'lbl_zombieworld_tutorial_zombie_rape_event',
             'texts': [
                 "You see a girl in teared clothes, forcefully pinned down by a strangely looking man. He is more like a half-rotten corpse than a living man, but moves vigorously. Strangely, this zombie-like monster don't trying to eat the girls brains, but fucks her violently instead.",
                 "A large knife lies on the ground nearby. The girl desperately reaches out to him but she misses a few inches. Stunned by this scene you trying to figure out what you should do. Meanwhile the monster and growls in pleasure... He is cumming!",
                 "You finally decide to act and grab a knife. At the same moment, the zombie loses interest in the woman lying on the ground and his interested look rushes toward you. It's not very clear whether he wants to kill or rape you, but in any case it's time to fight."
             ],
             'options': [
-                ('lbl_zombieworld_tutorial_zombie_rape_event_fight', __('Fight!'))
+                ({'type': 'fight', 'ghouls': 1, 'win_label': 'lbl_zombieworld_tutorial_zombie_rape_event_fight'}, __('Fight!'))
             ]
         },
         'girl': {
             'name': __('Girl'),
             'description': __("The rescued girl is still lying on the ground and is breathing heavily."),
-            'label': 'lbl_zombieworld_tutorial_girl_event'
+            'texts': [
+                "You approach a girl raped by zombie. Her clothes is ruined so you can see her naked body and scratched, brised, dirty skin. The woman does not even look at you, instead she tries to scrape something out of her vagina. You see that it's not an ordinary cum on her fingers, but a hideous black slime.",
+                "Girl - Fuck-fuck-fuck... this ghoul infested me. Not again. I'm so fucked, oh...",
+                "Player - Hey! What the hell is going on here? Who are you? And what this thing is?",
+                "Girl tells you that her name is Masha. The thing attacked her is a ghoul (...)"
+            ],
+            'options': [
+                ({'type': 'label', 'label': 'lbl_zombieworld_tutorial_girl_event'}, __("I'll bring you some clothes and food"))
+            ]
         },
         'tent': {
             'name': __('Tent'),
             'description': __("Masha told you where to find her tent. There must be some spare clothes and a bit of food there, but also a more ghouls."),
-            'label': 'lbl_zombieworld_tutorial_tent_event'
+            'texts': [
+                "Two ghouls are stumbling meaninglessly near the Masha's tent. There is no way to get inside without a fight."
+            ],
+            'options': [
+                ({'type': 'fight', 'ghouls': 1, 'win_label': 'lbl_zombieworld_tutorial_tent_event'}, __("Fight ghouls"))
+            ]
         },
         'first_quest': {
             'name': __('First quest'),
@@ -76,9 +88,13 @@ init python:
         }
     }
 
-label lbl_zombieworld_tutorial_zombie_rape_event_fight(event, person, world):    
+label lbl_zombieworld_event_start_fight(event, person, world, ghouls, win_label):
     python:
-        ZombieWorldCombat(world, person, 1).start()
+        event.fight = ZombieWorldCombat(world, person, ghouls, win_label, event)
+    return
+
+label lbl_zombieworld_tutorial_zombie_rape_event_fight(event, person, world):    
+
     python:
         person.add_item(ZombieWorldItem('knife'))
         girl_event = ZombieWorldEvent('girl', zombieworld_tutorial_events['girl'])
@@ -91,31 +107,23 @@ label lbl_zombieworld_tutorial_zombie_rape_event_fight(event, person, world):
     return
 
 label lbl_zombieworld_tutorial_girl_event(event, person, world):
-    "You approach a girl raped by zombie. Her clothes is ruined so you can see her naked body and scratched, brised, dirty skin. The woman does not even look at you, instead she tries to scrape something out of her vagina. You see that it's not an ordinary cum on her fingers, but a hideous black slime."
-    "Girl - Fuck-fuck-fuck... this ghoul infested me. Not again. I'm so fucked, oh..."
-    "Player - Hey! What the hell is going on here? Who are you? And what this thing is?"
-    menu:
-        "Girl tells you that her name is Masha. The thing attacked her is a ghoul (...)"
-        "I'll bring you some clothes and food":
-            python:
-                girl_event_2 = ZombieWorldEvent('tent', zombieworld_tutorial_events['tent'])
-                world.current_location.add_event(girl_event_2)
-                world.current_location.remove_event(girl_event)
+    python:
+        girl_event_2 = ZombieWorldEvent('tent', zombieworld_tutorial_events['tent'])
+        world.current_location.add_event(girl_event_2)
+        world.current_location.remove_event(girl_event)
     return
 
 label lbl_zombieworld_tutorial_tent_event(event, person, world):
-    menu:
-        "Two ghouls are stumbling meaninglessly near the Masha's tent. There is no way to get inside without a fight."
-        "Fight ghouls":
-            python:
-                ZombieWorldCombat(world, person, 1).start()
-                person.add_item(ZombieWorldItem('cloth'))
-                person.food += 2
-                tutorial_first_quest = ZombieWorldEvent('first_quest', zombieworld_tutorial_events['first_quest'])
-                world.current_location.add_event(tutorial_first_quest)
-                world.current_location.remove_event(girl_event_2)
-        "Retreat":
-            return
+    python:
+        event.replace_texts([
+            'You gain cloth',
+            'You gain 2 food'
+        ])
+        person.add_item(ZombieWorldItem('cloth'))
+        person.food += 2
+        tutorial_first_quest = ZombieWorldEvent('first_quest', zombieworld_tutorial_events['first_quest'])
+        world.current_location.add_event(tutorial_first_quest)
+        world.current_location.remove_event(girl_event_2)
     return
 
 label lbl_zombieworld_tutorial_cloth_event(event, person, world):
