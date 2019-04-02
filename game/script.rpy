@@ -15,6 +15,7 @@ init -10 python:
     from mer_sparks_festival import *
     from mer_sexuality import *
     from mer_duel import *
+    from mer_class import *
     from mer_legacy_system import CoreRiteOfLegacy
 
 init 1 python:
@@ -55,6 +56,7 @@ label start:
     $ core.skip_turn.add_callback(CoreAddCards(player).run)
     $ core.skip_turn.add_callback(CoreDuel.drop_skulls_callback)
     $ core.skip_turn.add_callback(CoreSexMinigame.decade_skip_callback)
+    $ renpy.change_language('russian')
     python:
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
@@ -79,7 +81,23 @@ label lbl_main:
             python:
                 angel = AngelMaker.gen_archon()
                 MistTravel(angel.world, player, core).run()
+        'Arena':
+            call lbl_arena()
 
+    return
+
+
+label lbl_arena():
+    python:
+        while True:
+            gladiator1 = PersonCreator.gen_person(gender='male', genus='human')
+            gladiator1.person_class = PersonClass.random_by_tag('gladiator')
+            gladiator2 = PersonCreator.gen_person(gender='male', genus='human')
+            gladiator2.person_class = PersonClass.random_by_tag('gladiator')
+            print(gladiator1.person_class.attack_suits)
+            print(gladiator1.person_class.attack_types)
+            print([str(i) for i in gladiator1.person_class.get_attacks()])
+            MerArena(gladiator1, gladiator2).start()
     return
 
 label lbl_make_initial_characters():
