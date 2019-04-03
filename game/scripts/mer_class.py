@@ -112,7 +112,7 @@ class MerArena(object):
         self.enemy_attack = None
 
     def start(self):
-        renpy.call_screen('sc_arena', arena=self)
+        return renpy.call_screen('sc_arena', arena=self)
 
     def make_bet(self, fighter):
         self.ally = fighter

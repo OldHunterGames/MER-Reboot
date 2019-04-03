@@ -27,7 +27,7 @@ screen sc_arena(arena):
                     text attack xalign 0.5
                 textbutton 'make a bet' action Function(arena.make_bet, fighter1)  xalign 0.5
 
-            textbutton 'Next fight' action Return() xalign 0.5 yalign 0.9
+            textbutton 'Next fight' action Return(True) xalign 0.5 yalign 0.9
 
             vbox:
                 xalign 1.0

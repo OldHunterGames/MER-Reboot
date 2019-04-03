@@ -103,18 +103,20 @@ label lbl_arena():
             gladiator2.soul_level = random.randint(0, 5)
 
             arena = MerArena(gladiator1, gladiator2)
-            arena.start()
-            fight = arena.fight
-            result = 'won' if fight.is_player_win() else 'lost'
+            is_skip = arena.start()
+            if not is_skip:
+                fight = arena.fight
+                result = 'won' if fight.is_player_win() else 'lost'
 
-        show screen sc_arena_results(fight)
-        'Fight'
-        python:
-            for i in xrange(len(fight.results)):
-                fight.update_counter()
-                renpy.say(None, fight.messages[i])
-        'Winner is [fight.winner.name] / player [result] his bet'
-        hide screen sc_arena_results
+        if not is_skip:
+            show screen sc_arena_results(fight)
+            'Fight'
+            python:
+                for i in xrange(len(fight.results)):
+                    fight.update_counter()
+                    renpy.say(None, fight.messages[i])
+            'Winner is [fight.winner.name] / player [result] his bet'
+            hide screen sc_arena_results
     return
 
 label lbl_make_initial_characters():

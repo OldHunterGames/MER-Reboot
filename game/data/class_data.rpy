@@ -33,6 +33,20 @@ init python:
             'attack_types': ['melee'],
             'tag': 'gladiator'
         },
+        'myrmidon': {
+            'name': __('Myrmidon'),
+            'tier': 3,
+            'key_attributes': ['might'],
+            'prerequisites': {
+                'class': ['pegniarius']
+            },
+            'type': 'slave',
+            'description': __('Classic sword & shield wielding, lightly armored gladiator.'),
+            'available_garments': ['armor'],
+            'attack_suits': ['spades'],
+            'attack_types': ['melee'],
+            'tag': 'gladiator'
+        },
         # 'pugilist': {
         #     'name': __('Pugilist'),
         #     'key_attributes': ['might'],
