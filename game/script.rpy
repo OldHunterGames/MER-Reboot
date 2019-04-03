@@ -228,6 +228,9 @@ label lbl_arena():
             else:
                 'Winner is [fight.winner.name] / player [result] his bet'
             hide screen sc_arena_results
+
+        'Back':
+            return
     return
 
 label lbl_make_initial_characters():
