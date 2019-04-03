@@ -27,7 +27,8 @@ screen sc_arena(arena):
                     text attack xalign 0.5
                 textbutton 'make a bet' action Function(arena.make_bet, fighter1)  xalign 0.5
 
-            textbutton 'Next fight' action Return(True) xalign 0.5 yalign 0.9
+            textbutton 'Next fight' action Return('next') xalign 0.5 yalign 0.9
+            textbutton 'Leave' action Return('leave_arena') xalign 0.5 yalign 1.0
 
             vbox:
                 xalign 1.0
@@ -44,6 +45,7 @@ screen sc_arena(arena):
                 for attack in fighter2.person_class.attack_types:
                     text attack xalign 0.5
                 textbutton 'make a bet' action Function(arena.make_bet, fighter2) xalign 0.5
+
         if arena.state == 'prefight':
             vbox:
                 xalign 0.5

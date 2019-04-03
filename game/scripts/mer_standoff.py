@@ -28,8 +28,10 @@ class Standoff(Command):
 
         if result > self.enemy.person_class.tier:
             self.winner = self.player_combatant
+            self.loser = self.enemy
         else:
             self.winner = self.enemy
+            self.loser = self.player_combatant
 
     def update_counter(self):
         self.counter += self.results[self.index]
