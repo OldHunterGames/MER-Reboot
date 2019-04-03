@@ -21,6 +21,7 @@ class Standoff(Command):
         self._calc_suits()
         self._calc_power()
         self._calc_class()
+        self._calc_soul()
         self._calc_armor()
         
         result = sum(self.results) if len(self.results) > 0 else 0
@@ -33,6 +34,14 @@ class Standoff(Command):
     def update_counter(self):
         self.counter += self.results[self.index]
         self.index += 1
+
+    def _calc_soul(self):
+        if self.player_combatant.soul_level > self.enemy.soul_level:
+            self.results.append(1)
+            self.messages.append('Advantage. Your soul is stronger')
+        elif self.player_combatant.soul_level < self.enemy.soul_level:
+            self.results.append(-1)
+            self.messages.append('Advantage. Your soul is weaker')
 
     def _calc_suits(self):
         player_value, enemy_value = suits_value(self.player_action.suit, self.enemy_action.suit)

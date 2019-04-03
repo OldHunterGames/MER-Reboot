@@ -17,6 +17,7 @@ screen sc_arena(arena):
                 text fighter1.name xalign 0.5
                 text fighter1.person_class.colored_name() xalign 0.5
                 text fighter1.armor.name xalign 0.5
+                text encolor_text(core_souls[fighter1.soul_level], fighter1.soul_level) xalign 0.5
                 for attr in fighter1.show_attributes().values():
                     text attr xalign 0.5
                 for attack in fighter1.person_class.attack_suits:
@@ -34,6 +35,7 @@ screen sc_arena(arena):
                 text fighter2.name xalign 0.5
                 text fighter2.person_class.colored_name() xalign 0.5
                 text fighter2.armor.name xalign 0.5
+                text encolor_text(core_souls[fighter2.soul_level], fighter2.soul_level) xalign 0.5
                 for attr in fighter2.show_attributes().values():
                     text attr xalign 0.5
                 for attack in fighter2.person_class.attack_suits:

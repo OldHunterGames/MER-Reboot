@@ -179,3 +179,12 @@ init python:
         'coward': {'slot': 'safety', 'name': __('Coward'), 'subtlety': 1},
         'zealous': {'slot': 'safety', 'name': __('Zealous'), 'might': 1},
     }
+
+    core_souls = {
+        0: __('darksoul'),
+        1: __('dimsoul'),
+        2: __('firesoul'),
+        3: __('soulblaze'),
+        4: __('hellfire'),
+        5: __('infernal'),
+    }

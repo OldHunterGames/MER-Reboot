@@ -92,11 +92,15 @@ label lbl_arena():
         python:
             gladiator1 = PersonCreator.gen_person(gender='male', genus='human')
             gladiator1.person_class = PersonClass.random_by_tag('gladiator')
+            
             gladiator2 = PersonCreator.gen_person(gender='male', genus='human')
             gladiator2.person_class = PersonClass.random_by_tag('gladiator')
-            print(gladiator1.person_class.available_garments)
+            
             gladiator1.armor = Armor.random_by_type(gladiator1.person_class.available_garments[0])
             gladiator2.armor = Armor.random_by_type(gladiator2.person_class.available_garments[0])
+            
+            gladiator1.soul_level = random.randint(0, 5)
+            gladiator2.soul_level = random.randint(0, 5)
 
             arena = MerArena(gladiator1, gladiator2)
             arena.start()
