@@ -11,18 +11,22 @@ init python:
     mer_armor = {
         'nude': {
             'name': __('Nude'),
+            'type': None,
             'calc_bonus': lambda x: -1
         },
         'casual_clothes': {
             'name': __('Casual clothes'),
+            'type': None,
             'calc_bonus': lambda x: -1 if x.get('standoff_type', None) == 'combat' else 0
         },
         'combat_armor': {
             'name': __('Combat armor'),
+            'type': 'armor',
             'calc_bonus': lambda x: -1 if x.get('standoff_type', None) == 'social' else 0
         },
         'plate_armor': {
             'name': __('Plate armor'),
+            'type': 'heavy_armor',
             'calc_bonus': plate_armor_calc
         },
     }

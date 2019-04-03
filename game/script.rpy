@@ -94,9 +94,10 @@ label lbl_arena():
             gladiator1.person_class = PersonClass.random_by_tag('gladiator')
             gladiator2 = PersonCreator.gen_person(gender='male', genus='human')
             gladiator2.person_class = PersonClass.random_by_tag('gladiator')
-            print(gladiator1.person_class.attack_suits)
-            print(gladiator1.person_class.attack_types)
-            print([str(i) for i in gladiator1.person_class.get_attacks()])
+            print(gladiator1.person_class.available_garments)
+            gladiator1.armor = Armor.random_by_type(gladiator1.person_class.available_garments[0])
+            gladiator2.armor = Armor.random_by_type(gladiator2.person_class.available_garments[0])
+
             arena = MerArena(gladiator1, gladiator2)
             arena.start()
             fight = arena.fight

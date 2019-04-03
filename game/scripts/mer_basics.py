@@ -1,3 +1,9 @@
+import random
+
+import renpy.store as store
+import renpy.exports as renpy
+
+
 class Suits(object):
     DIAMONDS = 'diamonds'
     SPADES = 'spades'
@@ -40,9 +46,21 @@ def suits_value(suit1, suit2):
 
 class Armor(object):
 
+    @classmethod
+    def get_by_type(cls, type):
+        return [cls(id, data) for id, data in store.mer_armor.items() if data['type'] == type or data['type'] is None]
+
+    @classmethod
+    def random_by_type(cls, type):
+        return random.choice(cls.get_by_type(type))
+
     def __init__(self, id, data):
         self.id = id
         self.data = data
 
+    @property
+    def name(self):
+        return self.data.get("name")
+
     def calc_bonus(self, context):
-        return data.get('calc_bonus', lambda x: 0)(context)
+        return self.data.get('calc_bonus', lambda x: 0)(context)

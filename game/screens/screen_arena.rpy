@@ -16,6 +16,7 @@ screen sc_arena(arena):
                 image fighter1.avatar
                 text fighter1.name xalign 0.5
                 text fighter1.person_class.colored_name() xalign 0.5
+                text fighter1.armor.name xalign 0.5
                 for attr in fighter1.show_attributes().values():
                     text attr xalign 0.5
                 for attack in fighter1.person_class.attack_suits:
@@ -32,6 +33,7 @@ screen sc_arena(arena):
                 image fighter2.avatar
                 text fighter2.name xalign 0.5
                 text fighter2.person_class.colored_name() xalign 0.5
+                text fighter2.armor.name xalign 0.5
                 for attr in fighter2.show_attributes().values():
                     text attr xalign 0.5
                 for attack in fighter2.person_class.attack_suits:
