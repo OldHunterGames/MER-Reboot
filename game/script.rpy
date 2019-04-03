@@ -109,6 +109,7 @@ label lbl_arena():
                 fight.update_counter()
                 renpy.say(None, fight.messages[i])
         'Winner is [fight.winner.name] / player [result] his bet'
+        hide screen sc_arena_results
     return
 
 label lbl_make_initial_characters():
