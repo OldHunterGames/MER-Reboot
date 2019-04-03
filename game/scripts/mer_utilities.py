@@ -4,6 +4,9 @@ from collections import defaultdict
 import renpy.store as store
 import renpy.exports as renpy
 
+def gui_image(path):
+    return 'gui/{}'.format(path)
+
 def value_color(value):
     keyworded = {
         'red': 'ff0000', 'green': '00ff00', 'cyan': '00ffff',

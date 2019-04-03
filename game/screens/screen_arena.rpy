@@ -18,7 +18,10 @@ screen sc_arena(arena):
                 text fighter1.person_class.colored_name() xalign 0.5
                 for attr in fighter1.show_attributes().values():
                     text attr xalign 0.5
-                for attack in fighter1.person_class.attack_types + fighter1.person_class.attack_suits:
+                for attack in fighter1.person_class.attack_suits:
+                    if attack != 'skull':
+                        text Suits.as_attack_type(attack) xalign 0.5
+                for attack in fighter1.person_class.attack_types:
                     text attack xalign 0.5
                 textbutton 'make a bet' action Function(arena.make_bet, fighter1)  xalign 0.5
 
@@ -31,7 +34,10 @@ screen sc_arena(arena):
                 text fighter2.person_class.colored_name() xalign 0.5
                 for attr in fighter2.show_attributes().values():
                     text attr xalign 0.5
-                for attack in fighter2.person_class.attack_types + fighter2.person_class.attack_suits:
+                for attack in fighter2.person_class.attack_suits:
+                    if attack != 'skull':
+                        text Suits.as_attack_type(attack) xalign 0.5
+                for attack in fighter2.person_class.attack_types:
                     text attack xalign 0.5
                 textbutton 'make a bet' action Function(arena.make_bet, fighter2) xalign 0.5
         if arena.state == 'prefight':
@@ -40,7 +46,7 @@ screen sc_arena(arena):
                 text 'Choose a strategy'
                 for attack in arena.ally.person_class.get_attacks():
                     textbutton str(attack):
-                        action Function(arena.select_attack, attack)
+                        action Function(arena.select_attack, attack), Return()
                         text_color value_color(attack.power(arena.ally))
                         text_hover_color '#fff'
                 
@@ -60,4 +66,25 @@ screen sc_arena(arena):
                     text arena.ally.person_class.colored_name()
                 vbox:
                     image arena.ally.avatar
-                
+
+screen sc_arena_results(fight):
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        xsize 500
+        ysize 300
+
+        if fight.counter < 1:
+            hbox:
+                xalign 0.5
+                yalign 0.5
+                for i in range(abs(fight.counter - 1)):
+                    image gui_image('loser.png')
+        else:
+            hbox:
+                xalign 0.5
+                yalign 0.5
+                for i in range(fight.counter):
+                    image gui_image('winner.png')
+

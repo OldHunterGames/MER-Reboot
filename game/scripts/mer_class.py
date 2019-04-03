@@ -5,6 +5,7 @@ import renpy.exports as renpy
 
 from mer_basics import Suits
 from mer_utilities import encolor_text
+from mer_standoff import Standoff
 
 
 class PersonClassTypes(object):
@@ -107,21 +108,20 @@ class MerArena(object):
         self.ally = None
         self.ally_attack = None
         self.enemy = None
+        self.fight = None
         self.enemy_attack = None
 
     def start(self):
         renpy.call_screen('sc_arena', arena=self)
 
     def make_bet(self, fighter):
-        print('bet')
         self.ally = fighter
         self.enemy = self.fighter1 if fighter == self.fighter2 else self.fighter2
-        self.enemy_attack = PersonAttack(
-            random.choice(self.enemy.person_class.attack_suits),
-            random.choice(self.enemy.person_class.attack_types),
-        )
+        self.enemy_attack = random.choice(self.enemy.person_class.get_attacks())
         self.state = 'prefight'
 
     def select_attack(self, attack):
         self.ally_attack = attack
         self.state = 'results'
+        self.fight = Standoff(self.ally, self.ally_attack, self.enemy, self.enemy_attack)
+        self.fight.run()

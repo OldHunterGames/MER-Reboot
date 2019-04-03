@@ -17,6 +17,7 @@ init -10 python:
     from mer_duel import *
     from mer_class import *
     from mer_legacy_system import CoreRiteOfLegacy
+    from mer_basics import *
 
 init 1 python:
     for key, value in core_features.items():
@@ -56,7 +57,6 @@ label start:
     $ core.skip_turn.add_callback(CoreAddCards(player).run)
     $ core.skip_turn.add_callback(CoreDuel.drop_skulls_callback)
     $ core.skip_turn.add_callback(CoreSexMinigame.decade_skip_callback)
-    $ renpy.change_language('russian')
     python:
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
@@ -88,8 +88,8 @@ label lbl_main:
 
 
 label lbl_arena():
-    python:
-        while True:
+    while True:
+        python:
             gladiator1 = PersonCreator.gen_person(gender='male', genus='human')
             gladiator1.person_class = PersonClass.random_by_tag('gladiator')
             gladiator2 = PersonCreator.gen_person(gender='male', genus='human')
@@ -97,7 +97,18 @@ label lbl_arena():
             print(gladiator1.person_class.attack_suits)
             print(gladiator1.person_class.attack_types)
             print([str(i) for i in gladiator1.person_class.get_attacks()])
-            MerArena(gladiator1, gladiator2).start()
+            arena = MerArena(gladiator1, gladiator2)
+            arena.start()
+            fight = arena.fight
+            result = 'won' if fight.is_player_win() else 'lost'
+
+        show screen sc_arena_results(fight)
+        'Fight'
+        python:
+            for i in xrange(len(fight.results)):
+                fight.update_counter()
+                renpy.say(None, fight.messages[i])
+        'Winner is [fight.winner.name] / player [result] his bet'
     return
 
 label lbl_make_initial_characters():
