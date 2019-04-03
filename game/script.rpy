@@ -179,58 +179,60 @@ label lbl_slave_market():
 
 label lbl_arena():
     $ res = None
-    menu:
-        'make bet':
-            while res != 'leave_arena':
-                python:
-                    gladiator1 = make_gladiator()            
-                    gladiator2 = make_gladiator()
-
-                    arena = MerArena(gladiator1, gladiator2)
-                    res = arena.start()
-                    if res != 'leave_arena' and res != 'next':
-                        fight = arena.fight
-                        result = 'won' if fight.is_player_win() else 'lost'
-
-                if res != 'leave_arena' and res != 'next':
-                    show screen sc_arena_results(fight)
-                    'Fight'
-                    python:
-                        for i in xrange(len(fight.results)):
-                            fight.update_counter()
-                            renpy.say(None, fight.messages[i])
-                    'Winner is [fight.winner.name] / player [result] his bet'
-                    hide screen sc_arena_results
-
-        'put fighter' if len(player.slaves) > 0:
+    $ disabled = None if len(player.slaves) < 1 else 'put'
+    $ choice = renpy.display_menu([('make bet', 'bet'), ('put fighter', disabled), ('Return', 'leave')])
+    if choice == 'bet':
+        while res != 'leave_arena':
             python:
-                gladiator1 = make_gladiator()
-                selector = FighterSelector(player, gladiator1)
-                selector.run()
-                gladiator2 = selector.current_fighter()
+                gladiator1 = make_gladiator()            
+                gladiator2 = make_gladiator()
+
                 arena = MerArena(gladiator1, gladiator2)
-                arena.make_bet(gladiator2)
-                arena.start()
-                fight = arena.fight
-                result = 'won' if fight.is_player_win() else 'lost'
-                if result != 'won':
-                    player.slaves.remove(gladiator2)
-                slavestore.update_slaves()
+                res = arena.start()
+                if res != 'leave_arena' and res != 'next':
+                    fight = arena.fight
+                    result = 'won' if fight.is_player_win() else 'lost'
 
-            show screen sc_arena_results(fight)
-            'Fight'
-            python:
-                for i in xrange(len(fight.results)):
-                    fight.update_counter()
-                    renpy.say(None, fight.messages[i])
-            if result != 'won':
-                'Winner is [fight.winner.name] / player [result] his bet / [fight.loser.name] is killed'
-            else:
+            if res != 'leave_arena' and res != 'next':
+                show screen sc_arena_results(fight)
+                'Fight'
+                python:
+                    for i in xrange(len(fight.results)):
+                        fight.update_counter()
+                        renpy.say(None, fight.messages[i])
                 'Winner is [fight.winner.name] / player [result] his bet'
-            hide screen sc_arena_results
+                hide screen sc_arena_results
+            
 
-        'Back':
-            return
+    if choice == 'put':
+        python:
+            gladiator1 = make_gladiator()
+            selector = FighterSelector(player, gladiator1)
+            selector.run()
+            gladiator2 = selector.current_fighter()
+            arena = MerArena(gladiator1, gladiator2)
+            arena.make_bet(gladiator2)
+            arena.start()
+            fight = arena.fight
+            result = 'won' if fight.is_player_win() else 'lost'
+            if result != 'won':
+                player.slaves.remove(gladiator2)
+            slavestore.update_slaves()
+
+        show screen sc_arena_results(fight)
+        'Fight'
+        python:
+            for i in xrange(len(fight.results)):
+                fight.update_counter()
+                renpy.say(None, fight.messages[i])
+        if result != 'won':
+            'Winner is [fight.winner.name] / player [result] his bet / [fight.loser.name] is killed'
+        else:
+            'Winner is [fight.winner.name] / player [result] his bet'
+        hide screen sc_arena_results
+
+    if choice == 'leave':
+        return
     return
 
 label lbl_make_initial_characters():
