@@ -43,7 +43,7 @@ class Standoff(Command):
             self.messages.append('Advantage. Your soul is stronger')
         elif self.player_combatant.soul_level < self.enemy.soul_level:
             self.results.append(-1)
-            self.messages.append('Advantage. Your soul is weaker')
+            self.messages.append('Vulnerability. Your soul is weaker')
 
     def _calc_suits(self):
         player_value, enemy_value = suits_value(self.player_action.suit, self.enemy_action.suit)
