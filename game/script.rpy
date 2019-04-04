@@ -49,7 +49,7 @@ init 1 python:
         CoreDuelCard.register_card(suit.id, CoreDuelCard(suit.id, data))
 
     def make_gladiator():
-        gladiator = PersonCreator.gen_person(gender='male', genus='human')
+        gladiator = PersonCreator.gen_person(genus='human')
         gladiator.person_class = PersonClass.random_by_tag('gladiator')  
         gladiator.armor = Armor.random_by_type(gladiator.person_class.available_garments[0])
         gladiator.soul_level = random.randint(0, 5)
@@ -59,6 +59,9 @@ init 1 python:
 
 label start:
     $ player = PersonCreator.gen_person(name='Player', gender='male', genus='human')
+    $ player.person_class = PersonClass.random_by_tag('gladiator')
+    $ player.armor = Armor.random_by_type(player.person_class.available_garments[0])
+    $ player.soul_level = random.randint(0, 5)
     $ player.slaves = []
     $ core = MERCore()
     $ core.player = player
@@ -123,7 +126,9 @@ label start:
 
             @property
             def fighters(self):
-                return self.player.slaves
+                fighters = [i for i in self.player.slaves]
+                fighters.append(self.player)
+                return fighters
 
             def current_fighter(self):
                 return self.fighters[self.index]
@@ -230,7 +235,9 @@ label lbl_arena():
         else:
             'Winner is [fight.winner.name] / player [result] his bet'
         hide screen sc_arena_results
-
+        python:
+            if fight.loser == player:
+                renpy.full_restart()
     if choice == 'leave':
         return
     return

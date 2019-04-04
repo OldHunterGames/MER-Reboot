@@ -45,4 +45,12 @@ screen sc_select_fighter(selector):
                     action Function(selector.prev), SensitiveIf(selector.prev_active())
                 textbutton 'next':
                     action Function(selector.next), SensitiveIf(selector.next_active())
+
+            
             textbutton 'select' action Return() xalign 0.5
+
+        if fighter1 == selector.player:
+                text "You gonna fight personaly. If you lose it's a game over. Are you shure?":
+                    color '#ff0000'
+                    xalign 0.5
+                    yalign 0.95

@@ -47,6 +47,15 @@ class Relations(object):
         'jealousy': 'scornful',
         'impudent': 'lust'
     }
+
+    HARMONY_TYPES = {
+        'pride': 'benevolent',
+        'fear': 'submissive',
+        'greed': 'amused',
+        'dependence': 'obedient',
+        'jealousy': 'zealous',
+        'impudent': 'slutty'
+    }
     
     def __init__(self):
         self._tension_points = list()
