@@ -247,6 +247,7 @@ class CorePerson(object):
         self.add_feature(gender)
         self.sexuality = CorePersonSexuality()
         self.player_relations = Relations()
+        self.soul_level = weighted_random(store.core_soul_weights)
     
     def calc_influence(self, influence):
         value = 2

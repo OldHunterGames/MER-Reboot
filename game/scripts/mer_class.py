@@ -61,13 +61,27 @@ class PersonClass(object):
 
     @staticmethod
     def get_by_tag(tag):
-        return [PersonClass(i) for i in store.mer_class_data.values() if i.get('tag') == tag]
+        return [PersonClass(id, data) for id, data in store.mer_class_data.items() if data.get('tag') == tag]
 
     @staticmethod
     def get_all():
-        return [PersonClass(i) for i in store.mer_class_data.values()]
+        return [PersonClass(id, data) for id, data in store.mer_class_data.items()]
 
-    def __init__(self, data):
+    @staticmethod
+    def gender_filter(needed_gender, items):
+        result = []
+        for i in items:
+            gender = i.requirements.get('gender')
+            if gender is None:
+                result.append(i)
+            elif needed_gender == gender:
+                result.append(i)
+            elif 'not' in gender and needed_gender != gender.split(' ')[1]:
+                result.append(i)
+        return result
+
+    def __init__(self, id, data):
+        self.id = id
         self.tier = data.get('tier', 0)
         self.name = data['name']
         self.key_attributes = data.get('key_attributes', [])
@@ -76,6 +90,7 @@ class PersonClass(object):
         self._attack_types = data.get('attack_types', [])
         self._available_garments = data.get('available_garments', [])
         self.tag = data.get('tag')
+        self.requirements = data.get('prerequisites', {})
 
     def colored_name(self):
         return encolor_text(self.name, self.tier)

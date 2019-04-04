@@ -188,3 +188,11 @@ init python:
         4: __('hellfire'),
         5: __('infernal'),
     }
+
+    core_soul_weights = {
+        5: 1,
+        4: 2,
+        3: 4,
+        2: 8,
+        1: 16
+    }

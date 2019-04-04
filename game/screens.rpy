@@ -238,7 +238,6 @@ style input:
 ## https://www.renpy.org/doc/html/screen_special.html#choice
 
 screen choice(items):
-    $ print(items)
     $ mer_core = getattr(renpy.store, 'core', None)
     python:
         if mer_core is not None:

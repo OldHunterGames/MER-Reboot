@@ -50,18 +50,22 @@ init 1 python:
 
     def make_gladiator():
         gladiator = PersonCreator.gen_person(genus='human')
-        gladiator.person_class = PersonClass.random_by_tag('gladiator')  
+        gladiator.person_class = random.choice(PersonClass.gender_filter(
+            gladiator.gender,
+            PersonClass.get_by_tag('gladiator')
+        ))
         gladiator.armor = Armor.random_by_type(gladiator.person_class.available_garments[0])
-        gladiator.soul_level = random.randint(0, 5)
 
         return gladiator
 # The game starts here.
 
 label start:
     $ player = PersonCreator.gen_person(name='Player', gender='male', genus='human')
-    $ player.person_class = PersonClass.random_by_tag('gladiator')
+    $ player.person_class = random.choice(PersonClass.gender_filter(
+        player.gender,
+        PersonClass.get_by_tag('gladiator')
+    ))
     $ player.armor = Armor.random_by_type(player.person_class.available_garments[0])
-    $ player.soul_level = random.randint(0, 5)
     $ player.slaves = []
     $ core = MERCore()
     $ core.player = player
@@ -79,9 +83,6 @@ label start:
             
         #     gladiator1.armor = Armor.random_by_type(gladiator1.person_class.available_garments[0])
         #     gladiator2.armor = Armor.random_by_type(gladiator2.person_class.available_garments[0])
-            
-        #     gladiator1.soul_level = random.randint(0, 5)
-        #     gladiator2.soul_level = random.randint(0, 5)
 
         #     act1 = random.choice(gladiator1.person_class.get_attacks())
         #     act2 = random.choice(gladiator2.person_class.get_attacks())

@@ -1,3 +1,24 @@
+init python:
+    glad_images = {
+        'golplynia': 'hoplinie.png',
+        'dimacheros': {
+            'female': 'dimacher_f.png',
+        },
+        'pugilist': {
+            'female': 'pugilist_f.png'
+        },
+        'secutor': 'Secutor.png'
+    }
+
+    def get_glad_image(person_class, gender):
+        data = glad_images[person_class.id]
+        if isinstance(data, dict):
+            return data[gender]
+        else:
+            return data
+    
+
+
 screen sc_arena(arena):
     python:
         fighter1 = arena.fighter1
@@ -23,7 +44,7 @@ screen sc_arena(arena):
                 image im.Scale(fighter1.avatar, 333, 346)
                 vbox:
                     xalign 0.5
-                    text fighter1.name xalign 0.5
+                    text fighter1.name xalign 0.5 color '#fff'
                     text fighter1.person_class.colored_name() xalign 0.5
                     text fighter1.armor.name xalign 0.5 color '#fff'
                     text encolor_text(core_souls[fighter1.soul_level], fighter1.soul_level) xalign 0.5
@@ -63,7 +84,12 @@ screen sc_arena(arena):
                     textbutton 'make a bet' action Function(arena.make_bet, fighter2) xalign 0.5
 
         if arena.state == 'prefight':
+            $ img = get_glad_image(arena.enemy.person_class, arena.enemy.gender)
             image gui_image('arena/Arena_BG.png')
+            if img is not None:
+                image gui_image('arena/{0}'.format(img)):
+                    xpos 465
+                    ypos 190
             image gui_image('arena/UI_overlay.png')
             vbox:
                 xalign 0.5
