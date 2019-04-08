@@ -11,7 +11,8 @@ init python:
     }
 
     def get_glad_image(person_class, gender):
-        data = glad_images[person_class.id]
+        data = glad_images.get(person_class.id)
+
         if isinstance(data, dict):
             return data[gender]
         else:

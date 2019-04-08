@@ -53,7 +53,7 @@ class PersonClass(object):
 
     @staticmethod
     def get_by_id(id):
-        return PersonClass(store.mer_class_data['id'])
+        return PersonClass(id, store.mer_class_data[id])
 
     @staticmethod
     def random_by_tag(tag):
