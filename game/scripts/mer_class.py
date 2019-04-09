@@ -80,6 +80,12 @@ class PersonClass(object):
                 result.append(i)
         return result
 
+    @staticmethod
+    def class_filter(allowed_classes, items):
+        if allowed_classes is None:
+            return [i for i in items]
+        return [i for i in items if i.id in allowed_classes]
+
     def __init__(self, id, data):
         self.id = id
         self.tier = data.get('tier', 0)
@@ -116,7 +122,7 @@ class PersonClass(object):
 
 class MerArena(object):
 
-    def __init__(self, fighter1, fighter2):
+    def __init__(self, fighter1, fighter2, sparks=0):
         self.fighter1 = fighter1
         self.fighter2 = fighter2
         self.state = 'selection'
@@ -125,6 +131,7 @@ class MerArena(object):
         self.enemy = None
         self.fight = None
         self.enemy_attack = None
+        self.sparks = sparks
 
     def start(self):
         return renpy.call_screen('sc_arena', arena=self)
@@ -140,3 +147,31 @@ class MerArena(object):
         self.state = 'results'
         self.fight = Standoff(self.ally, self.ally_attack, self.enemy, self.enemy_attack)
         self.fight.run()
+
+
+class MerArenaMaker(object):
+
+    def __init__(self, maker_func, min_player_level=0, allowed_classes=None, fixed_enemy=None, sparks=0):
+        self.min_player_level = min_player_level
+        self.allowed_classes = [] if allowed_classes is None else [i for i in allowed_classes]
+        self.fixed_enemy = fixed_enemy
+        self.maker_func = maker_func
+        self.sparks = sparks
+        self.current_enemy = self.make_gladiator()
+
+    def is_active(self, player):
+        return (player.person_class.tier >= self.min_player_level and
+            len(self.filter_fighters(player)) > 0)
+
+    def filter_fighters(self, player):
+        glads = [i for i in player.slaves]
+        glads.append(player)
+        return [i for i in glads if i.person_class.id in self.allowed_classes]
+
+    def make_gladiator(self, *args, **kwargs):
+        if self.fixed_enemy:
+            allowed_classes = [self.fixed_enemy]
+        else:
+            allowed_classes = self.allowed_classes
+        return self.maker_func(allowed_classes)
+

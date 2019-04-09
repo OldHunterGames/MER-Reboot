@@ -12,7 +12,7 @@ class Standoff(Command):
         self.messages = []
         self.results = []
         self.index = 0
-        self.counter = 0
+        self.counter = -self.enemy.person_class.tier
 
     def is_player_win(self):
         return self.winner == self.player_combatant

@@ -2,7 +2,7 @@ screen sc_slave_market(market):
     python:
         slaves = market.slaves if market.state == 'buy' else market.player.slaves
         action = market.buy if market.state == 'buy' else market.sell
-
+        sensitivity = market.can_buy if market.state == 'buy' else lambda x: True
     tag info
     modal True
     zorder 10
@@ -23,7 +23,9 @@ screen sc_slave_market(market):
                             text Suits.as_attack_type(attack) xalign 0.5
                     for attack in slave.person_class.attack_types:
                         text attack xalign 0.5
-                    textbutton market.state action Function(action, slave) xalign 0.5
+                    textbutton market.state + '(%s sparks)' % market.calc_price(slave):
+                        action Function(action, slave), SensitiveIf(sensitivity(slave))
+                        xalign 0.5
 
         textbutton 'leave' yalign 1.0 action Return()
 

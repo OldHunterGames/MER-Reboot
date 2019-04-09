@@ -10,6 +10,10 @@ screen sc_select_fighter(selector):
         style 'char_info_window'
         text 'Select fighter':
             xalign 0.5
+        textbutton 'Run away':
+            xalign 0.5
+            yalign 0.1
+            action Function(selector.escape), Return()
 
         vbox:
             image fighter2.avatar

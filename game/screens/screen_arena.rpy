@@ -14,7 +14,7 @@ init python:
         data = glad_images.get(person_class.id)
 
         if isinstance(data, dict):
-            return data[gender]
+            return data.get(gender)
         else:
             return data
     
@@ -56,7 +56,7 @@ screen sc_arena(arena):
                             text Suits.as_attack_type(attack) xalign 0.5 color '#fff'
                     for attack in fighter1.person_class.attack_types:
                         text attack xalign 0.5 color '#fff'
-                    textbutton 'make a bet' action Function(arena.make_bet, fighter1) xalign 0.5
+                    textbutton 'make a bet (%s sparks)' % arena.sparks action Function(arena.make_bet, fighter1) xalign 0.5
 
             textbutton 'Next fight' action Return('next') xalign 0.5 yalign 0.9:
                 text_color '#fff'
@@ -82,7 +82,7 @@ screen sc_arena(arena):
                             text Suits.as_attack_type(attack) xalign 0.5 color '#fff'
                     for attack in fighter2.person_class.attack_types:
                         text attack xalign 0.5 color '#fff'
-                    textbutton 'make a bet' action Function(arena.make_bet, fighter2) xalign 0.5
+                    textbutton 'make a bet (%s sparks)' % arena.sparks action Function(arena.make_bet, fighter2) xalign 0.5
 
         if arena.state == 'prefight':
             $ img = get_glad_image(arena.enemy.person_class, arena.enemy.gender)

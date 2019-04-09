@@ -7,6 +7,22 @@ init python:
             'type': 'slave',
             'tier': 0,
         },
+        'sex_slave': {
+            'name': __('Sex slave'),
+            'tier': 1,
+            'type': 'slave',
+            'description': __('Slave with a very basic training, suited for plain sexual relief and uncomplicated chores'),
+            'available_garments': ['cloth'],
+            'tag': 'starter'
+        },
+        'menial_slave': {
+            'name': __('Menial slave'),
+            'tier': 1,
+            'type': 'slave',
+            'description': __('Generic slave trained for uncomplicated physical labor'),
+            'available_garments': ['cloth'],
+            'tag': 'starter'
+        },
         'lucator': {
             'name': __('Lucator'),
             'tier': 2,
@@ -151,5 +167,65 @@ init python:
             'available_garments': ['cloth'],
             'attack_suits': ['hearts', 'spades', 'clubs'],
             'tag': 'gladiator'
+        },
+
+        'infamous_lanista': {
+            'name': __('Infamous lanista'),
+            'key_attributes': ['knowledge'],
+            'tier': 1,
+            'type': 'slave',
+            'description': __(""),
+            'available_garments': ['attire'],
+            'attack_suits': ['diamonds',],
+            'attack_types': ['magitech'],
+            'tag': 'lanista'
+        },
+
+        'marginal_lanista': {
+            'name': __('Marginal lanista'),
+            'key_attributes': ['knowledge'],
+            'tier': 2,
+            'type': 'slave',
+            'description': __(""),
+            'available_garments': ['attire'],
+            'attack_suits': ['diamonds',],
+            'attack_types': ['magitech'],
+            'tag': 'lanista'
+        },
+
+        'mediocre_lanista': {
+            'name': __('Mediocre lanista'),
+            'key_attributes': ['knowledge'],
+            'tier': 3,
+            'type': 'slave',
+            'description': __(""),
+            'available_garments': ['attire'],
+            'attack_suits': ['diamonds',],
+            'attack_types': ['magitech'],
+            'tag': 'lanista'
+        },
+
+        'popular_lanista': {
+            'name': __('Popular lanista'),
+            'key_attributes': ['knowledge'],
+            'tier': 4,
+            'type': 'slave',
+            'description': __(""),
+            'available_garments': ['attire'],
+            'attack_suits': ['diamonds',],
+            'attack_types': ['magitech'],
+            'tag': 'lanista'
+        },
+
+        'famous_lanista': {
+            'name': __('Famous lanista'),
+            'key_attributes': ['knowledge'],
+            'tier': 5,
+            'type': 'slave',
+            'description': __(""),
+            'available_garments': ['attire'],
+            'attack_suits': ['diamonds',],
+            'attack_types': ['magitech'],
+            'tag': 'lanista'
         },
     }
