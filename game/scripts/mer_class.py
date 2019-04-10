@@ -224,7 +224,6 @@ class MerArenaMaker(object):
         glads = [i for i in player.slaves]
         glads.append(player)
         glads = [i for i in glads if not i.exhausted]
-        print([i.id for i in self.allowed_classes])
         if self.allowed_classes is None:
             return glads
         return [i for i in glads if i.person_class in self.allowed_classes]
