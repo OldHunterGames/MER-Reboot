@@ -51,9 +51,23 @@ class PersonAttack(object):
 
 class PersonClass(object):
 
+    _available_classes = {}
+
+    @classmethod
+    def register_class(cls, id, data):
+        cls._available_classes[id] = cls(id, data)
+
     @staticmethod
     def get_by_id(id):
-        return PersonClass(id, store.mer_class_data[id])
+        return PersonClass._available_classes[id]
+
+    @staticmethod
+    def get_by_ids(ids):
+        return [i for i in PersonClass.get_all() if i.id in ids]
+
+    @staticmethod
+    def get_by_tier(tier):
+        return [i for i in PersonClass.get_all() if i.tier == tier]
 
     @staticmethod
     def random_by_tag(tag):
@@ -61,30 +75,69 @@ class PersonClass(object):
 
     @staticmethod
     def get_by_tag(tag):
-        return [PersonClass(id, data) for id, data in store.mer_class_data.items() if data.get('tag') == tag]
+        return [item for item in PersonClass.get_all() if item.tag == tag]
 
     @staticmethod
     def get_all():
-        return [PersonClass(id, data) for id, data in store.mer_class_data.items()]
+        return PersonClass._available_classes.values()
 
     @staticmethod
-    def gender_filter(needed_gender, items):
-        result = []
-        for i in items:
-            gender = i.requirements.get('gender')
-            if gender is None:
-                result.append(i)
-            elif needed_gender == gender:
-                result.append(i)
-            elif 'not' in gender and needed_gender != gender.split(' ')[1]:
-                result.append(i)
-        return result
+    def available_upgrades(person):
+        return [i for i in PersonClass.pipe_filters(
+            PersonClass.class_filter,
+            PersonClass.gender_filter,
+            PersonClass.type_filter,
+            PersonClass.tier_filter
+        )(person, PersonClass.get_all()) if i.id != person.person_class.id and i.type == person.person_class.type]
 
     @staticmethod
-    def class_filter(allowed_classes, items):
-        if allowed_classes is None:
-            return [i for i in items]
-        return [i for i in items if i.id in allowed_classes]
+    def pipe_filters(*filters):
+        def inner(person, items):
+            if len(filters) < 1:
+                return items
+            return filter(lambda item: all([f(person, item) for f in filters]), items)
+        return inner
+
+    @staticmethod
+    def tier_filter(person, new_class):
+        if not hasattr(person, 'person_class'):
+            return True
+        tier_req = person.person_class.tier + 1
+        return new_class.tier == tier_req
+
+    @staticmethod
+    def class_filter(person, new_class):
+        if not hasattr(person, 'person_class'):
+            return True
+        class_req = new_class.requirements.get('class')
+        if class_req is None:
+            return True
+        return person.person_class.id in class_req
+
+    @staticmethod
+    def type_filter(person, new_class):
+        if not hasattr(person, 'person_class'):
+            return True
+        type_req = new_class.requirements.get('type')
+        if type_req is None:
+            return True
+        return type_req == person.person_class.type
+
+    @staticmethod
+    def gender_filter(person, new_class):
+        if not hasattr(person, 'gender'):
+            return True
+        needed_gender = person.gender
+        gender = new_class.requirements.get('gender')
+        
+        if gender is None:
+            return True
+        elif needed_gender == gender:
+            return True
+        elif 'not' in gender and needed_gender != gender.split(' ')[1]:
+            return True
+
+        return False
 
     def __init__(self, id, data):
         self.id = id
@@ -97,6 +150,7 @@ class PersonClass(object):
         self._available_garments = data.get('available_garments', [])
         self.tag = data.get('tag')
         self.requirements = data.get('prerequisites', {})
+        self.cost = data.get('cost', 0)
 
     def colored_name(self):
         return encolor_text(self.name, self.tier)
@@ -153,25 +207,35 @@ class MerArenaMaker(object):
 
     def __init__(self, maker_func, min_player_level=0, allowed_classes=None, fixed_enemy=None, sparks=0):
         self.min_player_level = min_player_level
-        self.allowed_classes = [] if allowed_classes is None else [i for i in allowed_classes]
+        self.allowed_classes = None if allowed_classes is None else [i for i in allowed_classes]
         self.fixed_enemy = fixed_enemy
         self.maker_func = maker_func
         self.sparks = sparks
         self.current_enemy = self.make_gladiator()
+        self.is_winned = False
 
     def is_active(self, player):
-        return (player.person_class.tier >= self.min_player_level and
-            len(self.filter_fighters(player)) > 0)
+        return player.person_class.tier >= self.min_player_level
+            
+    def can_put_fighter(self, player):
+        return len(self.filter_fighters(player)) > 0
 
     def filter_fighters(self, player):
         glads = [i for i in player.slaves]
         glads.append(player)
-        return [i for i in glads if i.person_class.id in self.allowed_classes]
+        glads = [i for i in glads if not i.exhausted]
+        print([i.id for i in self.allowed_classes])
+        if self.allowed_classes is None:
+            return glads
+        return [i for i in glads if i.person_class in self.allowed_classes]
 
-    def make_gladiator(self, *args, **kwargs):
-        if self.fixed_enemy:
-            allowed_classes = [self.fixed_enemy]
+    def make_gladiator(self):
+        if self.fixed_enemy is not None:
+            allowed_classes = self.fixed_enemy
         else:
             allowed_classes = self.allowed_classes
         return self.maker_func(allowed_classes)
+
+    def set_gladiator(self, *args, **kwargs):
+        self.current_enemy = self.make_gladiator()
 

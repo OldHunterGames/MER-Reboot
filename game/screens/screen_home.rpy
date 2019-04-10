@@ -17,6 +17,7 @@ screen sc_home(home):
 
         textbutton 'Leave' xalign 0.5 action Return()
         textbutton 'Skip turn' xalign 0.5 yalign 0.1 action Function(home.skip_turn), Return()
+        text 'Current upkeep: %s' % home.calc_upkeep() xalign 0.5 yalign 0.2
 
         if home.current_slave is not None:
             vbox:
@@ -37,6 +38,18 @@ screen sc_home(home):
                             text Suits.as_attack_type(attack) xalign 0.5 color '#fff'
                     for attack in home.current_slave.person_class.attack_types:
                         text attack xalign 0.5 color '#fff'
+
+                if home.can_upgrade_slave(home.current_slave):
+                    text 'Available upgrades'
+                    for i in home.slave_upgrades(home.current_slave):
+                        python:
+                            text = i.name
+                            if i.cost > 0:
+                                text += '(%s sparks)' % i.cost
+                        textbutton text:
+                            text_color value_color(i.tier)
+                            action Function(home.upgrade_slave, home.current_slave, i), SensitiveIf(home.player.sparks >= i.cost)
+                            text_hover_color '#000'
 
         hbox:
             yalign 0.9

@@ -33,7 +33,8 @@ init python:
             'type': 'slave',
             'description': __('This specific type of gladiator is supposed to wrestle in mud, jelly or oil for a spectators fun. This wrestling is not particularly dangerous, so a beauty is more important than a physical fitness.'),
             'available_garments': ['cloth'],
-            'tag': 'gladiator'
+            'tag': 'gladiator',
+            'cost': 0
         },
         'andabant': {
             'name': __('Andabant'),
@@ -47,7 +48,8 @@ init python:
             'available_garments': ['cloth'],
             'attack_suits': ['hearts'],
             'attack_types': ['melee'],
-            'tag': 'gladiator'
+            'tag': 'gladiator',
+            'cost': 5,
         },
         'myrmidon': {
             'name': __('Myrmidon'),
@@ -61,7 +63,8 @@ init python:
             'available_garments': ['armor'],
             'attack_suits': ['spades'],
             'attack_types': ['melee'],
-            'tag': 'gladiator'
+            'tag': 'gladiator',
+            'cost': 10,
         },
         'pugilist': {
             'name': __('Pugilist'),
@@ -73,7 +76,8 @@ init python:
             },
             'description': __("This gladiator is trained for non lethal unarmed combat. Often it's just a first step to become a more brutal cestus gladiator."),
             'available_garments': ['cloth'],
-            'tag': 'gladiator'
+            'tag': 'gladiator',
+            'cost': 0,
         },
         'cestus': {
             'name': __('Cestus'),
@@ -81,17 +85,18 @@ init python:
             'tier': 3,
             'type': 'slave',
             'prerequisites': {
-                'class': 'pugilist'
+                'class': ['pugilist']
             },
             'description': __("Despite fighting with no actual weapon, cestus is a true martial fighter utilizing a metal plated gauntlets or knuckles adorned wit a menacing spikes, serated blades etc"),
             'available_garments': ['cloth'],
             'attack_suits': ['spades'],
-            'tag': 'gladiator'
+            'tag': 'gladiator',
+            'cost': 5,
         },
         'pegniarius': {
             'name': __('Pegniarius'),
             'key_attributes': ['might'],
-            'tier': 3,
+            'tier': 2,
             'type': 'slave',
             'prerequisites': {
                 'type': 'slave'
@@ -99,7 +104,8 @@ init python:
             'description': __("This gladiator in training have some potential but not ready for a mortal combat yet. Pegniarii can spar with a blunt weapons in between a real matches on the arena, to heathen up the public."),
             'available_garments': ['armor'],
             'attack_suits': ['hearts'],
-            'tag': 'gladiator'
+            'tag': 'gladiator',
+            'cost': 5
         },
         'dimacheros': {
             'name': __('Dimacheros'),
@@ -107,12 +113,13 @@ init python:
             'tier': 4,
             'type': 'slave',
             'prerequisites': {
-                'class': 'myrmidon'
+                'class': ['myrmidon']
             },
             'description': __("Dual wielding, lightly armored gladiator."),
             'available_garments': ['armor'],
             'attack_suits': ['spades'],
-            'tag': 'gladiator'
+            'tag': 'gladiator',
+            'cost': 10
         },
         'retiarius': {
             'name': __('Retiarius'),
@@ -120,12 +127,13 @@ init python:
             'tier': 3,
             'type': 'slave',
             'prerequisites': {
-                'class': 'pegniarius'
+                'class': ['pegniarius']
             },
             'description': __("Fast moving unarmored gladiator, armed with a net, trident and a knife."),
             'available_garments': ['cloth'],
             'attack_suits': ['spades', 'clubs'],
-            'tag': 'gladiator'
+            'tag': 'gladiator',
+            'cost': 10,
         },
         'secutor': {
             'name': __('Secutor'),
@@ -133,14 +141,16 @@ init python:
             'tier': 4,
             'type': 'slave',
             'prerequisites': {
-                'class': 'myrmidon',
-                'gender': 'male'
+                    'class': ['myrmidon'],
+                    'gender': 'male'
             },
             'description': __("This menacing pyramid-helmed man with a heavy two-handed sword is beloved by public and feared by peers."),
             'available_garments': ['cloth'],
             'attack_suits': ['diamonds'],
-            'tag': 'gladiator'
+            'tag': 'gladiator',
+            'cost': 20,
         },
+            
         'goplynia': {
             'name': __('Goplynia'),
             'key_attributes': ['might'],
@@ -153,7 +163,8 @@ init python:
             'description': __("This gladiatrix have heavy armored arms and legs but bare torso to please audience and make combat dangerous. Armed with a metal whips they are ready to trash anyone."),
             'available_garments': ['heavy_armor'],
             'attack_suits': ['hearts'],
-            'tag': 'gladiator'
+            'tag': 'gladiator',
+            'cost': 20
         },
         'cenobite': {
             'name': __('Cenobite'),
@@ -166,14 +177,15 @@ init python:
             'description': __("Cenobites are most cruel sado-mazo gladiators of Eternal Rome. They trading protective armor for explicit and self-harmful piercing, tattoos, scarification and BDSM iron or leather wearings. They use any type of weapon given it have a most menacing and scary appearance."),
             'available_garments': ['cloth'],
             'attack_suits': ['hearts', 'spades', 'clubs'],
-            'tag': 'gladiator'
+            'tag': 'gladiator',
+            'cost': 15
         },
 
         'infamous_lanista': {
             'name': __('Infamous lanista'),
             'key_attributes': ['knowledge'],
             'tier': 1,
-            'type': 'slave',
+            'type': 'civil',
             'description': __(""),
             'available_garments': ['attire'],
             'attack_suits': ['diamonds',],
@@ -185,7 +197,10 @@ init python:
             'name': __('Marginal lanista'),
             'key_attributes': ['knowledge'],
             'tier': 2,
-            'type': 'slave',
+            'type': 'civil',
+            'prerequisites': {
+                'class': ['infamous_lanista'],
+            },
             'description': __(""),
             'available_garments': ['attire'],
             'attack_suits': ['diamonds',],
@@ -197,7 +212,10 @@ init python:
             'name': __('Mediocre lanista'),
             'key_attributes': ['knowledge'],
             'tier': 3,
-            'type': 'slave',
+            'type': 'civil',
+            'prerequisites': {
+                'class': ['marginal_lanista'],
+            },
             'description': __(""),
             'available_garments': ['attire'],
             'attack_suits': ['diamonds',],
@@ -209,7 +227,10 @@ init python:
             'name': __('Popular lanista'),
             'key_attributes': ['knowledge'],
             'tier': 4,
-            'type': 'slave',
+            'prerequisites': {
+                'class': ['mediocre_lanista'],
+            },
+            'type': 'civil',
             'description': __(""),
             'available_garments': ['attire'],
             'attack_suits': ['diamonds',],
@@ -221,7 +242,10 @@ init python:
             'name': __('Famous lanista'),
             'key_attributes': ['knowledge'],
             'tier': 5,
-            'type': 'slave',
+            'prerequisites': {
+                'class': ['popular_lanista'],
+            },
+            'type': 'civil',
             'description': __(""),
             'available_garments': ['attire'],
             'attack_suits': ['diamonds',],

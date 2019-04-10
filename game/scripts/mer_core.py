@@ -40,11 +40,14 @@ class MERCore(object):
     
     @Observable
     def skip_turn(self):
-        self.player.sparks += self.calc_income(self.player)
-        self.player.sparks -= 5
+        # self.player.sparks += self.calc_income(self.player)
+        # self.player.sparks -= 5
         if self.player.sparks < 0:
             renpy.call_in_new_context('lbl_gameover')
         self.decade += 1
+        self.player.exhausted = False 
+        for i in self.player.slaves:
+            i.exhausted = False
 
 class EventsBook(object):
 

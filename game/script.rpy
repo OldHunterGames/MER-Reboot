@@ -44,19 +44,22 @@ init 1 python:
     for key, value in core_duel_suits_data.items():
         CoreDuelSuit.register_suit(key, CoreDuelSuit(key, value))
 
+    for key, value in mer_class_data.items():
+        PersonClass.register_class(key, value)
+
     for suit in CoreDuelSuit.get_suits():
         data = {'suit': suit}
         CoreDuelCard.register_card(suit.id, CoreDuelCard(suit.id, data))
 
     def make_gladiator(allowed_classes=None):
         gladiator = PersonCreator.gen_person(genus='human')
-        gladiator.person_class = random.choice(PersonClass.class_filter(
-            allowed_classes,
-            PersonClass.gender_filter(
-                gladiator.gender,
-                PersonClass.get_by_tag('gladiator')
-            )
-        ))
+        if allowed_classes is not None:
+            classes = allowed_classes
+        else:
+            classes = PersonClass.pipe_filters(PersonClass.class_filter, PersonClass.gender_filter)(
+                gladiator, PersonClass.get_by_tag('gladiator'))
+
+        gladiator.person_class = random.choice(classes)
         gladiator.armor = Armor.random_by_type(gladiator.person_class.available_garments[0])
 
         return gladiator
@@ -118,10 +121,10 @@ label start:
                     self.state = 'buy'
 
             def can_buy(self, slave):
-                return self.player.sparks >= self.calc_price(slave)
+                return self.player.sparks >= self.calc_price(slave) and HomeManager.MAX_SLAVES > len(self.player.slaves)
 
             def update_slaves(self, *args, **kwargs):
-                self.slaves = [make_gladiator() for i in xrange(3)]
+                self.slaves = [make_starter_salve() for i in xrange(3)]
 
             def open(self):
                 if len(self.slaves) > 0:
@@ -169,11 +172,18 @@ label start:
 
 
         class HomeManager(object):
+            MAX_SLAVES = 1
             def __init__(self, player):
                 self.player = player
                 self.current_slave = None
                 self.core = core
                 self.should_skip_turn = False
+
+            def calc_upkeep(self):
+                return self.MAX_SLAVES * 5 + len(self.player.slaves) * 5
+
+            def on_skip_turn(self, *args, **kwargs):
+                self.player.sparks -= self.calc_upkeep()
 
             @property
             def slaves(self):
@@ -187,25 +197,73 @@ label start:
 
             def skip_turn(self):
                 self.should_skip_turn = True
+
+            def can_upgrade_slave(self, person):
+                if person.person_class.tier == 1:
+                    return self.player.person_class.tier > 1
+                else:
+                    arena_winner = getattr(person, 'win_arena', False)
+                    tier = self.player.person_class.tier > person.person_class.tier 
+                    upgrades = len(PersonClass.available_upgrades(person)) > 0
+                    exhausted = person.exhausted
+                    return arena_winner and tier and upgrades and not exhausted
+
+            def slave_upgrades(self, person):
+                return PersonClass.available_upgrades(person)
+
+            def upgrade_slave(self, slave, person_class):
+                slave.person_class = person_class
+                slave.armor = Armor.random_by_type(slave.person_class.available_garments[0])
+                self.player.sparks -= person_class.cost
+                slave.exhausted = True
             
 
         slavestore = SlaveMarket(player)
-        pitfight_classes = [i.id for i in PersonClass.get_by_tag('lanista')]
-        pitfight_classes.extend(['lucator', 'pugilist', 'menial_slave'])
+        pitfight_classes = PersonClass.get_by_tag('lanista')
+        pitfight_classes.extend(PersonClass.get_by_ids(['lucator', 'pugilist', 'menial_slave']))
+        heat_up_classes = list(set(PersonClass.get_by_tag('gladiator'))
+            .difference(set(PersonClass.get_by_tier(4)))
+            .difference(set(PersonClass.get_by_tier(5)))
+        )
+        enemies = list(set(heat_up_classes).intersection(set(PersonClass.get_by_tier(3))))
+        grand_fight_classes = PersonClass.get_by_tag('gladiator')
+
         available_arenas = {
-            'mudfight': MerArenaMaker(make_gladiator, allowed_classes=['sex_slave', 'lucator'], sparks=5),
-            'whip_fight': MerArenaMaker(make_gladiator, 3, allowed_classes=['andabant'], sparks=10),
+            'mudfight': MerArenaMaker(make_gladiator, allowed_classes=PersonClass.get_by_ids(['sex_slave', 'lucator']), sparks=5),
+            'whip_fight': MerArenaMaker(make_gladiator, 3, allowed_classes=PersonClass.get_by_ids(['andabant']), sparks=10),
             'pitfight': MerArenaMaker(
                 make_gladiator,
                 allowed_classes=pitfight_classes,
-                fixed_enemy='pugilist',
+                fixed_enemy=[PersonClass.get_by_id('pugilist')],
                 sparks=5
+            ),
+            'practice': MerArenaMaker(
+                make_gladiator,
+                2,
+                allowed_classes=[PersonClass.get_by_id('pegniarius')],
+                sparks=5
+            ),
+            'heat_up': MerArenaMaker(
+                make_gladiator,
+                3,
+                allowed_classes=heat_up_classes,
+                fixed_enemy=enemies,
+                sparks=15,
+            ),
+            'grand_fight': MerArenaMaker(
+                make_gladiator,
+                4,
+                allowed_classes=grand_fight_classes,
+                fixed_enemy=enemies,
+                sparks=50,
             ),
         }
         for arena in available_arenas.values():
-            core.skip_turn.add_callback(arena.make_gladiator)
+            core.skip_turn.add_callback(arena.set_gladiator)
 
+        home_manager = HomeManager(player)
         core.skip_turn.add_callback(slavestore.update_slaves)
+        core.skip_turn.add_callback(home_manager.on_skip_turn)
 
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
     call _main from _call__main
@@ -234,12 +292,12 @@ label lbl_main:
         'Lupanarium':
             call lbl_lupanarium()
         'Colosseum':
-            $ pass
+            call lbl_colosseum()
         'Home':
             python:
-                home = HomeManager(player)
-                home.call()
-                if home.should_skip_turn:
+                home_manager.call()
+                if home_manager.should_skip_turn:
+                    home_manager.should_skip_turn = False
                     core.skip_turn()
         'Рынок':
             call lbl_slave_market()
@@ -286,6 +344,31 @@ label lbl_taberna():
     call lbl_arena(choice)
     return
 
+label lbl_colosseum():
+    python:
+        choices = [('Return', 'return')]
+        practice = available_arenas['practice']
+        heat_up = available_arenas['heat_up']
+        grand_fight = available_arenas['grand_fight']
+        if practice.is_active(player):
+            choices.append(('Practice', practice))
+        else:
+            choices.append(('Practice', None))
+        if heat_up.is_active(player):
+            choices.append(('Heat up', heat_up))
+        else:
+            choices.append(('Heat up', None))
+        if grand_fight.is_active(player):
+            choices.append(('Grand fight', grand_fight))
+        else:
+            choices.append(('Grand fight', None))
+
+        choice = renpy.display_menu(choices)
+    if choice == 'return':
+        return
+    call lbl_arena(choice)
+    return
+
 label lbl_arena(arena_maker):
     $ res = None
     $ disabled = None if len(arena_maker.filter_fighters(player)) < 1 else 'put'
@@ -296,15 +379,15 @@ label lbl_arena(arena_maker):
                 gladiator1 = arena_maker.make_gladiator()            
                 gladiator2 = arena_maker.make_gladiator()
 
-                arena = MerArena(gladiator1, gladiator2, sparks=arena_maker.sparks)
+                arena = MerArena(gladiator1, gladiator2, sparks=5)
                 res = arena.start()
                 if res != 'leave_arena' and res != 'next':
                     fight = arena.fight
                     result = 'won' if fight.is_player_win() else 'lost'
                     if result == 'won':
-                        player.sparks += arena_maker.sparks
+                        player.sparks += arena.sparks
                     else:
-                        player.sparks -= arena_maker.sparks
+                        player.sparks -= arena.sparks
 
             if res != 'leave_arena' and res != 'next':
                 show screen sc_arena_results(fight)
@@ -329,8 +412,14 @@ label lbl_arena(arena_maker):
                 arena.start()
                 fight = arena.fight
                 result = 'won' if fight.is_player_win() else 'lost'
+                gladiator2.exhausted = True
                 if result != 'won' and fight.loser != player:
                     player.slaves.remove(gladiator2)
+                if result == 'won' and not arena_maker.is_winned:
+                    new_classes = PersonClass.available_upgrades(player)
+                    if len(new_classes) > 0:
+                        player.person_class = random.choice(new_classes)
+                    arena_maker.is_winned = True
         if gladiator2 is None:
             return
 
