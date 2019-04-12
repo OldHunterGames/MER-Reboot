@@ -199,13 +199,13 @@ label start:
                 self.should_skip_turn = True
 
             def can_upgrade_slave(self, person):
+                exhausted = person.exhausted
                 if person.person_class.tier == 1:
-                    return self.player.person_class.tier > 1
+                    return self.player.person_class.tier > 1 and not exhausted
                 else:
                     arena_winner = getattr(person, 'win_arena', False)
                     tier = self.player.person_class.tier > person.person_class.tier 
                     upgrades = len(PersonClass.available_upgrades(person)) > 0
-                    exhausted = person.exhausted
                     return arena_winner and tier and upgrades and not exhausted
 
             def slave_upgrades(self, person):
@@ -431,9 +431,9 @@ label lbl_arena(arena_maker):
                 renpy.say(None, fight.messages[i])
             player.sparks += arena_maker.sparks
         if result != 'won':
-            'Winner is [fight.winner.name] / player [result] his bet / [fight.loser.name] is killed'
+            'Winner is [fight.winner.name] / player [result]/ [fight.loser.name] is killed'
         else:
-            'Winner is [fight.winner.name] / player [result] his bet'
+            'Winner is [fight.winner.name] / player [result]'
         hide screen sc_arena_results
         python:
             if fight.loser == player:
