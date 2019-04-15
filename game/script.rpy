@@ -115,7 +115,6 @@ label start:
 
             def sell(self, slave):
                 self.player.slaves.remove(slave)
-                self.slaves.append(slave)
                 self.player.sparks += self.calc_price(slave)
                 if len(self.player.slaves) < 1:
                     self.state = 'buy'
