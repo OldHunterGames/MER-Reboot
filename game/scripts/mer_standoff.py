@@ -12,6 +12,7 @@ class Standoff(object):
         self.player_current_card = None
         self.enemy_current_card = self.next_enemy_card()
         self.winner = None
+        self.calc_winner()
 
     def is_player_win(self):
         return self.winner == self.player_combatant
@@ -26,8 +27,10 @@ class Standoff(object):
     def calc_winner(self):
         if len(self.enemy_cards) < 1:
             self.winner = self.player_combatant
+            self.loser = self.enemy
         if len(self.player_cards) < 1:
             self.winner = self.enemy
+            self.loser = self.player_combatant
 
     def select_card(self, card):
         self.player_current_card = card
