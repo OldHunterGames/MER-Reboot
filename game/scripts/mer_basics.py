@@ -22,6 +22,15 @@ class Suits(object):
         }.get(suit)
 
     @classmethod
+    def attribute_as_suit(cls, attribute):
+        return {
+            'might': cls.DIAMONDS,
+            'subtlety': cls.SPADES,
+            'knowledge': cls.CLUBS,
+            'charisma': cls.HEARTS,
+        }.get(attribute)
+
+    @classmethod
     def as_attack_type(cls, suit):
         return {
             cls.DIAMONDS: 'heavy',

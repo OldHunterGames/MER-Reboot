@@ -1,99 +1,61 @@
-from mer_command import Command
+import random
+
 from mer_basics import suits_value, Suits
 
-class Standoff(Command):
+class Standoff(object):
 
-    def __init__(self, player_combatant, player_action, enemy, enemy_action):
+    def __init__(self, player_combatant, enemy,):
         self.player_combatant = player_combatant
-        self.player_action = player_action
         self.enemy = enemy
-        self.enemy_action = enemy_action
+        self.enemy_cards = enemy.person_class.get_cards()
+        self.player_cards = player_combatant.person_class.get_cards()
+        self.player_current_card = None
+        self.enemy_current_card = self.next_enemy_card()
         self.winner = None
-        self.messages = []
-        self.results = []
-        self.index = 0
-        self.counter = -self.enemy.person_class.tier
 
     def is_player_win(self):
         return self.winner == self.player_combatant
 
-    def run(self):
-        self._calc_suits()
-        self._calc_power()
-        self._calc_class()
-        self._calc_soul()
-        self._calc_armor()
-        
-        result = sum(self.results) if len(self.results) > 0 else 0
+    def next_enemy_card(self):
+        try:
+            card = random.choice(self.enemy_cards)
+        except IndexError:
+            card = None
+        return card
 
-        if result > self.enemy.person_class.tier:
+    def calc_winner(self):
+        if len(self.enemy_cards) < 1:
             self.winner = self.player_combatant
-            self.loser = self.enemy
-        else:
+        if len(self.player_cards) < 1:
             self.winner = self.enemy
-            self.loser = self.player_combatant
 
-    def update_counter(self):
-        self.counter += self.results[self.index]
-        self.index += 1
+    def select_card(self, card):
+        self.player_current_card = card
+        self.calc()
 
-    def _calc_soul(self):
-        if self.player_combatant.soul_level > self.enemy.soul_level:
-            self.results.append(1)
-            self.messages.append('Advantage. Your soul is stronger')
-        elif self.player_combatant.soul_level < self.enemy.soul_level:
-            self.results.append(-1)
-            self.messages.append('Vulnerability. Your soul is weaker')
+    def enemy_lost_card(self):
+        self.enemy_cards.remove(self.enemy_current_card)
+        self.enemy_current_card = self.next_enemy_card()
 
-    def _calc_suits(self):
-        player_value, enemy_value = suits_value(self.player_action.suit, self.enemy_action.suit)
-        if player_value > enemy_value:
-            self.results.append(1)
-            self.messages.append('Advantage. {0} is effective against {1}'.format(
-                Suits.as_attack_type(self.player_action.suit),
-                Suits.as_attack_type(self.enemy_action.suit)
-            ))
-        elif enemy_value > player_value:
-            self.results.append(-1)
-            self.messages.append('Vulnerability. {0} is not effective against {1}'.format(
-                Suits.as_attack_type(self.player_action.suit),
-                Suits.as_attack_type(self.enemy_action.suit)
-            ))
+    def calc(self):
+        self.calc_winner()
+        if self.winner is not None:
+            return
 
-    def _calc_power(self):
-        player_power = self.player_action.power(self.player_combatant)
-        enemy_power = self.enemy_action.power(self.enemy)
-        if player_power > enemy_power:
-            self.results.append(1)
-            self.messages.append('Advantage. Your attack is more powerful')
-        elif enemy_power > player_power:
-            self.results.append(-1)
-            self.messages.append('Vulnerability. Your attack is weaker')
+        player_suit, enemy_suit = suits_value(
+            self.player_current_card.suit(self.player_combatant, {}),
+            self.enemy_current_card.suit(self.enemy, {})
+        )
+        
+        if player_suit > enemy_suit:
+            self.enemy_lost_card()
+        elif player_suit == enemy_suit:
+            player_power = self.player_current_card.get_power(self.player_combatant, {})
+            enemy_power = self.enemy_current_card.get_power(self.enemy, {})
+            if player_power > enemy_power:
+                self.enemy_lost_card()
 
-    def _calc_class(self):
-        enemy_class = self.enemy.person_class.tier if self.enemy_action.suit != 'skull' else 0
-        ally_class = self.player_combatant.person_class.tier if self.player_action.suit != 'skull' else 0
-        if enemy_class > ally_class:
-            self.results.append(-1)
-            self.messages.append('Advantage. Your class is worse')
-        elif ally_class > enemy_class:
-            self.results.append(1)
-            self.messages.append('Advantage. Your class is better')
+        self.player_cards.remove(self.player_current_card)
+        self.player_current_card = None
+        self.calc_winner()
 
-    def _calc_armor(self):
-        ally_armor = self.player_combatant.armor.calc_bonus({'standoff_type': 'combat', 'suit': self.enemy_action.suit})
-        enemy_armor = self.enemy.armor.calc_bonus({'standoff_type': 'combat', 'suit': self.player_action.suit})
-
-        if ally_armor > 0:
-            self.results.append(1)
-            self.messages.append('Advantage. Good armor')
-        elif ally_armor < 0:
-            self.results.append(-1)
-            self.messages.append('Vulnerability. Bad armor')
-
-        if enemy_armor > 0:
-            self.results.append(-1)
-            self.messages.append('Vulnerability. Enemy has good armor')
-        elif enemy_armor < 0:
-            self.results.append(1)
-            self.messages.append('Advantage. Enemy has bad armor')

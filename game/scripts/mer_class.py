@@ -151,6 +151,10 @@ class PersonClass(object):
         self.tag = data.get('tag')
         self.requirements = data.get('prerequisites', {})
         self.cost = data.get('cost', 0)
+        self.cards = [PersonClassCard.get_card(i) for i in data.get('cards', [])]
+
+    def get_cards(self):
+        return [i for i in self.cards]
 
     def colored_name(self):
         return encolor_text(self.name, self.tier)
@@ -174,6 +178,52 @@ class PersonClass(object):
         return self._available_garments + [GarmentsTypes.NUDE]
 
 
+class PersonClassCard(object):
+    @classmethod
+    def get_card(cls, id):
+        return cls(id, store.person_cards_data[id])
+
+    def __init__(self, id, data):
+        self.data = data
+        self.id = id
+
+    def suit(self, user, context):
+        suit = self.data.get('suit', Suits.SKULL)
+        try:
+            suit = suit(user, context)
+        except TypeError:
+            pass
+        return suit
+
+    @property
+    def name(self):
+        return self.data.get('name', 'No name')
+    
+    @property
+    def attribute(self):
+        return self.data.get('attribute')
+
+    @property
+    def value(self):
+        return self.data.get('value', 0)
+    
+    @property
+    def custom(self):
+        return self.data.get('custom')
+
+    def get_power(self, user, context):
+        if self.custom is not None:
+            return self.custom(user, context)
+
+        if self.attribute is not None:
+            return user.attribute(self.attribute)
+
+        return self.value
+
+    def description(self, user, context):
+        return '{name}({suit})'.format(name=self.name, suit=self.suit(user, context))
+
+
 class MerArena(object):
 
     def __init__(self, fighter1, fighter2, sparks=0):
@@ -181,10 +231,8 @@ class MerArena(object):
         self.fighter2 = fighter2
         self.state = 'selection'
         self.ally = None
-        self.ally_attack = None
         self.enemy = None
         self.fight = None
-        self.enemy_attack = None
         self.sparks = sparks
 
     def start(self):
@@ -193,14 +241,12 @@ class MerArena(object):
     def make_bet(self, fighter):
         self.ally = fighter
         self.enemy = self.fighter1 if fighter == self.fighter2 else self.fighter2
-        self.enemy_attack = random.choice(self.enemy.person_class.get_attacks())
         self.state = 'prefight'
+        self.fight = Standoff(self.ally, self.enemy)
 
-    def select_attack(self, attack):
-        self.ally_attack = attack
+    def end(self):
         self.state = 'results'
-        self.fight = Standoff(self.ally, self.ally_attack, self.enemy, self.enemy_attack)
-        self.fight.run()
+        
 
 
 class MerArenaMaker(object):

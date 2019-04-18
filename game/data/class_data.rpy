@@ -1,27 +1,13 @@
 init python:
     mer_class_data = {
-        'omega': {
-            'name': __('Omega'),
-            'description': __('A pity to watch... useless.'),
-            'available_garments': ['cloth'],
-            'type': 'slave',
-            'tier': 0,
-        },
-        'sex_slave': {
-            'name': __('Sex slave'),
-            'tier': 1,
-            'type': 'slave',
-            'description': __('Slave with a very basic training, suited for plain sexual relief and uncomplicated chores'),
-            'available_garments': ['cloth'],
-            'tag': 'starter'
-        },
         'menial_slave': {
             'name': __('Menial slave'),
             'tier': 1,
             'type': 'slave',
             'description': __('Generic slave trained for uncomplicated physical labor'),
             'available_garments': ['cloth'],
-            'tag': 'starter'
+            'tag': 'starter',
+            'cards': [],
         },
         'lucator': {
             'name': __('Lucator'),
@@ -34,7 +20,8 @@ init python:
             'description': __('This specific type of gladiator is supposed to wrestle in mud, jelly or oil for a spectators fun. This wrestling is not particularly dangerous, so a beauty is more important than a physical fitness.'),
             'available_garments': ['cloth'],
             'tag': 'gladiator',
-            'cost': 0
+            'cost': 0,
+            'cards': ['wrestling', 'slippery_skin'],
         },
         'andabant': {
             'name': __('Andabant'),
@@ -50,6 +37,7 @@ init python:
             'attack_types': ['melee'],
             'tag': 'gladiator',
             'cost': 5,
+            'cards': ['whip_lash', 'far_reach', 'pain_resilience'],
         },
         'myrmidon': {
             'name': __('Myrmidon'),
@@ -65,6 +53,7 @@ init python:
             'attack_types': ['melee'],
             'tag': 'gladiator',
             'cost': 10,
+            'cards': ['sword', 'shield', 'combat_expirience'],
         },
         'pugilist': {
             'name': __('Pugilist'),
@@ -78,6 +67,7 @@ init python:
             'available_garments': ['cloth'],
             'tag': 'gladiator',
             'cost': 0,
+            'cards': ['punch', 'evasive'],
         },
         'cestus': {
             'name': __('Cestus'),
@@ -92,6 +82,7 @@ init python:
             'attack_suits': ['spades'],
             'tag': 'gladiator',
             'cost': 5,
+            'cards': ['cestus', 'evasive', 'combat_expirience'],
         },
         'pegniarius': {
             'name': __('Pegniarius'),
@@ -105,7 +96,8 @@ init python:
             'available_garments': ['armor'],
             'attack_suits': ['hearts'],
             'tag': 'gladiator',
-            'cost': 5
+            'cost': 5,
+            'cards': ['blunt_weapon', 'padded_armor'],
         },
         'dimacheros': {
             'name': __('Dimacheros'),
@@ -119,7 +111,8 @@ init python:
             'available_garments': ['armor'],
             'attack_suits': ['spades'],
             'tag': 'gladiator',
-            'cost': 10
+            'cost': 10,
+            'cards': ['sword', 'dual_strike', 'evasive', 'combat_expirience'],
         },
         'retiarius': {
             'name': __('Retiarius'),
@@ -134,6 +127,7 @@ init python:
             'attack_suits': ['spades', 'clubs'],
             'tag': 'gladiator',
             'cost': 10,
+            'cards': ['trident', 'net', 'knife', 'combat_expirience'],
         },
         'secutor': {
             'name': __('Secutor'),
@@ -149,6 +143,7 @@ init python:
             'attack_suits': ['diamonds'],
             'tag': 'gladiator',
             'cost': 20,
+            'cards': ['two_handed_sword', 'imposing_fear', 'pyramid_helm', 'combat_expirience'],
         },
             
         'goplynia': {
@@ -164,7 +159,8 @@ init python:
             'available_garments': ['heavy_armor'],
             'attack_suits': ['hearts'],
             'tag': 'gladiator',
-            'cost': 20
+            'cost': 20,
+            'cards': ['steel_whip', 'distracting_nudity', 'half_armored', 'combat_expirience'],
         },
         'cenobite': {
             'name': __('Cenobite'),
@@ -178,7 +174,8 @@ init python:
             'available_garments': ['cloth'],
             'attack_suits': ['hearts', 'spades', 'clubs'],
             'tag': 'gladiator',
-            'cost': 15
+            'cost': 15,
+            'cards': ['exotic_weapon', 'distracting_nudity', 'pain_resilience', 'combat_expirience'],
         },
 
         'infamous_lanista': {

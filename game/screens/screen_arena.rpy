@@ -86,6 +86,8 @@ screen sc_arena(arena):
 
         if arena.state == 'prefight':
             $ img = get_glad_image(arena.enemy.person_class, arena.enemy.gender)
+            $ standoff = arena.fight
+            $ enemy_card = standoff.enemy_current_card
             image gui_image('arena/Arena_BG.png')
             if img is not None:
                 image gui_image('arena/{0}'.format(img)):
@@ -95,12 +97,16 @@ screen sc_arena(arena):
             vbox:
                 xalign 0.5
                 ypos 15
-                text 'Choose a strategy'
-                for attack in arena.ally.person_class.get_attacks():
-                    textbutton str(attack):
-                        action Function(arena.select_attack, attack), Return()
-                        text_color value_color(attack.power(arena.ally))
-                        text_hover_color '#fff'
+                if standoff.winner is None:
+                    text 'Choose a strategy'
+                    for card in standoff.player_cards:
+                        textbutton str(card.description(arena.ally, {})):
+                            action Function(standoff.select_card, card)
+                            text_color value_color(card.get_power(arena.ally, {}))
+                            text_hover_color '#fff'
+                else:
+                    text 'Fight is over'
+                    textbutton 'Leave' action Return()
             vbox:
                 xpos 10
                 ypos 10
@@ -120,28 +126,4 @@ screen sc_arena(arena):
                     xalign 0.5
                     text arena.enemy.name color '#fff'
                     text arena.enemy.person_class.colored_name()
-                    text arena.enemy_attack.colored(arena.enemy) xalign 0.5
-
-            
-
-screen sc_arena_results(fight):
-
-    frame:
-        xalign 0.5
-        yalign 0.5
-        xsize 500
-        ysize 300
-
-        if fight.counter < 1:
-            hbox:
-                xalign 0.5
-                yalign 0.5
-                for i in range(abs(fight.counter - 1)):
-                    image gui_image('loser.png')
-        else:
-            hbox:
-                xalign 0.5
-                yalign 0.5
-                for i in range(fight.counter):
-                    image gui_image('winner.png')
-
+                    text encolor_text(enemy_card.description(arena.enemy, {}), enemy_card.get_power(arena.enemy, {})) xalign 0.5

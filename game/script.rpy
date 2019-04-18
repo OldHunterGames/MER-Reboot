@@ -389,15 +389,7 @@ label lbl_arena(arena_maker):
                         player.sparks -= arena.sparks
 
             if res != 'leave_arena' and res != 'next':
-                show screen sc_arena_results(fight)
-                'Fight'
-                python:
-                    for i in xrange(len(fight.results)):
-                        fight.update_counter()
-                        renpy.say(None, fight.messages[i])
-                'Winner is [fight.winner.name] / player [result] his bet'
-                hide screen sc_arena_results
-            
+                'Winner is [fight.winner.name] / player [result] his bet'            
 
     if choice == 'put':
         python:
@@ -422,18 +414,10 @@ label lbl_arena(arena_maker):
         if gladiator2 is None:
             return
 
-        show screen sc_arena_results(fight)
-        'Fight'
-        python:
-            for i in xrange(len(fight.results)):
-                fight.update_counter()
-                renpy.say(None, fight.messages[i])
-            player.sparks += arena_maker.sparks
         if result != 'won':
             'Winner is [fight.winner.name] / player [result]/ [fight.loser.name] is killed'
         else:
             'Winner is [fight.winner.name] / player [result]'
-        hide screen sc_arena_results
         python:
             if fight.loser == player:
                 renpy.full_restart()
