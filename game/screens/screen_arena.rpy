@@ -126,4 +126,5 @@ screen sc_arena(arena):
                     xalign 0.5
                     text arena.enemy.name color '#fff'
                     text arena.enemy.person_class.colored_name()
-                    text encolor_text(enemy_card.description(arena.enemy, {}), enemy_card.get_power(arena.enemy, {})) xalign 0.5
+                    if enemy_card is not None:
+                        text encolor_text(enemy_card.description(arena.enemy, {}), enemy_card.get_power(arena.enemy, {})) xalign 0.5

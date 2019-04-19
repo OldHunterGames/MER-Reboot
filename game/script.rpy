@@ -215,6 +215,31 @@ label start:
                 slave.armor = Armor.random_by_type(slave.person_class.available_garments[0])
                 self.player.sparks -= person_class.cost
                 slave.exhausted = True
+                slave.win_arena = False
+
+            def can_make_love(self, slave):
+                return slave.gender != self.player.gender and not slave.exhausted and not self.player.exhausted
+
+            def make_love(self, slave):
+                slave.grove = True
+                slave.temporary_card = PersonClassCard.get_card('satisfaction')
+                self.player.temporary_card = PersonClassCard.get_card('satisfaction')
+                if player.get_relation('lover') is not None:
+                    self.player.temporary_card = PersonClassCard.get_card('betrayal')
+                self.player.add_relation('lover', slave)
+                slave.exhausted = True
+                self.player.exhausted = True
+
+            def can_attend_party(self, slave):
+                return slave.gender == self.player.gender and not slave.exhausted and not self.player.exhausted
+
+            def attend_party(self, slave):
+                slave.grove = True
+                slave.temporary_card = PersonClassCard.get_card('shared_wisdom')
+                self.player.temporary_card = PersonClassCard.get_card('shared_wisdom')
+                self.player.add_relation('best_friend', slave)
+                slave.exhausted = True
+                self.player.exhausted = True
             
 
         slavestore = SlaveMarket(player)
@@ -407,10 +432,14 @@ label lbl_arena(arena_maker):
                 if result != 'won' and fight.loser != player:
                     player.slaves.remove(gladiator2)
                 if result == 'won' and not arena_maker.is_winned:
+                    gladiator2.after_fight()
                     new_classes = PersonClass.available_upgrades(player)
                     if len(new_classes) > 0:
                         player.person_class = random.choice(new_classes)
                     arena_maker.is_winned = True
+                if result == 'won':
+                    gladiator2.win_arena = True
+                    player.sparks += arena_maker.sparks
         if gladiator2 is None:
             return
 

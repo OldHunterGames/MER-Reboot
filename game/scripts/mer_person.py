@@ -2,9 +2,11 @@
 import random
 import renpy.store as store
 import renpy.exports as renpy
+
 from mer_utilities import default_avatar, weighted_random, encolor_text
 from mer_sexuality import CorePersonSexuality
 from mer_relations import Relations
+from mer_class import PersonClassCard
 
 
 class CoreFeature(object):
@@ -248,7 +250,32 @@ class CorePerson(object):
         self.sexuality = CorePersonSexuality()
         self.player_relations = Relations()
         self.soul_level = weighted_random(store.core_soul_weights)
+        self.person_class = None
+        self.grove = False
         self.exhausted = False
+        self.temporary_card = None
+        self.relations = {} # temp, will be removed
+
+    def add_relation(self, relation, person):
+        self.relations[relation] = person
+
+    def get_relation(self, relation):
+        return self.relations.get(relation)
+
+    def get_cards(self):
+        cards = self.person_class.get_cards()
+        if self.grove:
+            cards.append(PersonClassCard.get_card('lucky'))
+        if self.temporary_card is not None:
+            cards.append(self.temporary_card)
+        return cards
+
+    def set_temporary_card(self, card):
+        self.temporary_card = card
+
+    def after_fight(self):
+        self.grove = False
+        self.temporary_card = None
     
     def calc_influence(self, influence):
         value = 2

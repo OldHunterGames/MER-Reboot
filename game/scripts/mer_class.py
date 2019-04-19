@@ -152,9 +152,19 @@ class PersonClass(object):
         self.requirements = data.get('prerequisites', {})
         self.cost = data.get('cost', 0)
         self.cards = [PersonClassCard.get_card(i) for i in data.get('cards', [])]
+        self._prototype = data.get('prototype')
 
+    @property
+    def prototype(self):
+        if self._prototype is not None:
+            return PersonClass.get_by_id(self._prototype)
+        return self._prototype
+    
     def get_cards(self):
-        return [i for i in self.cards]
+        cards = [i for i in self.cards]
+        if self.prototype is not None:
+            cards.extend(self.prototype.get_cards())
+        return cards
 
     def colored_name(self):
         return encolor_text(self.name, self.tier)

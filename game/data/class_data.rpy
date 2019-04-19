@@ -185,9 +185,8 @@ init python:
             'type': 'civil',
             'description': __(""),
             'available_garments': ['attire'],
-            'attack_suits': ['diamonds',],
-            'attack_types': ['magitech'],
-            'tag': 'lanista'
+            'cards': ['smart_tactics', 'tactical_advice'],
+            'tag': 'lanista',
         },
 
         'marginal_lanista': {
@@ -200,9 +199,9 @@ init python:
             },
             'description': __(""),
             'available_garments': ['attire'],
-            'attack_suits': ['diamonds',],
-            'attack_types': ['magitech'],
-            'tag': 'lanista'
+            'cards': ['combat_expirience'],
+            'tag': 'lanista',
+            'prototype': 'infamous_lanista',
         },
 
         'mediocre_lanista': {
@@ -215,9 +214,9 @@ init python:
             },
             'description': __(""),
             'available_garments': ['attire'],
-            'attack_suits': ['diamonds',],
-            'attack_types': ['magitech'],
-            'tag': 'lanista'
+            'cards': ['deception'],
+            'tag': 'lanista',
+            'prototype': 'marginal_lanista',
         },
 
         'popular_lanista': {
@@ -230,9 +229,9 @@ init python:
             'type': 'civil',
             'description': __(""),
             'available_garments': ['attire'],
-            'attack_suits': ['diamonds',],
-            'attack_types': ['magitech'],
-            'tag': 'lanista'
+            'cards': ['public_approval',],
+            'tag': 'lanista',
+            'prototype': 'mediocre_lanista',
         },
 
         'famous_lanista': {
@@ -245,8 +244,8 @@ init python:
             'type': 'civil',
             'description': __(""),
             'available_garments': ['attire'],
-            'attack_suits': ['diamonds',],
-            'attack_types': ['magitech'],
-            'tag': 'lanista'
+            'cards': ['living_legend',],
+            'tag': 'lanista',
+            'prototype': 'popular_lanista',
         },
     }

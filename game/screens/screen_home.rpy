@@ -50,6 +50,12 @@ screen sc_home(home):
                             text_color value_color(i.tier)
                             action Function(home.upgrade_slave, home.current_slave, i), SensitiveIf(home.player.sparks >= i.cost)
                             text_hover_color '#000'
+                if home.can_make_love(home.current_slave) or home.can_attend_party(home.current_slave):
+                    text 'Actions'
+                    if home.can_attend_party(home.current_slave):
+                        textbutton 'Attend party' action Function(home.attend_party, home.current_slave)
+                    if home.can_make_love(home.current_slave):
+                        textbutton 'Make love' action Function(home.make_love, home.current_slave)
 
         hbox:
             yalign 0.9

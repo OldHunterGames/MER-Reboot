@@ -2,6 +2,9 @@ init python:
     def class_tier_bonus(user, context):
         return user.person_class.tier
 
+    def soul_level_bonus(user, context):
+        return user.soul_level
+
     def best_attr_bonus(user, context):
         attr = max(user.attributes().keys(), key=lambda x: user.attribute(x))
         return attr
@@ -130,6 +133,51 @@ init python:
         'exotic_weapon': {
             'name': __("Exotic weapon"),
             'suit': best_attr_suit,
-            'attribute': best_attr_bonus,
+            'custom': best_attr_bonus,
+        },
+        'lucky': {
+            'name': __("Lucky"),
+            'suit': 'diamonds',
+            'custom': soul_level_bonus,
+        },
+        'shared_wisdom': {
+            'name': __("Shared wisdom"),
+            'suit': 'clubs',
+            'attribute': 'knowledge',
+        },
+        'satisfaction': {
+            'name': __("Satisfaction"),
+            'suit': 'hearts',
+            'attribute': 'charisma',
+        },
+        'betrayal': {
+            'name': __("Betrayal"),
+            'suit': 'hearts',
+            'custom': soul_level_bonus,
+        },
+        'smart_tactics': {
+            'name': __("Smart tactics"),
+            'suit': 'diamonds',
+            'attribute': 'knowledge',
+        },
+        'tactical_advice': {
+            'name': __("Tactical advice"),
+            'suit': 'diamonds',
+            'custom': class_tier_bonus,
+        },
+        'deception': {
+            'name': __("Deception"),
+            'suit': 'spades',
+            'attribute': 'subtlety',
+        },
+        'public_approval': {
+            'name': __("Public approval"),
+            'suit': 'hearts',
+            'attribute': 'charisma',
+        },
+        'living_legend': {
+            'name': __("Living legend"),
+            'suit': 'joker',
+            'value': 1,
         },
     }
