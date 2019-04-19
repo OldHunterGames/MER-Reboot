@@ -6,7 +6,7 @@ init python:
         return user.soul_level
 
     def best_attr_bonus(user, context):
-        attr = max(user.attributes().keys(), key=lambda x: user.attribute(x))
+        attr = max(user.attributes().values())
         return attr
 
     def best_attr_suit(user, context):
