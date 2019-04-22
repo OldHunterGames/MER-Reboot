@@ -4,7 +4,7 @@ import renpy.store as store
 import renpy.exports as renpy
 
 from mer_basics import Suits
-from mer_utilities import encolor_text
+from mer_utilities import encolor_text, min_max
 from mer_standoff import Standoff
 
 
@@ -160,8 +160,8 @@ class PersonClass(object):
             return PersonClass.get_by_id(self._prototype)
         return self._prototype
     
-    def get_cards(self):
-        cards = [i for i in self.cards]
+    def get_cards(self, case):
+        cards = [i for i in self.cards if i.type == case or i.type is None]
         if self.prototype is not None:
             cards.extend(self.prototype.get_cards())
         return cards
@@ -177,12 +177,6 @@ class PersonClass(object):
     def attack_types(self):
         return self._attack_types if len(self._attack_types) > 0 else [AttackTypes.MELEE]
 
-    def get_attacks(self):
-        attacks = [PersonAttack(suit, type) for type in self.attack_types for suit in self.attack_suits]
-        if len(self.attack_suits) > 1:
-            return filter(lambda attack: attack.suit != 'skull', attacks)
-        return attacks
-
     @property
     def available_garments(self):
         return self._available_garments + [GarmentsTypes.NUDE]
@@ -196,6 +190,10 @@ class PersonClassCard(object):
     def __init__(self, id, data):
         self.data = data
         self.id = id
+
+    @property
+    def type(self):
+        return self.data.get('type')
 
     def suit(self, user, context):
         suit = self.data.get('suit', Suits.SKULL)
@@ -221,6 +219,7 @@ class PersonClassCard(object):
     def custom(self):
         return self.data.get('custom')
 
+    @min_max(0, 5)
     def get_power(self, user, context):
         if self.custom is not None:
             return self.custom(user, context)

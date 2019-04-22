@@ -56,6 +56,8 @@ screen sc_home(home):
                         textbutton 'Attend party' action Function(home.attend_party, home.current_slave)
                     if home.can_make_love(home.current_slave):
                         textbutton 'Make love' action Function(home.make_love, home.current_slave)
+                    if home.can_train(home.current_slave):
+                        textbutton 'Train' action Function(home.train, home.current_slave)
 
         hbox:
             yalign 0.9

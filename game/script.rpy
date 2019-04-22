@@ -171,7 +171,7 @@ label start:
 
 
         class HomeManager(object):
-            MAX_SLAVES = 1
+            MAX_SLAVES = 5
             def __init__(self, player):
                 self.player = player
                 self.current_slave = None
@@ -238,6 +238,15 @@ label start:
                 slave.temporary_card = PersonClassCard.get_card('shared_wisdom')
                 self.player.temporary_card = PersonClassCard.get_card('shared_wisdom')
                 self.player.add_relation('best_friend', slave)
+                slave.exhausted = True
+                self.player.exhausted = True
+
+            def can_train(self, slave):
+                cards = self.player.get_cards('combat_support')
+                return not slave.exhausted and not self.player.exhausted and len(cards) > 0
+
+            def train(self, slave):
+                slave.temporary_card = random.choice(self.player.get_cards('combat_support'))
                 slave.exhausted = True
                 self.player.exhausted = True
             

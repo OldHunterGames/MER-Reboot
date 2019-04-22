@@ -4,6 +4,13 @@ from collections import defaultdict
 import renpy.store as store
 import renpy.exports as renpy
 
+def min_max(min_value, max_value):
+    def wrapper(func):
+        def wrapper_inner(*args, **kwargs):
+            return max(min_value, min(max_value, func(*args, **kwargs)))
+        return wrapper_inner
+    return wrapper
+
 def gui_image(path):
     return 'gui/{}'.format(path)
 

@@ -7,8 +7,8 @@ class Standoff(object):
     def __init__(self, player_combatant, enemy,):
         self.player_combatant = player_combatant
         self.enemy = enemy
-        self.enemy_cards = enemy.get_cards()
-        self.player_cards = player_combatant.get_cards()
+        self.enemy_cards = enemy.get_cards('combat')
+        self.player_cards = player_combatant.get_cards('combat')
         self.player_current_card = None
         self.enemy_current_card = self.next_enemy_card()
         self.winner = None

@@ -18,6 +18,8 @@ init python:
         else:
             return data
     
+    def get_card_suit_image(suit, power):
+        return gui_image('arena/{0}_{1}.png'.format(suit, power))
 
 
 screen sc_arena(arena):
@@ -47,15 +49,10 @@ screen sc_arena(arena):
                     xalign 0.5
                     text fighter1.name xalign 0.5 color '#fff'
                     text fighter1.person_class.colored_name() xalign 0.5
-                    text fighter1.armor.name xalign 0.5 color '#fff'
-                    text encolor_text(core_souls[fighter1.soul_level], fighter1.soul_level) xalign 0.5
-                    for attr in fighter1.show_attributes().values():
-                        text attr xalign 0.5
-                    for attack in fighter1.person_class.attack_suits:
-                        if attack != 'skull':
-                            text Suits.as_attack_type(attack) xalign 0.5 color '#fff'
-                    for attack in fighter1.person_class.attack_types:
-                        text attack xalign 0.5 color '#fff'
+                    hbox:
+                        spacing 5
+                        for card in fighter1.get_cards('combat'):
+                            use fight_card_representation(card.suit(fighter1, {}), card.get_power(fighter1, {}), card.name, NullAction())
                     textbutton 'make a bet (%s sparks)' % arena.sparks action Function(arena.make_bet, fighter1) xalign 0.5
 
             textbutton 'Next fight' action Return('next') xalign 0.5 yalign 0.9:
@@ -73,15 +70,10 @@ screen sc_arena(arena):
                     xalign 0.5
                     text fighter2.name xalign 0.5 color '#fff'
                     text fighter2.person_class.colored_name() xalign 0.5
-                    text fighter2.armor.name xalign 0.5 color '#fff'
-                    text encolor_text(core_souls[fighter2.soul_level], fighter2.soul_level) xalign 0.5
-                    for attr in fighter2.show_attributes().values():
-                        text attr xalign 0.5
-                    for attack in fighter2.person_class.attack_suits:
-                        if attack != 'skull':
-                            text Suits.as_attack_type(attack) xalign 0.5 color '#fff'
-                    for attack in fighter2.person_class.attack_types:
-                        text attack xalign 0.5 color '#fff'
+                    hbox:
+                        spacing 5
+                        for card in fighter2.get_cards('combat'):
+                            use fight_card_representation(card.suit(fighter2, {}), card.get_power(fighter2, {}), card.name, NullAction())
                     textbutton 'make a bet (%s sparks)' % arena.sparks action Function(arena.make_bet, fighter2) xalign 0.5
 
         if arena.state == 'prefight':
@@ -99,11 +91,11 @@ screen sc_arena(arena):
                 ypos 15
                 if standoff.winner is None:
                     text 'Choose a strategy'
-                    for card in standoff.player_cards:
-                        textbutton str(card.description(arena.ally, {})):
-                            action Function(standoff.select_card, card)
-                            text_color value_color(card.get_power(arena.ally, {}))
-                            text_hover_color '#fff'
+                    hbox:
+                        spacing 5
+                        box_wrap True
+                        for card in standoff.player_cards:
+                            use fight_card_representation(card.suit(arena.ally, {}), card.get_power(arena.ally, {}), card.name, Function(standoff.select_card, card))
                 else:
                     text 'Fight is over'
                     textbutton 'Leave' action Return()
@@ -127,4 +119,21 @@ screen sc_arena(arena):
                     text arena.enemy.name color '#fff'
                     text arena.enemy.person_class.colored_name()
                     if enemy_card is not None:
-                        text encolor_text(enemy_card.description(arena.enemy, {}), enemy_card.get_power(arena.enemy, {})) xalign 0.5
+                        use fight_card_representation(enemy_card.suit(arena.enemy, {}), enemy_card.get_power(arena.enemy, {}), enemy_card.name, NullAction())
+
+screen fight_card_representation(suit, power, name, card_action):
+    $ corners = [(0, 0), (0, 1.0), (1.0, 0), (1.0, 1.0)]
+    frame:
+        background '#59300D'
+        xsize 100
+        ysize 150
+        for corner in corners:
+            image get_card_suit_image(suit, power):
+                xalign corner[0]
+                yalign corner[1]
+        textbutton name:
+            text_color value_color(power)
+            text_hover_color '#fff'
+            action card_action, SensitiveIf(not isinstance(card_action, NullAction))
+            xalign 0.5
+            yalign 0.5

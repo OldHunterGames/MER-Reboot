@@ -262,8 +262,8 @@ class CorePerson(object):
     def get_relation(self, relation):
         return self.relations.get(relation)
 
-    def get_cards(self):
-        cards = self.person_class.get_cards()
+    def get_cards(self, case):
+        cards = self.person_class.get_cards(case)
         if self.grove:
             cards.append(PersonClassCard.get_card('lucky'))
         if self.temporary_card is not None:
