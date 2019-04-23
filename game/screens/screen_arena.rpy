@@ -123,6 +123,14 @@ screen sc_arena(arena):
 
 screen fight_card_representation(suit, power, name, card_action):
     $ corners = [(0, 0), (0, 1.0), (1.0, 0), (1.0, 1.0)]
+    python:
+        if len(name) > 8:
+            name_text = ''
+            steps = len(name) // 8
+            for i in range(steps+1):
+                name_text += name[(i)*8:(i+1)*8] + ' '
+        else:
+            name_text = name
     frame:
         background '#59300D'
         xsize 100
@@ -131,7 +139,7 @@ screen fight_card_representation(suit, power, name, card_action):
             image get_card_suit_image(suit, power):
                 xalign corner[0]
                 yalign corner[1]
-        textbutton name:
+        textbutton name_text:
             text_color value_color(power)
             text_hover_color '#fff'
             action card_action, SensitiveIf(not isinstance(card_action, NullAction))

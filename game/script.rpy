@@ -222,10 +222,10 @@ label start:
 
             def make_love(self, slave):
                 slave.grove = True
-                slave.temporary_card = PersonClassCard.get_card('satisfaction')
-                self.player.temporary_card = PersonClassCard.get_card('satisfaction')
+                self.player.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
+                slave.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
                 if player.get_relation('lover') is not None:
-                    self.player.temporary_card = PersonClassCard.get_card('betrayal')
+                    self.player.set_temporary_card(PersonClassCard.get_card('betrayal'), 'sabotage')
                 self.player.add_relation('lover', slave)
                 slave.exhausted = True
                 self.player.exhausted = True
@@ -235,8 +235,8 @@ label start:
 
             def attend_party(self, slave):
                 slave.grove = True
-                slave.temporary_card = PersonClassCard.get_card('shared_wisdom')
-                self.player.temporary_card = PersonClassCard.get_card('shared_wisdom')
+                slave.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
+                self.player.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
                 self.player.add_relation('best_friend', slave)
                 slave.exhausted = True
                 self.player.exhausted = True
@@ -246,7 +246,7 @@ label start:
                 return not slave.exhausted and not self.player.exhausted and len(cards) > 0
 
             def train(self, slave):
-                slave.temporary_card = random.choice(self.player.get_cards('combat_support'))
+                slave.set_temporary_card(random.choice(self.player.get_cards('combat_support')), 'support')
                 slave.exhausted = True
                 self.player.exhausted = True
             
@@ -262,7 +262,7 @@ label start:
         grand_fight_classes = PersonClass.get_by_tag('gladiator')
 
         available_arenas = {
-            'mudfight': MerArenaMaker(make_gladiator, allowed_classes=PersonClass.get_by_ids(['sex_slave', 'lucator']), sparks=5),
+            'mudfight': MerArenaMaker(make_gladiator, allowed_classes=PersonClass.get_by_ids(['menial_slave', 'lucator']), sparks=5),
             'whip_fight': MerArenaMaker(make_gladiator, 3, allowed_classes=PersonClass.get_by_ids(['andabant']), sparks=10),
             'pitfight': MerArenaMaker(
                 make_gladiator,

@@ -253,7 +253,12 @@ class CorePerson(object):
         self.person_class = None
         self.grove = False
         self.exhausted = False
-        self.temporary_card = None
+        self.temporary_cards = {
+            'support': None,
+            'love': None,
+            'fellowship': None,
+            'sabotage': None,
+        }
         self.relations = {} # temp, will be removed
 
     def add_relation(self, relation, person):
@@ -266,12 +271,13 @@ class CorePerson(object):
         cards = self.person_class.get_cards(case)
         if self.grove:
             cards.append(PersonClassCard.get_card('lucky'))
-        if self.temporary_card is not None:
-            cards.append(self.temporary_card)
+        for card in self.temporary_cards.values():
+            if card is not None:
+                cards.append(card)
         return cards
 
-    def set_temporary_card(self, card):
-        self.temporary_card = card
+    def set_temporary_card(self, card, type):
+        self.temporary_cards[type] = card
 
     def after_fight(self):
         self.grove = False
