@@ -97,42 +97,7 @@ label start:
         #     act1 = random.choice(gladiator1.person_class.get_attacks())
         #     act2 = random.choice(gladiator2.person_class.get_attacks())
         #     Standoff(gladiator1, act1, gladiator2, act2).run()
-        class SlaveMarket(object):
-            def __init__(self, player):
-                self.slaves = [make_starter_salve() for i in xrange(3)]
-                self.state = 'buy'
-                self.player = player
-
-            def switch_mode(self):
-                self.state = 'sell' if self.state == 'buy' else 'buy'
-
-            def buy(self, slave):
-                self.player.slaves.append(slave)
-                self.slaves.remove(slave)
-                self.player.sparks -= self.calc_price(slave)
-                if len(self.slaves) < 1:
-                    self.state = 'sell'
-
-            def sell(self, slave):
-                self.player.slaves.remove(slave)
-                self.player.sparks += self.calc_price(slave)
-                if len(self.player.slaves) < 1:
-                    self.state = 'buy'
-
-            def can_buy(self, slave):
-                return self.player.sparks >= self.calc_price(slave) and HomeManager.MAX_SLAVES > len(self.player.slaves)
-
-            def update_slaves(self, *args, **kwargs):
-                self.slaves = [make_starter_salve() for i in xrange(3)]
-
-            def open(self):
-                if len(self.slaves) > 0:
-                    self.state = 'buy'
-                return renpy.call_screen('sc_slave_market', self)
-
-            def calc_price(self, slave):
-                attr = min(0, max(slave.attributes().values()))
-                return (attr + slave.soul_level) * 5 * slave.person_class.tier
+        
 
         class FighterSelector(object):
             def __init__(self, player, enemy, arena_maker):
