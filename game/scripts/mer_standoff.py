@@ -8,7 +8,11 @@ class Standoff(object):
         self.player_combatant = player_combatant
         self.enemy = enemy
         self.enemy_cards = enemy.get_cards('combat')
+        if self.player_combatant.get_sabotage() is not None:
+            self.enemy_cards.append(self.player_cards.get_sabotage())
         self.player_cards = player_combatant.get_cards('combat')
+        if self.enemy.get_sabotage() is not None:
+            self.player_cards.append(self.player_cards.get_sabotage())
         self.player_current_card = None
         self.enemy_current_card = self.next_enemy_card()
         self.winner = None

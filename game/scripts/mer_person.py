@@ -271,17 +271,21 @@ class CorePerson(object):
         cards = self.person_class.get_cards(case)
         if self.grove:
             cards.append(PersonClassCard.get_card('lucky'))
-        for card in self.temporary_cards.values():
-            if card is not None:
+        for key, card in self.temporary_cards.items():
+            if card is not None and key != 'sabotage':
                 cards.append(card)
         return cards
+
+    def get_sabotage(self):
+        return self.temporary_cards['sabotage']
 
     def set_temporary_card(self, card, type):
         self.temporary_cards[type] = card
 
     def after_fight(self):
         self.grove = False
-        self.temporary_card = None
+        for key in self.temporary_cards:
+            self.temporary_cards[key] = None
     
     def calc_influence(self, influence):
         value = 2

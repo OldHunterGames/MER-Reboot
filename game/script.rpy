@@ -179,7 +179,7 @@ label start:
                 self.should_skip_turn = False
 
             def calc_upkeep(self):
-                return self.MAX_SLAVES * 5 + len(self.player.slaves) * 5
+                return 5 + len(self.player.slaves) * 5
 
             def on_skip_turn(self, *args, **kwargs):
                 self.player.sparks -= self.calc_upkeep()
