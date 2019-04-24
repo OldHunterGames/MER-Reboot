@@ -46,11 +46,6 @@ screen sc_home(home):
                         text encolor_text(core_souls[home.current_slave.soul_level], home.current_slave.soul_level) xalign 0.5
                         for attr in home.current_slave.show_attributes().values():
                             text attr xalign 0.5
-                        for attack in home.current_slave.person_class.attack_suits:
-                            if attack != 'skull':
-                                text Suits.as_attack_type(attack) xalign 0.5 color '#fff'
-                        for attack in home.current_slave.person_class.attack_types:
-                            text attack xalign 0.5 color '#fff'
 
                     if home.can_upgrade_slave(home.current_slave):
                         text 'Available upgrades'
