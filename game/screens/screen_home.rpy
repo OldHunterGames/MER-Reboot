@@ -27,6 +27,7 @@ screen sc_home(home):
                 xalign 1.0
                 ypos 10
                 hbox:
+                    box_wrap True
                     xmaximum 400
                     spacing 5
                     for card in home.current_slave.get_cards('all'):

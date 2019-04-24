@@ -14,15 +14,9 @@ screen sc_slave_market(market):
                     image slave.avatar
                     text slave.name xalign 0.5
                     text slave.person_class.colored_name() xalign 0.5
-                    text slave.armor.name xalign 0.5
                     text encolor_text(core_souls[slave.soul_level], slave.soul_level) xalign 0.5
                     for attr in slave.show_attributes().values():
                         text attr xalign 0.5
-                    for attack in slave.person_class.attack_suits:
-                        if attack != 'skull':
-                            text Suits.as_attack_type(attack) xalign 0.5
-                    for attack in slave.person_class.attack_types:
-                        text attack xalign 0.5
                     textbutton market.state + '(%s sparks)' % market.calc_price(slave):
                         action Function(action, slave), SensitiveIf(sensitivity(slave))
                         xalign 0.5
