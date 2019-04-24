@@ -1,4 +1,4 @@
-# The script of the game goes in this file.
+﻿he script of the game goes in this file.
 
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
@@ -452,7 +452,7 @@ label lbl_arena(arena_maker):
         if gladiator2 is None:
             return
 
-        if result != 'won':
+        if result != 'won' and arena_maker.die_after_fight:
             'Winner is [fight.winner.name] / player [result]/ [fight.loser.name] is killed'
         else:
             'Winner is [fight.winner.name] / player [result]'
