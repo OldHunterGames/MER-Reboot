@@ -7,6 +7,8 @@ screen sc_select_fighter(selector):
     modal True
     zorder 10
     window:
+        background gui_image('arena/Arena_BG.png')
+        image gui_image('arena/UI_overlay.png')
         style 'char_info_window'
         text 'Select fighter':
             xalign 0.5
@@ -16,33 +18,31 @@ screen sc_select_fighter(selector):
             action Function(selector.escape), Return()
 
         vbox:
-            image fighter2.avatar
-            text fighter2.name xalign 0.5
+            spacing 15
+            xpos 10
+            ypos 10
+            image im.Scale(fighter2.avatar, 333, 346)
+            text fighter2.name xalign 0.5 color '#ffffff'
             text fighter2.person_class.colored_name() xalign 0.5
-            text fighter2.armor.name xalign 0.5
             text encolor_text(core_souls[fighter2.soul_level], fighter2.soul_level) xalign 0.5
-            for attr in fighter2.show_attributes().values():
-                text attr xalign 0.5
-            for attack in fighter2.person_class.attack_suits:
-                if attack != 'skull':
-                    text Suits.as_attack_type(attack) xalign 0.5
-            for attack in fighter2.person_class.attack_types:
-                text attack xalign 0.5
+            hbox:
+                xalign 0.5
+                spacing 5
+                for card in fighter2.get_cards('combat'):
+                    use fight_card_representation(card.suit(fighter2, {}), card.get_power(fighter2, {}), card.name, NullAction())
 
         vbox:
-            xalign 1.0
-            image fighter1.avatar
-            text fighter1.name xalign 0.5
+            spacing 15
+            xpos 935
+            ypos 10
+            image im.Scale(fighter1.avatar, 333, 346)
+            text fighter1.name xalign 0.5 color '#ffffff'
             text fighter1.person_class.colored_name() xalign 0.5
-            text fighter1.armor.name xalign 0.5
-            text encolor_text(core_souls[fighter1.soul_level], fighter1.soul_level) xalign 0.5
-            for attr in fighter1.show_attributes().values():
-                text attr xalign 0.5
-            for attack in fighter1.person_class.attack_suits:
-                if attack != 'skull':
-                    text Suits.as_attack_type(attack) xalign 0.5
-            for attack in fighter1.person_class.attack_types:
-                text attack xalign 0.5
+            hbox:
+                spacing 5
+                xalign 0.5
+                for card in fighter1.get_cards('combat'):
+                    use fight_card_representation(card.suit(fighter1, {}), card.get_power(fighter1, {}), card.name, NullAction())
             hbox:
                 xalign 0.5
                 textbutton 'previous':
@@ -57,4 +57,5 @@ screen sc_select_fighter(selector):
                 text "You gonna fight personaly. If you lose it's a game over. Are you shure?":
                     color '#ff0000'
                     xalign 0.5
-                    yalign 0.95
+                    yalign 0.9
+                    xmaximum 500

@@ -9,7 +9,10 @@ screen sc_home(home):
         vbox:
             ypos 10
             spacing 15
-            image im.Scale(home.player.avatar, 250, 250)
+            if home.player.exhausted:
+                image im.Scale(im.Grayscale(home.player.avatar), 250, 250)
+            else:
+                image im.Scale(home.player.avatar, 250, 250)
             vbox:
                 xalign 0.5
                 text home.player.name xalign 0.5 color '#fff'
@@ -24,7 +27,10 @@ screen sc_home(home):
                 xalign 1.0
                 ypos 10
                 spacing 15
-                image im.Scale(home.current_slave.avatar, 250, 250)
+                if home.current_slave.exhausted:
+                    image im.Scale(im.Grayscale(home.current_slave.avatar), 250, 250)
+                else:
+                    image im.Scale(home.current_slave.avatar, 250, 250)
                 vbox:
                     xalign 0.5
                     text home.current_slave.name xalign 0.5 color '#fff'
@@ -68,7 +74,10 @@ screen sc_home(home):
                     ypos 10
                     spacing 15
                     imagebutton:
-                        idle im.Scale(slave.avatar, 200, 200)
+                        if slave.exhausted:
+                            idle im.Scale(im.Grayscale(slave.avatar), 250, 250)
+                        else:
+                            idle im.Scale(slave.avatar, 250, 250)
                         action Function(home.select, slave)
                     vbox:
                         xalign 0.5

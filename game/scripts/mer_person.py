@@ -269,6 +269,11 @@ class CorePerson(object):
 
     def get_cards(self, case):
         cards = self.person_class.get_cards(case)
+        if len(cards) < 1:
+            attr = self.max_attribute()
+            if self.soul_level > self.attribute(attr):
+                attr = 'soul'
+            cards.append(self.person_class.card_for_empty_hand(attr))
         if self.grove:
             cards.append(PersonClassCard.get_card('lucky'))
         for key, card in self.temporary_cards.items():
@@ -341,6 +346,9 @@ class CorePerson(object):
 
     def attribute(self, attr):
         return self.count_modifiers(attr)
+
+    def max_attribute(self):
+        return max(self.attributes().keys(), key=lambda x: self.attributes()[x])
     
     def count_modifiers(self, attr):
         value = 0

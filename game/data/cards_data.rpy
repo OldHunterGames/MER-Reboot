@@ -144,6 +144,7 @@ init python:
             'name': __("Shared wisdom"),
             'suit': 'clubs',
             'attribute': 'knowledge',
+            'type': 'combat_support',
         },
         'satisfaction': {
             'name': __("Satisfaction"),
@@ -179,5 +180,30 @@ init python:
             'name': __("Living legend"),
             'suit': 'joker',
             'value': 1,
+        },
+        'wisdom_of_many_lives': {
+            'name': __("Wisdom of many lives"),
+            'suit': 'diamonds',
+            'custom': soul_level_bonus,
+        },
+        'slippery_words': {
+            'name': __("Slippery words"),
+            'suit': 'skull',
+            'attribute': 'subtlety',
+        },
+        'stubborn': {
+            'name': __("Stubborn"),
+            'suit': 'skull',
+            'attribute': 'might',
+        },
+        'common_sense': {
+            'name': __("Common sense"),
+            'suit': 'skull',
+            'attribute': 'knowledge',
+        },
+        'natural_charm': {
+            'name': __("Natural charm"),
+            'suit': 'skull',
+            'attribute': 'charisma',
         },
     }

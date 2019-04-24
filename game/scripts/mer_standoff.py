@@ -17,6 +17,7 @@ class Standoff(object):
         self.enemy_current_card = self.next_enemy_card()
         self.winner = None
         self.calc_winner()
+        self.message = None
 
     def is_player_win(self):
         return self.winner == self.player_combatant
@@ -45,6 +46,9 @@ class Standoff(object):
         self.enemy_cards.remove(self.enemy_current_card)
         self.enemy_current_card = self.next_enemy_card()
 
+    def clear_message(self):
+        self.message = None
+
     def calc(self):
         self.calc_winner()
         if self.winner is not None:
@@ -54,14 +58,17 @@ class Standoff(object):
             self.player_current_card.suit(self.player_combatant, {}),
             self.enemy_current_card.suit(self.enemy, {})
         )
+        self.message = 'fail'
         
         if player_suit > enemy_suit:
             self.enemy_lost_card()
+            self.message = 'success'
         elif player_suit == enemy_suit:
             player_power = self.player_current_card.get_power(self.player_combatant, {})
             enemy_power = self.enemy_current_card.get_power(self.enemy, {})
             if player_power > enemy_power:
                 self.enemy_lost_card()
+                self.message = 'success'
 
         self.player_cards.remove(self.player_current_card)
         self.player_current_card = None

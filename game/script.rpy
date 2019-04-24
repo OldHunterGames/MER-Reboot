@@ -262,19 +262,21 @@ label start:
         grand_fight_classes = PersonClass.get_by_tag('gladiator')
 
         available_arenas = {
-            'mudfight': MerArenaMaker(make_gladiator, allowed_classes=PersonClass.get_by_ids(['menial_slave', 'lucator']), sparks=5),
-            'whip_fight': MerArenaMaker(make_gladiator, 3, allowed_classes=PersonClass.get_by_ids(['andabant']), sparks=10),
+            'mudfight': MerArenaMaker(make_gladiator, allowed_classes=PersonClass.get_by_ids(['menial_slave', 'lucator']), sparks=5, die_after_fight=False),
+            'whip_fight': MerArenaMaker(make_gladiator, 3, allowed_classes=PersonClass.get_by_ids(['andabant']), sparks=10, die_after_fight=False),
             'pitfight': MerArenaMaker(
                 make_gladiator,
                 allowed_classes=pitfight_classes,
                 fixed_enemy=[PersonClass.get_by_id('pugilist')],
-                sparks=5
+                sparks=5,
+                die_after_fight=False
             ),
             'practice': MerArenaMaker(
                 make_gladiator,
                 2,
                 allowed_classes=[PersonClass.get_by_id('pegniarius')],
-                sparks=5
+                sparks=5,
+                die_after_fight=False
             ),
             'heat_up': MerArenaMaker(
                 make_gladiator,
@@ -438,9 +440,9 @@ label lbl_arena(arena_maker):
                 fight = arena.fight
                 result = 'won' if fight.is_player_win() else 'lost'
                 gladiator2.exhausted = True
-                if result != 'won' and fight.loser != player:
+                if result != 'won' and fight.loser != player and arena_maker.die_after_fight:
                     player.slaves.remove(gladiator2)
-                if result == 'won' and not arena_maker.is_winned:
+                if result == 'won' and not arena_maker.is_winned and gladiator2 != player:
                     gladiator2.after_fight()
                     new_classes = PersonClass.available_upgrades(player)
                     if len(new_classes) > 0:

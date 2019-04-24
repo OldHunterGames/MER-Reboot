@@ -54,6 +54,17 @@ class PersonClass(object):
     _available_classes = {}
 
     @classmethod
+    def card_for_empty_hand(cls, card):
+        id = {
+            'soul': 'wisdom_of_many_lives',
+            'might': 'stubborn',
+            'subtlety': 'slippery_words',
+            'knowledge': 'common_sense',
+            'charisma': 'natural_charm'
+        }.get(card)
+        return PersonClassCard.get_card(id)
+
+    @classmethod
     def register_class(cls, id, data):
         cls._available_classes[id] = cls(id, data)
 
@@ -260,7 +271,7 @@ class MerArena(object):
 
 class MerArenaMaker(object):
 
-    def __init__(self, maker_func, min_player_level=0, allowed_classes=None, fixed_enemy=None, sparks=0):
+    def __init__(self, maker_func, min_player_level=0, allowed_classes=None, fixed_enemy=None, sparks=0, die_after_fight=True):
         self.min_player_level = min_player_level
         self.allowed_classes = None if allowed_classes is None else [i for i in allowed_classes]
         self.fixed_enemy = fixed_enemy
@@ -268,6 +279,7 @@ class MerArenaMaker(object):
         self.sparks = sparks
         self.current_enemy = self.make_gladiator()
         self.is_winned = False
+        self.die_after_fight = die_after_fight
 
     def is_active(self, player):
         return player.person_class.tier >= self.min_player_level

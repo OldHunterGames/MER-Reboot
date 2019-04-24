@@ -97,8 +97,22 @@ screen sc_arena(arena):
                         for card in standoff.player_cards:
                             use fight_card_representation(card.suit(arena.ally, {}), card.get_power(arena.ally, {}), card.name, Function(standoff.select_card, card))
                 else:
-                    text 'Fight is over'
+                    if standoff.is_player_win():
+                        text 'Player won'
+                    else:
+                        text 'Player lost'
                     textbutton 'Leave' action Return()
+
+            vbox:
+                xalign 0.5
+                yalign 0.5
+                if standoff.message == 'success':
+                    text standoff.message color '#00ff00'
+                    timer 1.0 action Function(standoff.clear_message)
+                elif standoff.message == 'fail':
+                    text standoff.message color '#ff0000'
+                    timer 1.0 action Function(standoff.clear_message)
+
             vbox:
                 xpos 10
                 ypos 10
