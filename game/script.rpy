@@ -1,4 +1,4 @@
-﻿# The script of the game goes in this file.
+# The script of the game goes in this file.
 
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
@@ -170,6 +170,17 @@ label start:
                 return self.index > 0
 
 
+        class FuncCommand(object):
+            def __init__(self, func, *args):
+                self.func = func
+                self.args = list(args)
+
+            def add_arg(self, arg):
+                self.args.append(arg)
+
+            def run(self):
+                self.func(*self.args)
+
         class HomeManager(object):
             MAX_SLAVES = 5
             def __init__(self, player):
@@ -217,29 +228,37 @@ label start:
                 slave.exhausted = True
                 slave.win_arena = False
 
-            def can_make_love(self, slave):
-                return slave.gender != self.player.gender and not slave.exhausted and not self.player.exhausted
+            def can_make_love(self, person1, person2):
+                return person1.gender != person2.gender and not person1.exhausted and not person2.exhausted
 
-            def make_love(self, slave):
-                slave.grove = True
-                self.player.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
-                slave.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
-                if player.get_relation('lover') is not None:
-                    self.player.set_temporary_card(PersonClassCard.get_card('betrayal'), 'sabotage')
-                self.player.add_relation('lover', slave)
-                slave.exhausted = True
-                self.player.exhausted = True
+            def make_love(self, person1, person2):
+                print('making love')
+                person1.grove = True
+                person2.grove = True
+                person1.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
+                person2.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
+                if person1.get_relation('lover') is not None:
+                    self.person1.set_temporary_card(PersonClassCard.get_card('betrayal'), 'sabotage')
+                person1.add_relation('lover', person2)
+                person1.exhausted = True
+                person2.exhausted = True
 
-            def can_attend_party(self, slave):
-                return slave.gender == self.player.gender and not slave.exhausted and not self.player.exhausted
+            def can_attend_party(self, person1, person2):
+                return person1.gender == person2.gender and not person1.exhausted and not person2.exhausted
 
-            def attend_party(self, slave):
-                slave.grove = True
-                slave.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
-                self.player.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
-                self.player.add_relation('best_friend', slave)
-                slave.exhausted = True
-                self.player.exhausted = True
+            def persons_for_selection(self, checker):
+                persons = [i for i in self.slaves if i != self.current_slave]
+                persons.append(self.player)
+                return [i for i in persons if checker(self.current_slave, i)]
+
+            def attend_party(self, person1, person2):
+                person1.grove = True
+                person2.grove = True
+                person1.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
+                person2.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
+                person1.add_relation('best_friend', person2)
+                person1.exhausted = True
+                person2.exhausted = True
 
             def can_train(self, slave):
                 cards = self.player.get_cards('combat_support')
@@ -249,6 +268,20 @@ label start:
                 slave.set_temporary_card(random.choice(self.player.get_cards('combat_support')), 'support')
                 slave.exhausted = True
                 self.player.exhausted = True
+
+        class SimpleSelector(object):
+            def __init__(self, items, on_select):
+                self.items = items
+                self.on_select_command = on_select
+
+            def select(self, item):
+                self.on_select_command.add_arg(item)
+                self.on_select_command.run()
+
+            def show(self):
+                print('called show')
+                return renpy.show_screen('sc_simple_selector', selector=self)
+                
             
 
         slavestore = SlaveMarket(player)

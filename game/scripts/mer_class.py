@@ -172,7 +172,10 @@ class PersonClass(object):
         return self._prototype
     
     def get_cards(self, case):
-        cards = [i for i in self.cards if i.type == case or i.type is None]
+        if case == 'all':
+            cards = [i for i in self.cards]
+        else:
+            cards = [i for i in self.cards if i.type == case or i.type is None]
         if self.prototype is not None:
             cards.extend(self.prototype.get_cards(case))
         return cards
