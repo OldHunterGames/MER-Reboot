@@ -270,9 +270,9 @@ class CorePerson(object):
     def get_cards(self, case):
         cards = self.person_class.get_cards(case)
         if len(cards) < 1:
-            if case == 'combat':
+            if case == 'combat' or case == 'all':
                 cards.append(PersonClassCard.get_card('struggle'))
-            elif case == 'social':
+            if case == 'social' or case == 'all':
                 attr = self.max_attribute()
                 if self.soul_level > self.attribute(attr):
                     attr = 'soul'
