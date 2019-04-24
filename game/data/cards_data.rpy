@@ -196,6 +196,11 @@ init python:
             'suit': 'skull',
             'attribute': 'might',
         },
+        'struggle': {
+            'name': __("Struggle"),
+            'suit': 'skull',
+            'attribute': 'might',
+        },
         'common_sense': {
             'name': __("Common sense"),
             'suit': 'skull',
