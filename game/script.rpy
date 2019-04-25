@@ -202,8 +202,8 @@ label start:
                 person2.grove = True
                 person1.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
                 person2.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
-                if person1.get_relation('lover') is not None:
-                    self.person1.set_temporary_card(PersonClassCard.get_card('betrayal'), 'sabotage')
+                if person1.get_relation('lover') is not None and person1.get_relation('lover') != person2:
+                    person1.set_temporary_card(PersonClassCard.get_card('betrayal'), 'sabotage')
                 person1.add_relation('lover', person2)
                 person1.exhausted = True
                 person2.exhausted = True
