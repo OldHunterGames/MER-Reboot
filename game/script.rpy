@@ -405,7 +405,7 @@ label lbl_colosseum():
 label lbl_arena(arena_maker):
     $ res = None
     $ disabled = None if len(arena_maker.filter_fighters(player)) < 1 else 'put'
-    $ choice = renpy.display_menu([('make bet', 'bet'), ('put fighter', disabled), ('Return', 'leave')])
+    $ choice = renpy.display_menu([('put fighter', disabled), ('Return', 'leave')])
     if choice == 'bet':
         while res != 'leave_arena':
             python:
