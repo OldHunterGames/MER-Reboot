@@ -40,7 +40,7 @@ init python:
 
 screen sc_slave_market(market):
     python:
-        slaves = market.slaves if market.state == 'buy' else market.player.slaves
+        slaves = market.slaves if market.state == 'buy' else [i for i in market.player.slaves if not i.exhausted]
         action = market.buy if market.state == 'buy' else market.sell
         sensitivity = market.can_buy if market.state == 'buy' else lambda x: True
     tag info
