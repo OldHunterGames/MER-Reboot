@@ -9,6 +9,7 @@ init python:
             self.state = 'sell' if self.state == 'buy' else 'buy'
 
         def buy(self, slave):
+            slave.exhausted = True
             self.player.slaves.append(slave)
             self.slaves.remove(slave)
             self.player.sparks -= self.calc_price(slave)

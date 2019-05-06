@@ -168,7 +168,8 @@ label start:
                 self.current_slave = slave
 
             def call(self):
-                return renpy.call_screen('sc_home', self)
+                renpy.call_screen('sc_home', self)
+                self.current_slave = None
 
             def skip_turn(self):
                 self.should_skip_turn = True
