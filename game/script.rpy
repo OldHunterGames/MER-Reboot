@@ -32,6 +32,15 @@ init 1 python:
     for key, value in core_age_features.items():
         CoreFeature.register_feature(key, CoreFeature(key, value))
 
+    for key, value in core_homeworld_features.items():
+        CoreFeature.register_feature(key, CoreFeature(key, value))
+    
+    for key, value in core_profession_features.items():
+        CoreFeature.register_feature(key, CoreFeature(key, value))
+    
+    for key, value in core_family_features.items():
+        CoreFeature.register_feature(key, CoreFeature(key, value))
+
     for key, value in sex_cards_data.items():
         CoreSexCard.register_card(key, CoreSexCard(key, value))
 

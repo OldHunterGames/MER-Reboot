@@ -42,7 +42,6 @@ screen sc_home(home):
                         xalign 0.5
                         text home.current_slave.name xalign 0.5 color '#fff'
                         text home.current_slave.person_class.colored_name() xalign 0.5
-                        text home.current_slave.armor.name xalign 0.5 color '#fff'
                         text encolor_text(core_souls[home.current_slave.soul_level], home.current_slave.soul_level) xalign 0.5
                         for attr in home.current_slave.show_attributes().values():
                             text attr xalign 0.5

@@ -20,6 +20,10 @@ class CoreFeature(object):
     @property
     def slot(self):
         return self._data.get('slot')
+    
+    @property
+    def attribute(self):
+        return self._data.get('attribute')
 
     def name(self):
         return self._data.get('name')
@@ -82,6 +86,11 @@ class PersonCreator(object):
         'smile',
         'skin',
     ]
+    
+    BACKGROUND_SLOTS = [
+        'homeworld',
+        'family',
+    ]
 
     GENDER_SLOTS = {
         'male': [
@@ -139,6 +148,14 @@ class PersonCreator(object):
             person.add_feature(i)
         for i in cls.gender_features(gender.id):
             person.add_feature(i)
+
+        if person.age != 'junior':
+            attr = person.max_attribute()
+            features = CoreFeature.get_by_slot('profession')
+            for i in features:
+                if i.attribute == attr:
+                    person.add_feature(i)
+                    break
         person.set_avatar(PersonCreator.gen_avatar(gender.id, age.id, genus))
         cls.gen_initial_hand(person)
         return person
@@ -223,9 +240,18 @@ class PersonCreator(object):
         return features
 
     @classmethod
+    def make_background(cls):
+        slots = [i for i in cls.BACKGROUND_SLOTS]
+        features = list()
+        for slot in slots:
+            features.append(CoreFeature.random_by_slot(slot))
+        return features
+
+    @classmethod
     def make_features(cls):
         features = cls.make_alignments()
         features.extend(cls.make_physical())
+        features.extend(cls.make_background())
         return features
 
 

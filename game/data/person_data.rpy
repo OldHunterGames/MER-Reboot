@@ -180,6 +180,28 @@ init python:
         'zealous': {'slot': 'safety', 'name': __('Zealous'), 'might': 1},
     }
 
+    core_homeworld_features = {
+        'prehistoric': {'slot': 'homeworld', 'name': __('Prehistoric world'), 'might': 1, 'knowledge': -1},
+        'industrial': {'slot': 'homeworld', 'name': __('Industrial world'), 'might': -1, 'knowledge': 1},
+        'postapoc': {'slot': 'homeworld', 'name': __('Postapocalyptic world'), 'subtlety': 1, 'charisma': -1},
+        'utopia': {'slot': 'homeworld', 'name': __('Utopic world'), 'subtlety': -1, 'charisma': 1},
+    }
+
+    core_family_features = {
+        'orphan': {'slot': 'family', 'name': __('Orphan'), 'subtlety': 1, 'knowledge': -1},
+        'matrial': {'slot': 'family', 'name': __('Matrial'), 'might': 1, 'subtlety': -1},
+        'intelligent': {'slot': 'family', 'name': __('Intelligent'), 'might': -1, 'knowledge': 1},
+        'highborn': {'slot': 'family', 'name': __('Highborn'), 'subtlety': -1, 'charisma': 1},
+        'lowborn': {'slot': 'family', 'name': __('Lowborn'), 'subtlety': 1, 'charisma': -1},
+    }
+
+    core_profession_features = {
+        'warrior': {'slot': 'profession', 'name': __('Warrior'), 'attribute': 'might', 'might': 1, 'knowledge': -1},
+        'servant': {'slot': 'profession', 'name': __('Servant'), 'attribute': 'subtlety', 'subtlety': 1, 'charisma': -1},
+        'scholar': {'slot': 'profession', 'name': __('Scholar'), 'attribute': 'knowledge', 'knowledge': 1, 'subtlety': -1},
+        'artist': {'slot': 'profession', 'name': __('Artist'), 'attribute': 'charisma', 'charisma': 1, 'might': -1},
+    }
+
     core_souls = {
         0: __('darksoul'),
         1: __('dimsoul'),
