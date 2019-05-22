@@ -1,9 +1,17 @@
 init python:
+    def make_starter_slave():
+        slave = PersonCreator.gen_person(genus='human')
+        slave.person_class = PersonClass.random_by_tag('starter')
+        slave.armor = Armor.random_by_type(slave.person_class.available_garments[0])
+
+        return slave
+
     class SlaveMarket(object):
-        def __init__(self, player):
-            self.slaves = [make_starter_salve() for i in xrange(3)]
+        def __init__(self, player, calculator):
+            self.slaves = [make_starter_slave() for i in xrange(3)]
             self.state = 'buy'
             self.player = player
+            self.calculator = calculator
 
         def switch_mode(self):
             self.state = 'sell' if self.state == 'buy' else 'buy'
@@ -26,7 +34,7 @@ init python:
             return self.player.sparks >= self.calc_price(slave) and HomeManager.MAX_SLAVES > len(self.player.slaves)
 
         def update_slaves(self, *args, **kwargs):
-            self.slaves = [make_starter_salve() for i in xrange(3)]
+            self.slaves = [make_starter_slave() for i in xrange(3)]
 
         def open(self):
             if len(self.slaves) > 0:
@@ -34,9 +42,7 @@ init python:
             return renpy.call_screen('sc_slave_market', self)
 
         def calc_price(self, slave):
-            attr = max(0, max(slave.attributes().values()))
-            return (attr + slave.soul_level) * 5 * slave.person_class.tier
-
+            return self.calculator(slave).price()
 
 screen sc_slave_market(market):
     python:
@@ -54,6 +60,7 @@ screen sc_slave_market(market):
                     image slave.avatar
                     text slave.name xalign 0.5
                     text slave.person_class.colored_name() xalign 0.5
+                    text 'Raiting: %s' % PriceCalculator(slave).training_price() xalign 0.5
                     text encolor_text(core_souls[slave.soul_level], slave.soul_level) xalign 0.5
                     for attr in slave.show_attributes().values():
                         text attr xalign 0.5

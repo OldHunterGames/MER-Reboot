@@ -3,6 +3,7 @@ init python:
         'menial_slave': {
             'name': __('Menial slave'),
             'tier': 1,
+            'key_attributes': ['might'],
             'type': 'slave',
             'description': __('Generic slave trained for uncomplicated physical labor'),
             'available_garments': ['cloth'],
@@ -168,7 +169,7 @@ init python:
             'tier': 4,
             'type': 'slave',
             'prerequisites': {
-                'class': ['retiarius', 'andabant'],
+                'class': ['retiarius', 'andabant', 'cestus'],
             },
             'description': __("Cenobites are most cruel sado-mazo gladiators of Eternal Rome. They trading protective armor for explicit and self-harmful piercing, tattoos, scarification and BDSM iron or leather wearings. They use any type of weapon given it have a most menacing and scary appearance."),
             'available_garments': ['cloth'],
@@ -247,5 +248,58 @@ init python:
             'cards': ['living_legend',],
             'tag': 'lanista',
             'prototype': 'popular_lanista',
+        },
+
+        'cenobite_champion': {
+            'name': __('Cenobite champion'),
+            'key_attributes': ['might'],
+            'tier': 5,
+            'type': 'slave',
+            'prerequisites': {
+                'class': ['cenobite'],
+            },
+            'description': __("Cenobites are most cruel sado-mazo gladiators of Eternal Rome. They trading protective armor for explicit and self-harmful piercing, tattoos, scarification and BDSM iron or leather wearings. They use any type of weapon given it have a most menacing and scary appearance. Champion of the arena"),
+            'tag': 'gladiator',
+            'cards': ['champion'],
+            'prototype': 'cenobite',
+        },
+        'dimacheros_champion': {
+            'name': __('Dimacheros champion'),
+            'key_attributes': ['might'],
+            'tier': 5,
+            'type': 'slave',
+            'prerequisites': {
+                'class': ['dimacheros'],
+            },
+            'description': __("Dual wielding, lightly armored gladiator. Champion of the arena."),
+            'tag': 'gladiator',
+            'cards': ['champion'],
+            'prototype': 'dimacheros',
+        },
+        'secutor_champion': {
+            'name': __('Secutor champion'),
+            'key_attributes': ['might'],
+            'tier': 5,
+            'type': 'slave',
+            'prerequisites': {
+                'class': ['secutor'],
+            },
+            'description': __("This menacing pyramid-helmed man with a heavy two-handed sword is beloved by public and feared by peers. Champion of the arena."),
+            'tag': 'gladiator',
+            'cards': ['champion'],
+            'prototype': 'secutor',
+        },
+        'goplynia_champion': {
+            'name': __('Goplynia champion'),
+            'key_attributes': ['might'],
+            'tier': 5,
+            'type': 'slave',
+            'prerequisites': {
+                'class': ['goplynia'],
+            },
+            'description': __("This gladiatrix have heavy armored arms and legs but bare torso to please audience and make combat dangerous. Armed with a metal whips they are ready to trash anyone. Champion of the arena."),
+            'tag': 'gladiator',
+            'cards': ['champion'],
+            'prototype': 'goplynia',
         },
     }

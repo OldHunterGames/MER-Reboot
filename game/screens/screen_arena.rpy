@@ -120,6 +120,7 @@ screen sc_arena(arena):
                         xalign 0.5
                         text arena.enemy.name color '#fff'
                         text arena.enemy.person_class.colored_name()
+                        text 'Raiting: %s' % PriceCalculator(arena.enemy).training_price()
                 if enemy_card is not None:
                     use fight_card_representation(enemy_card.suit(arena.enemy, {}), enemy_card.get_power(arena.enemy, {}), enemy_card.name, NullAction())
             hbox:
@@ -129,13 +130,15 @@ screen sc_arena(arena):
                 hbox:
                     yalign 1.0
                     spacing 15
-                    for card in standoff.player_cards:
-                        use fight_card_representation(card.suit(arena.ally, {}), card.get_power(arena.ally, {}), card.name, Function(standoff.select_card, card))
+                    if standoff.winner is None:
+                        for card in standoff.player_cards:
+                            use fight_card_representation(card.suit(arena.ally, {}), card.get_power(arena.ally, {}), card.name, Function(standoff.select_card, card))
                 vbox:
                     vbox:
                         xalign 0.5
                         text arena.ally.name color '#fff'
                         text arena.ally.person_class.colored_name()
+                        text 'Raiting: %s' % PriceCalculator(arena.ally).training_price()
                     image im.Scale(arena.ally.avatar, 200, 200)
 
 

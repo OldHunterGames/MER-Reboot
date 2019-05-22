@@ -2,7 +2,7 @@ screen sc_select_fighter(selector):
     python:
         fighter1 = selector.current_fighter()
         fighter2 = selector.enemy
-
+        entertainment = PriceCalculator(fighter2).entertainment_raiting_formula()
     tag info
     modal True
     zorder 10
@@ -24,7 +24,11 @@ screen sc_select_fighter(selector):
                 image im.Scale(fighter2.avatar, 200, 200)
                 text fighter2.name xalign 0.5 color '#ffffff'
                 text fighter2.person_class.colored_name() xalign 0.5
+                text 'Raiting: %s' % PriceCalculator(fighter2).training_price() xalign 0.5
+                text 'Entertainment raiting %s' % entertainment
                 text encolor_text(core_souls[fighter2.soul_level], fighter2.soul_level) xalign 0.5
+                if selector.arena_maker.can_skip_enemy:
+                    textbutton 'Skip this enemy' action Function(selector.arena_maker.set_gladiator)
             hbox:
                 spacing 5
                 for card in fighter2.get_cards('combat'):
@@ -48,6 +52,7 @@ screen sc_select_fighter(selector):
                         action Function(selector.next), SensitiveIf(selector.next_active())
                 text fighter1.name xalign 0.5 color '#ffffff'
                 text fighter1.person_class.colored_name() xalign 0.5
+                text 'Raiting: %s' % PriceCalculator(fighter1).training_price() xalign 0.5
                 image im.Scale(fighter1.avatar, 200, 200)
             
 

@@ -60,25 +60,268 @@ init 1 python:
         data = {'suit': suit}
         CoreDuelCard.register_card(suit.id, CoreDuelCard(suit.id, data))
 
-    def make_gladiator(allowed_classes=None):
-        gladiator = PersonCreator.gen_person(genus='human')
-        if allowed_classes is not None:
-            classes = allowed_classes
-        else:
-            classes = PersonClass.pipe_filters(PersonClass.class_filter, PersonClass.gender_filter)(
-                gladiator, PersonClass.get_by_tag('gladiator'))
+    def make_gladiator(allowed_classes=None, person_generator_params=None):
+        if person_generator_params is None:
+            person_generator_params = {}
+        while True:
+            gladiator = PersonCreator.gen_person(genus='human', **person_generator_params)
+            if allowed_classes is not None:
+                classes = allowed_classes
+            else:
+                classes = PersonClass.pipe_filters(PersonClass.class_filter, PersonClass.gender_filter)(
+                    gladiator, PersonClass.get_by_tag('gladiator'))
 
-        gladiator.person_class = random.choice(classes)
+            gladiator.person_class = random.choice(classes)
+
+            if gladiator.attribute(gladiator.person_class.key_attributes[0]) >= gladiator.person_class.tier:
+                break
         gladiator.armor = Armor.random_by_type(gladiator.person_class.available_garments[0])
 
         return gladiator
+    
+    def make_mudfight_gladiator():
+        return make_gladiator(PersonClass.get_by_ids(['lucator']), {'gender': 'female'})
+    
+    def make_whipfight_gladiator():
+        return make_gladiator(PersonClass.get_by_ids(['andabant']), {'gender': 'female'})
+    
+    def make_pitfight_gladiator():
+        return make_gladiator(PersonClass.get_by_ids(['pugilist']))
+    
+    def make_gladiator_fit_raiting(low, high, calculator):
+        def inner():
+            while True:
+                glad = make_gladiator()
+                price = calculator(glad).training_price()
+                if price >= low and price <= high:
+                    return glad
+        return inner
+    
+    def make_champion():
+        return make_gladiator(PersonClass.get_by_tag('gladiator', PersonClass.get_by_tier(5)))
+    
+    def default_arena_prize(arena):
+        sparks = arena.enemy.person_class.tier * 5
+        if arena.fight.is_player_win():
+            sparks *= 2
+        return sparks
+    
+    def whipfight_prize(arena):
+        return PriceCalculator(arena.enemy).training_price()
+    
+    def filter_equipment(card):
+        return card.type != 'equipment'
 
-    def make_starter_salve():
-        slave = PersonCreator.gen_person(genus='human')
-        slave.person_class = PersonClass.random_by_tag('starter')
-        slave.armor = Armor.random_by_type(slave.person_class.available_garments[0])
+init python:
+    class FighterSelector(object):
+        def __init__(self, player, arena_maker, exclude=None, team=None):
+            self.player = player
+            self.index = 0
+            self.arena_maker = arena_maker
+            self.escaped = False
+            self.exclude = exclude or []
+            self.team = team or []
+        
+        @property
+        def enemy(self):
+            return self.arena_maker.current_enemy
 
-        return slave
+        def escape(self):
+            self.escaped = True
+
+        def run(self):
+            return renpy.call_screen('sc_select_fighter', self)
+
+        @property
+        def fighters(self):
+            if len(self.team) > 0:
+                return self.team
+            return [i for i in self.arena_maker.filter_fighters(self.player) if i not in self.exclude]
+
+        def current_fighter(self):
+            if self.escaped:
+                return None
+            return self.fighters[self.index]
+
+        def next(self):
+            self.index += 1
+
+        def prev(self):
+            self.index -= 1
+
+        def next_active(self):
+            return self.index < len(self.fighters) - 1
+
+        def prev_active(self):
+            return self.index > 0
+
+
+    class FuncCommand(object):
+        def __init__(self, func, *args):
+            self.func = func
+            self.args = list(args)
+
+        def add_arg(self, arg):
+            self.args.append(arg)
+
+        def run(self):
+            self.func(*self.args)
+
+    class HomeManager(object):
+        MAX_SLAVES = 5
+        def __init__(self, player):
+            self.player = player
+            self.current_slave = None
+            self.core = core
+            self.should_skip_turn = False
+
+        def calc_upkeep(self):
+            return 5 + len(self.player.slaves) * 5
+
+        def on_skip_turn(self, *args, **kwargs):
+            self.player.sparks -= self.calc_upkeep()
+
+        @property
+        def slaves(self):
+            return [i for i in self.player.slaves]
+
+        def select(self, slave):
+            self.current_slave = slave
+
+        def call(self):
+            renpy.call_screen('sc_home', self)
+            self.current_slave = None
+
+        def skip_turn(self):
+            self.should_skip_turn = True
+
+        def can_upgrade_slave(self, person):
+            exhausted = person.exhausted
+            if person.person_class.tier == 1:
+                return self.player.person_class.tier > 1 and not exhausted
+            else:
+                arena_winner = getattr(person, 'win_arena', False)
+                tier = self.player.person_class.tier > person.person_class.tier 
+                upgrades = len(PersonClass.available_upgrades(person)) > 0
+                return arena_winner and tier and upgrades and not exhausted
+
+        def slave_upgrades(self, person):
+            return PersonClass.available_upgrades(person)
+
+        def upgrade_slave(self, slave, person_class):
+            slave.person_class = person_class
+            slave.armor = Armor.random_by_type(slave.person_class.available_garments[0])
+            self.player.sparks -= person_class.cost
+            slave.exhausted = True
+            slave.win_arena = False
+
+        def can_make_love(self, person1, person2):
+            return person1.gender != person2.gender and not person1.exhausted and not person2.exhausted
+
+        def make_love(self, person1, person2):
+            person1.grove = True
+            person2.grove = True
+            person1.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
+            person2.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
+            if person1.get_relation('lover') is not None and person1.get_relation('lover') != person2:
+                person1.set_temporary_card(PersonClassCard.get_card('betrayal'), 'sabotage')
+            person1.add_relation('lover', person2)
+            person1.exhausted = True
+            person2.exhausted = True
+
+        def can_attend_party(self, person1, person2):
+            return person1.gender == person2.gender and not person1.exhausted and not person2.exhausted
+
+        def persons_for_selection(self, checker):
+            persons = [i for i in self.slaves if i != self.current_slave]
+            persons.append(self.player)
+            return [i for i in persons if checker(self.current_slave, i)]
+
+        def attend_party(self, person1, person2):
+            person1.grove = True
+            person2.grove = True
+            person1.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
+            person2.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
+            person1.add_relation('best_friend', person2)
+            person1.exhausted = True
+            person2.exhausted = True
+
+        def can_train(self, slave):
+            cards = self.player.get_cards('combat', True)
+            return not slave.exhausted and not self.player.exhausted and len(cards) > 0
+
+        def train(self, slave):
+            slave.set_temporary_card(random.choice(self.player.get_cards('combat', True)), 'support')
+            slave.exhausted = True
+            self.player.exhausted = True
+
+    class SimpleSelector(object):
+        def __init__(self, items, on_select):
+            self._items = items
+            self.on_select_command = on_select
+        
+        @property
+        def items(self):
+            try:
+                items = self._items()
+            except TypeError:
+                items = self._items
+            return items
+
+        def select(self, item):
+            self.on_select_command.add_arg(item)
+            self.on_select_command.run()
+
+        def show(self):
+            return renpy.show_screen('sc_simple_selector', selector=self)
+    
+    class PriceCalculator(object):
+        _RAITINGS = defaultdict(int)
+        attrs_table = {
+            0: 0,
+            1: 1,
+            2: 5,
+            3: 10,
+            4: 20,
+            5: 50,
+        }
+        def __init__(self, person):
+            self.person = person
+        
+        def add_raiting(self, value):
+            self._RAITINGS[self.person] += value - self._rating_modifier()
+        
+        def potential_price(self):
+            price = 0
+            for value in self.person.attributes().values():
+                price += self.attrs_table.get(value, -10)
+            price += self.attrs_table.get(self.person.soul_level, -10)
+            return price
+        
+        def training_price(self):
+            price = 0
+            for card in self.person.get_cards('combat'):
+                suit = card.suit(self.person)
+                if suit == Suits.SKULL:
+                    price += card.get_power(self.person)
+                elif suit == Suits.JOKER:
+                    price += 25 + 10 * card.get_power(self.person)
+                else:
+                    price += 10 + 5 * card.get_power(self.person)
+            return price
+        
+        def raiting_price(self):
+            return self._RAITINGS.get(self.person, 0)
+        
+        def _rating_modifier(self):
+            return self.raiting_price() / 20
+        
+        def price(self):
+            return max(5, max(self.potential_price(), self.training_price(), self.raiting_price()))
+        
+        def entertainment_raiting_formula(self):
+            return self.price() * self.person.person_class.tier ** 2
+
 # The game starts here.
 
 label start:
@@ -93,213 +336,74 @@ label start:
     # $ core.skip_turn.add_callback(CoreSexMinigame.decade_skip_callback)
     python:
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
-        # for i in range(10000):
-        #     gladiator1 = PersonCreator.gen_person(gender='male', genus='human')
-        #     gladiator1.person_class = PersonClass.random_by_tag('gladiator')
-            
-        #     gladiator2 = PersonCreator.gen_person(gender='male', genus='human')
-        #     gladiator2.person_class = PersonClass.random_by_tag('gladiator')
-            
-        #     gladiator1.armor = Armor.random_by_type(gladiator1.person_class.available_garments[0])
-        #     gladiator2.armor = Armor.random_by_type(gladiator2.person_class.available_garments[0])
 
-        #     act1 = random.choice(gladiator1.person_class.get_attacks())
-        #     act2 = random.choice(gladiator2.person_class.get_attacks())
-        #     Standoff(gladiator1, act1, gladiator2, act2).run()
-        
-
-        class FighterSelector(object):
-            def __init__(self, player, enemy, arena_maker):
-                self.player = player
-                self.enemy = enemy
-                self.index = 0
-                self.arena_maker = arena_maker
-                self.escaped = False
-
-            def escape(self):
-                self.escaped = True
-
-            def run(self):
-                return renpy.call_screen('sc_select_fighter', self)
-
-            @property
-            def fighters(self):
-                return arena_maker.filter_fighters(self.player)
-
-            def current_fighter(self):
-                if self.escaped:
-                    return None
-                return self.fighters[self.index]
-
-            def next(self):
-                self.index += 1
-
-            def prev(self):
-                self.index -= 1
-
-            def next_active(self):
-                return self.index < len(self.fighters) - 1
-
-            def prev_active(self):
-                return self.index > 0
-
-
-        class FuncCommand(object):
-            def __init__(self, func, *args):
-                self.func = func
-                self.args = list(args)
-
-            def add_arg(self, arg):
-                self.args.append(arg)
-
-            def run(self):
-                self.func(*self.args)
-
-        class HomeManager(object):
-            MAX_SLAVES = 5
-            def __init__(self, player):
-                self.player = player
-                self.current_slave = None
-                self.core = core
-                self.should_skip_turn = False
-
-            def calc_upkeep(self):
-                return 5 + len(self.player.slaves) * 5
-
-            def on_skip_turn(self, *args, **kwargs):
-                self.player.sparks -= self.calc_upkeep()
-
-            @property
-            def slaves(self):
-                return [i for i in self.player.slaves]
-
-            def select(self, slave):
-                self.current_slave = slave
-
-            def call(self):
-                renpy.call_screen('sc_home', self)
-                self.current_slave = None
-
-            def skip_turn(self):
-                self.should_skip_turn = True
-
-            def can_upgrade_slave(self, person):
-                exhausted = person.exhausted
-                if person.person_class.tier == 1:
-                    return self.player.person_class.tier > 1 and not exhausted
-                else:
-                    arena_winner = getattr(person, 'win_arena', False)
-                    tier = self.player.person_class.tier > person.person_class.tier 
-                    upgrades = len(PersonClass.available_upgrades(person)) > 0
-                    return arena_winner and tier and upgrades and not exhausted
-
-            def slave_upgrades(self, person):
-                return PersonClass.available_upgrades(person)
-
-            def upgrade_slave(self, slave, person_class):
-                slave.person_class = person_class
-                slave.armor = Armor.random_by_type(slave.person_class.available_garments[0])
-                self.player.sparks -= person_class.cost
-                slave.exhausted = True
-                slave.win_arena = False
-
-            def can_make_love(self, person1, person2):
-                return person1.gender != person2.gender and not person1.exhausted and not person2.exhausted
-
-            def make_love(self, person1, person2):
-                print('making love')
-                person1.grove = True
-                person2.grove = True
-                person1.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
-                person2.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
-                if person1.get_relation('lover') is not None and person1.get_relation('lover') != person2:
-                    person1.set_temporary_card(PersonClassCard.get_card('betrayal'), 'sabotage')
-                person1.add_relation('lover', person2)
-                person1.exhausted = True
-                person2.exhausted = True
-
-            def can_attend_party(self, person1, person2):
-                return person1.gender == person2.gender and not person1.exhausted and not person2.exhausted
-
-            def persons_for_selection(self, checker):
-                persons = [i for i in self.slaves if i != self.current_slave]
-                persons.append(self.player)
-                return [i for i in persons if checker(self.current_slave, i)]
-
-            def attend_party(self, person1, person2):
-                person1.grove = True
-                person2.grove = True
-                person1.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
-                person2.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
-                person1.add_relation('best_friend', person2)
-                person1.exhausted = True
-                person2.exhausted = True
-
-            def can_train(self, slave):
-                cards = self.player.get_cards('combat_support')
-                return not slave.exhausted and not self.player.exhausted and len(cards) > 0
-
-            def train(self, slave):
-                slave.set_temporary_card(random.choice(self.player.get_cards('combat_support')), 'support')
-                slave.exhausted = True
-                self.player.exhausted = True
-
-        class SimpleSelector(object):
-            def __init__(self, items, on_select):
-                self.items = items
-                self.on_select_command = on_select
-
-            def select(self, item):
-                self.on_select_command.add_arg(item)
-                self.on_select_command.run()
-
-            def show(self):
-                print('called show')
-                return renpy.show_screen('sc_simple_selector', selector=self)
-                
-            
-
-        slavestore = SlaveMarket(player)
-        pitfight_classes = PersonClass.get_by_tag('lanista')
-        pitfight_classes.extend(PersonClass.get_by_ids(['lucator', 'pugilist', 'menial_slave']))
+        slavestore = SlaveMarket(player, PriceCalculator)
+        pitfight_classes = PersonClass.get_by_ids(['lucator', 'pugilist', 'menial_slave'])
         heat_up_classes = list(set(PersonClass.get_by_tag('gladiator'))
             .difference(set(PersonClass.get_by_tier(4)))
             .difference(set(PersonClass.get_by_tier(5)))
         )
         enemies = list(set(heat_up_classes).intersection(set(PersonClass.get_by_tier(3))))
         grand_fight_classes = PersonClass.get_by_tag('gladiator')
-
+        maker = make_gladiator_fit_raiting(90, 120, PriceCalculator)
+        print(maker())
         available_arenas = {
-            'mudfight': MerArenaMaker(make_gladiator, allowed_classes=PersonClass.get_by_ids(['menial_slave', 'lucator']), sparks=5, die_after_fight=False),
-            'whip_fight': MerArenaMaker(make_gladiator, 3, allowed_classes=PersonClass.get_by_ids(['andabant']), sparks=10, die_after_fight=False),
+            'mudfight': MerArenaMaker(make_mudfight_gladiator, lambda person: person.gender == 'female', default_arena_prize, die_after_fight=False, cards_filter=filter_equipment),
+            'whip_fight': MerArenaMaker(make_whipfight_gladiator, lambda person: person.gender == 'female', whipfight_prize, min_player_level=3, die_after_fight=False),
             'pitfight': MerArenaMaker(
-                make_gladiator,
-                allowed_classes=pitfight_classes,
-                fixed_enemy=[PersonClass.get_by_id('pugilist')],
-                sparks=5,
-                die_after_fight=False
+                make_pitfight_gladiator,
+                lambda person: person.gender == 'male',
+                default_arena_prize,
+                die_after_fight=False,
+                cards_filter=filter_equipment,
             ),
-            'practice': MerArenaMaker(
+            'chaotic_fights': MerArenaMaker(
                 make_gladiator,
-                2,
-                allowed_classes=[PersonClass.get_by_id('pegniarius')],
-                sparks=5,
-                die_after_fight=False
+                lambda person: True,
+                lambda _: 0,
+                die_after_fight=False,
+                gain_prestige=False,
+                can_skip_enemy=True,
             ),
-            'heat_up': MerArenaMaker(
+            'common_fight': MerArenaMaker(
+                make_gladiator_fit_raiting(30, 100, PriceCalculator),
+                lambda person: True,
+                default_arena_prize,
+                min_player_level=2,
+            ),
+            'premium_fights': MerArenaMaker(
+                make_gladiator_fit_raiting(100, 150, PriceCalculator),
+                lambda person: True,
+                default_arena_prize,
+                min_player_level=3,
+            ),
+            'tournament': MerArenaMaker(
                 make_gladiator,
-                3,
-                allowed_classes=heat_up_classes,
-                fixed_enemy=enemies,
-                sparks=15,
-            ),
-            'grand_fight': MerArenaMaker(
-                make_gladiator,
-                4,
-                allowed_classes=grand_fight_classes,
-                fixed_enemy=enemies,
-                sparks=50,
-            ),
+                lambda person: True,
+                default_arena_prize,
+                min_player_level=4,
+            )
+            # 'practice': MerArenaMaker(
+            #     make_gladiator,
+            #     2,
+            #     allowed_classes=[PersonClass.get_by_id('pegniarius')],
+            #     sparks=5,
+            #     die_after_fight=False
+            # ),
+            # 'heat_up': MerArenaMaker(
+            #     make_gladiator,
+            #     3,
+            #     allowed_classes=heat_up_classes,
+            #     fixed_enemy=enemies,
+            #     sparks=15,
+            # ),
+            # 'grand_fight': MerArenaMaker(
+            #     make_gladiator,
+            #     4,
+            #     allowed_classes=grand_fight_classes,
+            #     fixed_enemy=enemies,
+            #     sparks=50,
+            # ),
         }
         for arena in available_arenas.values():
             core.skip_turn.add_callback(arena.set_gladiator)
@@ -307,6 +411,8 @@ label start:
         home_manager = HomeManager(player)
         core.skip_turn.add_callback(slavestore.update_slaves)
         core.skip_turn.add_callback(home_manager.on_skip_turn)
+        # for i in range(10):
+        #     test()
 
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
     call _main from _call__main
@@ -390,55 +496,77 @@ label lbl_taberna():
 label lbl_colosseum():
     python:
         choices = [('Return', 'return')]
-        practice = available_arenas['practice']
-        heat_up = available_arenas['heat_up']
-        grand_fight = available_arenas['grand_fight']
-        if practice.is_active(player):
-            choices.append(('Practice', practice))
+        chaotic = available_arenas['chaotic_fights']
+        common_fight = available_arenas['common_fight']
+        premium_fight = available_arenas['premium_fights']
+        tournament = available_arenas['tournament']
+        if chaotic.is_active(player):
+            choices.append(('Chaotic fights', chaotic))
         else:
-            choices.append(('Practice', None))
-        if heat_up.is_active(player):
-            choices.append(('Heat up', heat_up))
+            choices.append(('Chaotic fights', None))
+        if common_fight.is_active(player):
+            choices.append(('Common fight', common_fight))
         else:
-            choices.append(('Heat up', None))
-        if grand_fight.is_active(player):
-            choices.append(('Grand fight', grand_fight))
+            choices.append(('Common fight', None))
+        if premium_fight.is_active(player):
+            choices.append(('Premium fight', premium_fight))
         else:
-            choices.append(('Grand fight', None))
+            choices.append(('Premium fight', None))
 
+        if tournament.is_active(player) and len(tournament.filter_fighters(player) >= 3):
+            choices.append(('Tournament', tournament))
+        else:
+            choices.append(('Tournament', None))
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
     call lbl_arena(choice)
     return
 
+label lbl_grand_fight(arena_maker):
+    python:
+        team = []
+        enemies = [make_gladiator_fit_raiting(30, 100)() for i in xrange(2)]
+        enemies.extend([make_gladiator_fit_raiting(100, 150) for i in xrange(2)])
+        enemies.append(make_champion())
+        arena_maker.current_enemy = enemies.pop(0)
+    'Select you team (3 fighters)'
+    python:
+        while len(team) < 3:
+            selector = FighterSelector(player, arena_maker, team)
+            selector.run()
+            team.append(selector.current_fighter())
+    'Tournament is going to begin'
+    python:
+        while len(team > 0) or len(enemies) > 0:
+            selector = FighterSelector(player, arena_maker, team=team)
+            selector.run()
+            ally = selector.current_fighter()
+            arena = MerArena(arena_maker.current_enemy, ally)
+            arena.make_bet(ally)
+            arena.start()
+            fight = arena.fight
+            if fight.is_player_win():
+                arena_maker.current_enemy = enemies.pop(0)
+            else:
+                team.remove(ally)
+                player.slaves.remove(ally)
+        if len(team) > 0:
+            player_win = True
+        else:
+            player_win = False
+    'Tournament ended'
+    return
+
 label lbl_arena(arena_maker):
     $ res = None
     $ disabled = None if len(arena_maker.filter_fighters(player)) < 1 else 'put'
-    $ choice = renpy.display_menu([('put fighter', disabled), ('Return', 'leave')])
-    if choice == 'bet':
-        while res != 'leave_arena':
-            python:
-                gladiator1 = arena_maker.make_gladiator()            
-                gladiator2 = arena_maker.make_gladiator()
-
-                arena = MerArena(gladiator1, gladiator2, sparks=5)
-                res = arena.start()
-                if res != 'leave_arena' and res != 'next':
-                    fight = arena.fight
-                    result = 'won' if fight.is_player_win() else 'lost'
-                    if result == 'won':
-                        player.sparks += arena.sparks
-                    else:
-                        player.sparks -= arena.sparks
-
-            if res != 'leave_arena' and res != 'next':
-                'Winner is [fight.winner.name] / player [result] his bet'            
+    $ choice = renpy.display_menu([('put fighter', disabled), ('Return', 'leave')])          
 
     if choice == 'put':
         python:
             gladiator1 = arena_maker.current_enemy
-            selector = FighterSelector(player, gladiator1, arena_maker.allowed_classes)
+            selector = FighterSelector(player, arena_maker)
             selector.run()
             gladiator2 = selector.current_fighter()
             if gladiator2 is not None:
@@ -447,18 +575,27 @@ label lbl_arena(arena_maker):
                 arena.start()
                 fight = arena.fight
                 result = 'won' if fight.is_player_win() else 'lost'
+                fame_changed = False
                 gladiator2.exhausted = True
+                player.sparks += arena_maker.get_prize(arena)
+                gladiator2.after_fight()
                 if result != 'won' and fight.loser != player and arena_maker.die_after_fight:
                     player.slaves.remove(gladiator2)
-                if result == 'won' and not arena_maker.is_winned and gladiator2 != player:
-                    gladiator2.after_fight()
-                    new_classes = PersonClass.available_upgrades(player)
-                    if len(new_classes) > 0:
-                        player.person_class = random.choice(new_classes)
-                    arena_maker.is_winned = True
+                rule = player.person_class.tier >= 2 and not arena_maker.die_after_fight
+                print(rule)
+                if result == 'won' and not arena_maker.is_winned and not rule and arena_maker.gain_prestige:
+                    fame_changed = True
+                    fame = arena.raise_fame(PriceCalculator, player)
+                    arena_maker.is_winned = fame
                 if result == 'won':
                     gladiator2.win_arena = True
-                    player.sparks += arena_maker.sparks
+                
+                if fight.is_player_win():
+                    PriceCalculator(gladiator2).add_raiting(fight.enemy_cards_amount ** 2)
+                else:
+                    PriceCalculator(gladiator1).add_raiting(fight.player_cards_amount ** 2)
+                if not fame_changed:
+                    arena.drop_fame(PriceCalculator, player)
         if gladiator2 is None:
             return
 
@@ -472,6 +609,7 @@ label lbl_arena(arena_maker):
     if choice == 'leave':
         return
     return
+
 
 label lbl_make_initial_characters():
     python:

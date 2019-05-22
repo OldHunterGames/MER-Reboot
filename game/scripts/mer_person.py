@@ -293,8 +293,10 @@ class CorePerson(object):
     def get_relation(self, relation):
         return self.relations.get(relation)
 
-    def get_cards(self, case):
-        cards = self.person_class.get_cards(case)
+    def get_cards(self, case, get_support=False):
+        cards = self.person_class.get_cards(case, get_support)
+        if get_support:
+            return cards
         if len(cards) < 1:
             if case == 'combat' or case == 'all':
                 cards.append(PersonClassCard.get_card('struggle'))
