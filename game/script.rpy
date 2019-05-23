@@ -334,6 +334,7 @@ label start:
     # $ core.skip_turn.add_callback(CoreAddCards(player).run)
     # $ core.skip_turn.add_callback(CoreDuel.drop_skulls_callback)
     # $ core.skip_turn.add_callback(CoreSexMinigame.decade_skip_callback)
+
     python:
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
 
@@ -415,6 +416,7 @@ label start:
         #     test()
 
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
+    call lbl_storylanista_start
     call _main from _call__main
 
     return
