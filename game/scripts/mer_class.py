@@ -182,8 +182,6 @@ class PersonClass(object):
             else:
                 cards = [i for i in self.cards if i.case == case or i.case is None and i.type != 'support']
         if self.prototype is not None:
-            print('prototype is')
-            print(self.prototype)
             cards.extend(self.prototype.get_cards(case))
         return cards
 
@@ -270,7 +268,7 @@ class MerArena(object):
         self.enemy = None
         self.fight = None
         self.sparks = sparks
-        self.cards_filter = None
+        self.cards_filter = cards_filter
 
     def start(self):
         return renpy.call_screen('sc_arena', arena=self)
@@ -301,7 +299,9 @@ class MerArena(object):
     def drop_fame(self, calculator, player):
         fight = self.fight
         if calculator(fight.winner).training_price() > (calculator(fight.loser).price() * fight.loser.person_class.tier ** 2):
-            player.person_class = player.person_class.prototype        
+            player.person_class = player.person_class.prototype
+            return True
+        return False
 
 
 class MerArenaMaker(object):
@@ -314,7 +314,7 @@ class MerArenaMaker(object):
         self.current_enemy = self.make_gladiator()
         self.is_winned = False
         self.die_after_fight = die_after_fight
-        self.cards_filter = None
+        self.cards_filter = cards_filter
         self.can_skip_enemy = can_skip_enemy
         self.gain_prestige = gain_prestige
         self.team = []

@@ -293,8 +293,10 @@ class CorePerson(object):
     def get_relation(self, relation):
         return self.relations.get(relation)
 
-    def get_cards(self, case, get_support=False):
+    def get_cards(self, case, get_support=False, get_temporary=True, special_filter=None):
         cards = self.person_class.get_cards(case, get_support)
+        if special_filter is not None:
+            cards = [i for i in cards if special_filter(i)]
         if get_support:
             return cards
         if len(cards) < 1:
@@ -305,11 +307,12 @@ class CorePerson(object):
                 if self.soul_level > self.attribute(attr):
                     attr = 'soul'
                 cards.append(self.person_class.card_for_empty_hand(attr))
-        if self.grove:
+        if self.grove and get_temporary:
             cards.append(PersonClassCard.get_card('lucky'))
-        for key, card in self.temporary_cards.items():
-            if card is not None and key != 'sabotage':
-                cards.append(card)
+        if get_temporary:
+            for key, card in self.temporary_cards.items():
+                if card is not None and key != 'sabotage':
+                    cards.append(card)
         return cards
 
     def get_sabotage(self):

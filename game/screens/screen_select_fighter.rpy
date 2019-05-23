@@ -31,7 +31,7 @@ screen sc_select_fighter(selector):
                     textbutton 'Skip this enemy' action Function(selector.arena_maker.set_gladiator)
             hbox:
                 spacing 5
-                for card in fighter2.get_cards('combat'):
+                for card in fighter2.get_cards('combat', special_filter=selector.arena_maker.cards_filter):
                     use fight_card_representation(card.suit(fighter2, {}), card.get_power(fighter2, {}), card.name, NullAction())
 
         hbox:
@@ -41,7 +41,7 @@ screen sc_select_fighter(selector):
             hbox:
                 spacing 5
                 yalign 1.0
-                for card in fighter1.get_cards('combat'):
+                for card in fighter1.get_cards('combat', special_filter=selector.arena_maker.cards_filter):
                     use fight_card_representation(card.suit(fighter1, {}), card.get_power(fighter1, {}), card.name, NullAction())
             vbox:
                 hbox:

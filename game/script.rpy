@@ -300,7 +300,7 @@ init python:
         
         def training_price(self):
             price = 0
-            for card in self.person.get_cards('combat'):
+            for card in self.person.get_cards('combat', get_temporary=False):
                 suit = card.suit(self.person)
                 if suit == Suits.SKULL:
                     price += card.get_power(self.person)
@@ -320,7 +320,7 @@ init python:
             return max(5, max(self.potential_price(), self.training_price(), self.raiting_price()))
         
         def entertainment_raiting_formula(self):
-            return self.price() * self.person.person_class.tier ** 2
+            return self.training_price() * self.person.person_class.tier ** 2
 
 # The game starts here.
 
@@ -544,7 +544,7 @@ label lbl_grand_fight(arena_maker):
             selector = FighterSelector(player, arena_maker, team=team)
             selector.run()
             ally = selector.current_fighter()
-            arena = MerArena(arena_maker.current_enemy, ally)
+            arena = MerArena(arena_maker.current_enemy, ally, arena_maker.cards_filter)
             arena.make_bet(ally)
             arena.start()
             fight = arena.fight
@@ -572,14 +572,15 @@ label lbl_arena(arena_maker):
             selector.run()
             gladiator2 = selector.current_fighter()
             if gladiator2 is not None:
-                arena = MerArena(gladiator1, gladiator2)
+                arena = MerArena(gladiator1, gladiator2, cards_filter=arena_maker.cards_filter)
                 arena.make_bet(gladiator2)
                 arena.start()
                 fight = arena.fight
                 result = 'won' if fight.is_player_win() else 'lost'
                 fame_changed = False
                 gladiator2.exhausted = True
-                player.sparks += arena_maker.get_prize(arena)
+                prize = arena_maker.get_prize(arena)
+                player.sparks += prize
                 gladiator2.after_fight()
                 if result != 'won' and fight.loser != player and arena_maker.die_after_fight:
                     player.slaves.remove(gladiator2)
@@ -587,6 +588,7 @@ label lbl_arena(arena_maker):
                 print(rule)
                 if result == 'won' and not arena_maker.is_winned and not rule and arena_maker.gain_prestige:
                     fame_changed = True
+                    fame_message = 'Player gain fame'
                     fame = arena.raise_fame(PriceCalculator, player)
                     arena_maker.is_winned = fame
                 if result == 'won':
@@ -597,7 +599,8 @@ label lbl_arena(arena_maker):
                 else:
                     PriceCalculator(gladiator1).add_raiting(fight.player_cards_amount ** 2)
                 if not fame_changed:
-                    arena.drop_fame(PriceCalculator, player)
+                    fame_changed = arena.drop_fame(PriceCalculator, player)
+                    fame_message = 'Player lose fame'
         if gladiator2 is None:
             return
 
@@ -605,6 +608,9 @@ label lbl_arena(arena_maker):
             'Winner is [fight.winner.name] / player [result]/ [fight.loser.name] is killed'
         else:
             'Winner is [fight.winner.name] / player [result]'
+        if fame_changed:
+            '[fame_message]'
+        'You prize is [prize] sparks'
         python:
             if fight.loser == player:
                 renpy.full_restart()

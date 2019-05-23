@@ -13,6 +13,9 @@ init python:
         attr = max(user.attributes().keys(), key=lambda x: user.attribute(x))
         suit = Suits.attribute_as_suit(attr)
         return suit
+    
+    def joker_power(user, context):
+        return 1 if context.get('isEnemy', False) else 5
 
     person_cards_data = {
         'wrestling': {
@@ -211,7 +214,7 @@ init python:
         'living_legend': {
             'name': __("Living legend"),
             'suit': 'joker',
-            'value': 1,
+            'custom': joker_power,
             'type': 'skill',
         },
         'wisdom_of_many_lives': {
@@ -253,7 +256,7 @@ init python:
         'champion': {
             'name': __("Champion"),
             'suit': 'joker',
-            'custom': soul_level_bonus,
+            'custom': joker_power,
             'type': 'skill'
         },
     }

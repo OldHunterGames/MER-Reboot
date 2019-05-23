@@ -4,20 +4,16 @@ from mer_basics import suits_value, Suits
 
 class Standoff(object):
 
-    def __init__(self, player_combatant, enemy, cards_filter=None):
+    def __init__(self, player_combatant, enemy, cards_filter):
         self.player_combatant = player_combatant
         self.enemy = enemy
-        self.enemy_cards = enemy.get_cards('combat')
+        self.enemy_cards = enemy.get_cards('combat', special_filter=cards_filter)
         
         if self.player_combatant.get_sabotage() is not None:
             self.enemy_cards.append(self.player_combatant.get_sabotage())
-        self.player_cards = player_combatant.get_cards('combat')
+        self.player_cards = player_combatant.get_cards('combat', special_filter=cards_filter)
         if self.enemy.get_sabotage() is not None:
             self.player_cards.append(self.enemy.get_sabotage())
-        
-        if cards_filter is not None:
-            self.enemy_cards = [i for i in self.enemy_cards if cards_filter(i)]
-            self.player_cards = [i for i in self.player_cards if cards_filter(i)]
         
         self.enemy_cards_amount = len(self.enemy_cards)
         self.player_cards_amount = len(self.player_cards)
@@ -72,8 +68,8 @@ class Standoff(object):
             self.enemy_lost_card()
             self.message = 'success'
         elif player_suit == enemy_suit:
-            player_power = self.player_current_card.get_power(self.player_combatant, {})
-            enemy_power = self.enemy_current_card.get_power(self.enemy, {})
+            player_power = self.player_current_card.get_power(self.player_combatant, {'isEnemy': False})
+            enemy_power = self.enemy_current_card.get_power(self.enemy, {'isEnemy': True})
             if player_power > enemy_power:
                 self.enemy_lost_card()
                 self.message = 'success'
