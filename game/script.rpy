@@ -60,7 +60,7 @@ init 1 python:
         data = {'suit': suit}
         CoreDuelCard.register_card(suit.id, CoreDuelCard(suit.id, data))
 
-    def make_gladiator(allowed_classes=None, person_generator_params=None):
+    def make_gladiator(allowed_classes=None, person_generator_params=None, min_tier=0):
         if person_generator_params is None:
             person_generator_params = {}
         while True:
@@ -69,13 +69,17 @@ init 1 python:
                 classes = allowed_classes
             else:
                 classes = PersonClass.pipe_filters(PersonClass.class_filter, PersonClass.gender_filter)(
-                    gladiator, PersonClass.get_by_tag('gladiator'))
+                    None, PersonClass.get_by_tag('gladiator'))
+                classes = [i for i in classes if i.tier >= min_tier]
+            classes_to_give = []
+            for i in classes:
+                if gladiator.attribute(i.key_attributes[0]) >= i.tier:
+                    classes_to_give.append(i)
+            if len(classes_to_give) < 1:
+                continue
+            gladiator.person_class = random.choice(classes_to_give)
 
-            gladiator.person_class = random.choice(classes)
-
-            if gladiator.attribute(gladiator.person_class.key_attributes[0]) >= gladiator.person_class.tier:
-                break
-        gladiator.armor = Armor.random_by_type(gladiator.person_class.available_garments[0])
+            return gladiator
 
         return gladiator
     
@@ -86,12 +90,17 @@ init 1 python:
         return make_gladiator(PersonClass.get_by_ids(['andabant']), {'gender': 'female'})
     
     def make_pitfight_gladiator():
-        return make_gladiator(PersonClass.get_by_ids(['pugilist']))
+        return make_gladiator(PersonClass.get_by_ids(['pugilist']), {'gender': 'male'})
     
     def make_gladiator_fit_raiting(low, high, calculator):
+        min_tier = 0
         def inner():
             while True:
-                glad = make_gladiator()
+                if low >= 30:
+                    min_tier = 2
+                if low >= 100:
+                    min_tier = 3
+                glad = make_gladiator(min_tier=min_tier)
                 price = calculator(glad).training_price()
                 if price >= low and price <= high:
                     return glad
@@ -105,6 +114,19 @@ init 1 python:
         if arena.fight.is_player_win():
             sparks *= 2
         return sparks
+    
+    def lupanarium_prize(arena):
+        if arena.fight.is_player_win():
+            prize = 15
+        else:
+            value = arena.fight.player_combatant.attribute('charisma')
+            if value < 0:
+                prize = 1
+            else:
+                prize = 5 + 5 * value
+        if arena.fight.player_combatant.person_class == PersonClass.get_by_id('lucator'):
+            prize += 5
+        return prize
     
     def whipfight_prize(arena):
         return PriceCalculator(arena.enemy).training_price()
@@ -221,10 +243,10 @@ init python:
         def make_love(self, person1, person2):
             person1.grove = True
             person2.grove = True
-            person1.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
-            person2.set_temporary_card(PersonClassCard.get_card('satisfaction'), 'love')
+            person1.set_temporary_card(PersonClassCard.get_card('satisfaction', person2), 'love')
+            person2.set_temporary_card(PersonClassCard.get_card('satisfaction', person1), 'love')
             if person1.get_relation('lover') is not None and person1.get_relation('lover') != person2:
-                person1.set_temporary_card(PersonClassCard.get_card('betrayal'), 'sabotage')
+                person1.set_temporary_card(PersonClassCard.get_card('betrayal', person1.get_relation('lover')), 'sabotage')
             person1.add_relation('lover', person2)
             person1.exhausted = True
             person2.exhausted = True
@@ -240,8 +262,8 @@ init python:
         def attend_party(self, person1, person2):
             person1.grove = True
             person2.grove = True
-            person1.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
-            person2.set_temporary_card(PersonClassCard.get_card('shared_wisdom'), 'fellowship')
+            person1.set_temporary_card(PersonClassCard.get_card('bravado', person2), 'fellowship')
+            person2.set_temporary_card(PersonClassCard.get_card('bravado', person1), 'fellowship')
             person1.add_relation('best_friend', person2)
             person1.exhausted = True
             person2.exhausted = True
@@ -305,7 +327,7 @@ init python:
                 if suit == Suits.SKULL:
                     price += card.get_power(self.person)
                 elif suit == Suits.JOKER:
-                    price += 25 + 10 * card.get_power(self.person)
+                    price += 100
                 else:
                     price += 10 + 5 * card.get_power(self.person)
             return price
@@ -349,8 +371,8 @@ label start:
         maker = make_gladiator_fit_raiting(90, 120, PriceCalculator)
         print(maker())
         available_arenas = {
-            'mudfight': MerArenaMaker(make_mudfight_gladiator, lambda person: person.gender == 'female', default_arena_prize, die_after_fight=False, cards_filter=filter_equipment),
-            'whip_fight': MerArenaMaker(make_whipfight_gladiator, lambda person: person.gender == 'female', whipfight_prize, min_player_level=3, die_after_fight=False),
+            'mudfight': MerArenaMaker(make_mudfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, die_after_fight=False, cards_filter=filter_equipment),
+            'whip_fight': MerArenaMaker(make_whipfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, min_player_level=3, die_after_fight=False),
             'pitfight': MerArenaMaker(
                 make_pitfight_gladiator,
                 lambda person: person.gender == 'male',
@@ -567,8 +589,8 @@ label lbl_arena(arena_maker):
 
     if choice == 'put':
         python:
-            gladiator1 = arena_maker.current_enemy
             selector = FighterSelector(player, arena_maker)
+            gladiator1 = arena_maker.current_enemy
             selector.run()
             gladiator2 = selector.current_fighter()
             if gladiator2 is not None:

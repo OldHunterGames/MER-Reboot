@@ -122,8 +122,9 @@ class PersonClass(object):
 
     @staticmethod
     def class_filter(person, new_class):
-        if person.person_class is None:
+        if getattr(person, 'person_class', None) is None:
             return True
+
         class_req = new_class.requirements.get('class')
         if class_req is None:
             return True
@@ -155,6 +156,7 @@ class PersonClass(object):
         return False
 
     def __init__(self, id, data):
+        self._data = data
         self.id = id
         self.tier = data.get('tier', 0)
         self.name = data['name']
@@ -164,8 +166,11 @@ class PersonClass(object):
         self.tag = data.get('tag')
         self.requirements = data.get('prerequisites', {})
         self.cost = data.get('cost', 0)
-        self.cards = [PersonClassCard.get_card(i) for i in data.get('cards', [])]
         self._prototype = data.get('prototype')
+    
+    @property
+    def cards(self):
+        return [PersonClassCard.get_card(i) for i in self._data.get('cards', [])]
 
     @property
     def prototype(self):
@@ -198,15 +203,20 @@ class PersonClass(object):
 
 class PersonClassCard(object):
     @classmethod
-    def get_card(cls, id):
-        return cls(id, store.person_cards_data[id])
+    def get_card(cls, id, giver=None):
+        return cls(id, store.person_cards_data[id], giver)
 
-    def __init__(self, id, data):
+    def __init__(self, id, data, giver=None):
         self.data = data
         self.id = id
+        self.giver = giver
     
     def __str__(self):
         return self.id
+    
+    @property
+    def permanent_context(self):
+        return {'giver': self.giver}
 
     @property
     def type(self):
@@ -219,6 +229,7 @@ class PersonClassCard(object):
     def suit(self, user, context=None):
         if context is None:
             context = {}
+        context = self.permanent_context.update(context)
         suit = self.data.get('suit', Suits.SKULL)
         try:
             suit = suit(user, context)
@@ -246,10 +257,13 @@ class PersonClassCard(object):
     def get_power(self, user, context=None):
         if context is None:
             context = {}
+        context = self.permanent_context.update(context)
         if self.custom is not None:
             return self.custom(user, context)
 
         if self.attribute is not None:
+            if self.giver:
+                return self.giver.attribute(self.attribute)
             return user.attribute(self.attribute)
 
         return self.value
@@ -298,7 +312,7 @@ class MerArena(object):
     
     def drop_fame(self, calculator, player):
         fight = self.fight
-        if calculator(fight.winner).training_price() > (calculator(fight.loser).price() * fight.loser.person_class.tier ** 2):
+        if calculator(fight.winner).training_price() > calculator(fight.loser).entertainment_raiting_formula():
             player.person_class = player.person_class.prototype
             return True
         return False

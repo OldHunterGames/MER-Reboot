@@ -1,20 +1,28 @@
 init python:
+    def context_or_empty(context):
+        return {} if context is None else context
+
     def class_tier_bonus(user, context):
+        context = context_or_empty(context)
         return user.person_class.tier
 
     def soul_level_bonus(user, context):
+        context = context_or_empty(context)
         return user.soul_level
 
     def best_attr_bonus(user, context):
+        context = context_or_empty(context)
         attr = max(user.attributes().values())
         return attr
 
     def best_attr_suit(user, context):
+        context = context_or_empty(context)
         attr = max(user.attributes().keys(), key=lambda x: user.attribute(x))
         suit = Suits.attribute_as_suit(attr)
         return suit
     
     def joker_power(user, context):
+        context = context_or_empty(context)
         return 1 if context.get('isEnemy', False) else 5
 
     person_cards_data = {
@@ -194,7 +202,7 @@ init python:
         },
         'tactical_advice': {
             'name': __("Tactical advice"),
-            'suit': 'diamonds',
+            'suit': 'clubs',
             'custom': class_tier_bonus,
             'type': 'support',
             'case': 'combat',
@@ -259,4 +267,11 @@ init python:
             'custom': joker_power,
             'type': 'skill'
         },
+        'bravado': {
+            'name': __("Bravado"),
+            'suit': 'spades',
+            'attribute': 'subtlety',
+            'tag': 'fellowship',
+            'type': 'support',
+        }
     }

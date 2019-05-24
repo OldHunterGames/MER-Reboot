@@ -298,6 +298,8 @@ class CorePerson(object):
         if special_filter is not None:
             cards = [i for i in cards if special_filter(i)]
         if get_support:
+            for i in cards:
+                i.giver = self
             return cards
         if len(cards) < 1:
             if case == 'combat' or case == 'all':
