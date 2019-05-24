@@ -98,23 +98,21 @@ style frame:
 screen say(who, what):
     style_prefix "say"
 
-    window:
-        id 'window'
+    
+    if who is not None:
+        use sc_dialog(who, what)
+    else:
+        window:
+            id 'window'
 
-        if who is not None:
+            if who is not None:
 
-            window:
-                id 'namebox'
-                style 'namebox'
-                text who id 'who'
+                window:
+                    id 'namebox'
+                    style 'namebox'
+                    text who id 'who'
 
-        text what id 'what'
-    # if who is not None:
-    #     use sc_dialog(who, what)
-    # else:
-    #     window:
-    #         id "window"
-    #         text what id "what"
+            text what id 'what'
 
 
     ## If there's a side image, display it above the text. Do not display on the
