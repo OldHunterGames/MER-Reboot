@@ -267,7 +267,7 @@ class CorePerson(object):
         self._avatar = None
         self._renpy_character = store.Character(firstname)
         self._host = list()
-        self._sparks = 1000
+        self._sparks = 100
         self._successors = list()
         self.features = dict()
         self.slotless_features = list()
