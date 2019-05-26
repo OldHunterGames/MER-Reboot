@@ -69,7 +69,7 @@ init 1 python:
                 classes = allowed_classes
             else:
                 classes = PersonClass.pipe_filters(PersonClass.class_filter, PersonClass.gender_filter)(
-                    None, PersonClass.get_by_tag('gladiator'))
+                   gladiator, PersonClass.get_by_tag('gladiator'))
                 classes = [i for i in classes if i.tier >= min_tier and i.tier <= max_tier]
             classes_to_give = []
             for i in classes:
@@ -100,7 +100,7 @@ init 1 python:
                     min_tier = 2
                 if low >= 100:
                     min_tier = 3
-                glad = make_gladiator(min_tier=min_tier)
+                glad = make_gladiator(min_tier=min_tier, max_tier=max_tier)
                 price = calculator(glad).training_price()
                 if price >= low and price <= high:
                     return glad
