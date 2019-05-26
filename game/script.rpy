@@ -611,6 +611,7 @@ label lbl_arena(arena_maker):
                 fame = arena.raise_fame(PriceCalculator, player)
                 arena_maker.is_winned = fame
             if result == 'won':
+                arena_maker.set_gladiator()
                 gladiator2.win_arena = True
             
             if fight.is_player_win():
