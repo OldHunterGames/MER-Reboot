@@ -502,6 +502,9 @@ label lbl_lupanarium():
     return
 
 label lbl_taberna():
+    if not tabernintro:
+        $ tabernintro = True
+        call lbl_storylanista_tabernintro
     python:
         choices = [('Return', 'return')]
         pitfight = available_arenas['pitfight']
