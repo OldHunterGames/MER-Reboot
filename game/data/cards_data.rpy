@@ -195,10 +195,9 @@ init python:
             'type': 'skill',
         },
         'smart_tactics': {
-            'name': __("Tactical advice"),
-            'suit': 'clubs',
-            'custom': class_tier_bonus,
-            'type': 'support',
+            'name': __("Smart tactics"),
+            'suit': 'diamonds',
+            'attribute': 'knowledge',
             'case': 'combat',
         },
         'tactical_advice': {

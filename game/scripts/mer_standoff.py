@@ -4,14 +4,14 @@ from mer_basics import suits_value, Suits
 
 class Standoff(object):
 
-    def __init__(self, player_combatant, enemy, cards_filter):
+    def __init__(self, player_combatant, enemy, cards_filter, case='combat'):
         self.player_combatant = player_combatant
         self.enemy = enemy
-        self.enemy_cards = enemy.get_cards('combat', special_filter=cards_filter)
+        self.enemy_cards = enemy.get_cards(case, special_filter=cards_filter)
         
         if self.player_combatant.get_sabotage() is not None:
             self.enemy_cards.append(self.player_combatant.get_sabotage())
-        self.player_cards = player_combatant.get_cards('combat', special_filter=cards_filter)
+        self.player_cards = player_combatant.get_cards(case, special_filter=cards_filter)
         if self.enemy.get_sabotage() is not None:
             self.player_cards.append(self.enemy.get_sabotage())
         

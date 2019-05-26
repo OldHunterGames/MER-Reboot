@@ -183,11 +183,11 @@ class PersonClass(object):
             cards = [i for i in self.cards]
         else:
             if get_suport:
-                cards = [i for i in self.cards if i.case == case or i.case is None and i.type == 'support']
+                cards = [i for i in self.cards if (i.case == case or i.case is None) and i.type == 'support']
             else:
-                cards = [i for i in self.cards if i.case == case or i.case is None and i.type != 'support']
+                cards = [i for i in self.cards if (i.case == case or i.case is None) and i.type != 'support']
         if self.prototype is not None:
-            cards.extend(self.prototype.get_cards(case))
+            cards.extend(self.prototype.get_cards(case, get_suport))
         return cards
 
     def colored_name(self):
@@ -307,13 +307,14 @@ class MerArena(object):
                 if len(new_classes) > 0:
                     player.person_class = random.choice(new_classes)
                 return True
-        self.drop_fame(calculator, player)
+        # self.drop_fame(calculator, player)
         return False
     
     def drop_fame(self, calculator, player):
         fight = self.fight
         if calculator(fight.winner).training_price() > calculator(fight.loser).entertainment_raiting_formula():
-            player.person_class = player.person_class.prototype
+            if player.person_class.prototype is not None:
+                player.person_class = player.person_class.prototype
             return True
         return False
 

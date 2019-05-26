@@ -60,7 +60,7 @@ init 1 python:
         data = {'suit': suit}
         CoreDuelCard.register_card(suit.id, CoreDuelCard(suit.id, data))
 
-    def make_gladiator(allowed_classes=None, person_generator_params=None, min_tier=0):
+    def make_gladiator(allowed_classes=None, person_generator_params=None, min_tier=0, max_tier=5):
         if person_generator_params is None:
             person_generator_params = {}
         while True:
@@ -70,7 +70,7 @@ init 1 python:
             else:
                 classes = PersonClass.pipe_filters(PersonClass.class_filter, PersonClass.gender_filter)(
                     None, PersonClass.get_by_tag('gladiator'))
-                classes = [i for i in classes if i.tier >= min_tier]
+                classes = [i for i in classes if i.tier >= min_tier and i.tier <= max_tier]
             classes_to_give = []
             for i in classes:
                 if gladiator.attribute(i.key_attributes[0]) >= i.tier:
@@ -92,7 +92,7 @@ init 1 python:
     def make_pitfight_gladiator():
         return make_gladiator(PersonClass.get_by_ids(['pugilist']), {'gender': 'male'})
     
-    def make_gladiator_fit_raiting(low, high, calculator):
+    def make_gladiator_fit_raiting(low, high, calculator, max_tier=5):
         min_tier = 0
         def inner():
             while True:
@@ -273,6 +273,7 @@ init python:
             return not slave.exhausted and not self.player.exhausted and len(cards) > 0
 
         def train(self, slave):
+            print([i.id for i in self.player.get_cards('combat', True)])
             slave.set_temporary_card(random.choice(self.player.get_cards('combat', True)), 'support')
             slave.exhausted = True
             self.player.exhausted = True
@@ -368,8 +369,6 @@ label start:
         )
         enemies = list(set(heat_up_classes).intersection(set(PersonClass.get_by_tier(3))))
         grand_fight_classes = PersonClass.get_by_tag('gladiator')
-        maker = make_gladiator_fit_raiting(90, 120, PriceCalculator)
-        print(maker())
         available_arenas = {
             'mudfight': MerArenaMaker(make_mudfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, die_after_fight=False, cards_filter=filter_equipment),
             'whip_fight': MerArenaMaker(make_whipfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, min_player_level=3, die_after_fight=False),
@@ -389,7 +388,7 @@ label start:
                 can_skip_enemy=True,
             ),
             'common_fight': MerArenaMaker(
-                make_gladiator_fit_raiting(30, 100, PriceCalculator),
+                make_gladiator_fit_raiting(30, 100, PriceCalculator, max_tier=3),
                 lambda person: True,
                 default_arena_prize,
                 min_player_level=2,
@@ -537,7 +536,7 @@ label lbl_colosseum():
         else:
             choices.append(('Premium fight', None))
 
-        if tournament.is_active(player) and len(tournament.filter_fighters(player) >= 3):
+        if tournament.is_active(player) and len(tournament.filter_fighters(player)) >= 3:
             choices.append(('Tournament', tournament))
         else:
             choices.append(('Tournament', None))
@@ -618,9 +617,9 @@ label lbl_arena(arena_maker):
                 PriceCalculator(gladiator2).add_raiting(fight.enemy_cards_amount ** 2)
             else:
                 PriceCalculator(gladiator1).add_raiting(fight.player_cards_amount ** 2)
-            if not fame_changed:
-                fame_changed = arena.drop_fame(PriceCalculator, player)
-                fame_message = 'Player lose fame'
+            # if not fame_changed:
+            #     fame_changed = arena.drop_fame(PriceCalculator, player)
+            #     fame_message = 'Player lose fame'
     if gladiator2 is None:
         return
 
