@@ -543,6 +543,9 @@ label lbl_colosseum():
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
+    if choice == tournament:
+        call lbl_grand_fight(choice)
+        return
     call lbl_arena(choice)
     return
 
