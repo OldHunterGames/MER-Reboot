@@ -11,7 +11,7 @@ init python:
             'cards': [],
         },
         'lucator': {
-            'name': __('Lucator'),
+            'name': __('Luctator'),
             'tier': 2,
             'key_attributes': ['charisma'],
             'prerequisites': {
