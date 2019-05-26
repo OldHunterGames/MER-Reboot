@@ -152,13 +152,11 @@ label lbl_storylanista_meetlanista:
     lanista 'Почему бы и нет. Спрашивай.'
     call lbl_storylanista_lanistaquestions
 
-lanista ''
-player ''
     return
 
 label lbl_storylanista_lanistaquestions:
     menu:
-        'Поздно уже. Я пойду'
+        'Поздно уже. Я пойду':
             'Я поблагодарил новых друзей за угощение и слегка пошатываясь от принятого на грудь пошёл на поиски дорстойного жилья'
 
     return
