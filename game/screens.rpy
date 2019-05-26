@@ -128,20 +128,21 @@ screen sc_dialog(who, what):
             avatar = None
     add "gui/dialog.png":
         ypos 220
+        xalign 0.5
     if avatar is not None:
         $ avatar = im.Scale(avatar, 200, 200)
         imagebutton:
             idle avatar
-            pos(99, 295)
+            pos(240, 295)
             # hovered If(not core.sayer == narrator, Show('sc_info_popup', person=core.sayer))
             # unhovered Hide('sc_info_popup')
             # action Show('sc_character_info_screen', person=core.sayer)
     if who is not None:
         text who:
-            pos(310, 470)
+            pos(460, 470)
             color '#ffffff'
     viewport:
-        pos(110, 520)
+        pos(260, 520)
         xysize(780, 500)
         text what id "what":
             xmaximum 680

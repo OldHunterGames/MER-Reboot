@@ -584,60 +584,55 @@ label lbl_grand_fight(arena_maker):
 
 label lbl_arena(arena_maker):
     $ res = None
-    $ disabled = None if len(arena_maker.filter_fighters(player)) < 1 else 'put'
-    $ choice = renpy.display_menu([('put fighter', disabled), ('Return', 'leave')])          
 
-    if choice == 'put':
-        python:
-            selector = FighterSelector(player, arena_maker)
-            gladiator1 = arena_maker.current_enemy
-            selector.run()
-            gladiator2 = selector.current_fighter()
-            if gladiator2 is not None:
-                arena = MerArena(gladiator1, gladiator2, cards_filter=arena_maker.cards_filter)
-                arena.make_bet(gladiator2)
-                arena.start()
-                fight = arena.fight
-                result = 'won' if fight.is_player_win() else 'lost'
-                fame_changed = False
-                gladiator2.exhausted = True
-                prize = arena_maker.get_prize(arena)
-                player.sparks += prize
-                gladiator2.after_fight()
-                if result != 'won' and fight.loser != player and arena_maker.die_after_fight:
-                    player.slaves.remove(gladiator2)
-                rule = player.person_class.tier >= 2 and not arena_maker.die_after_fight
-                print(rule)
-                if result == 'won' and not arena_maker.is_winned and not rule and arena_maker.gain_prestige:
-                    fame_changed = True
-                    fame_message = 'Player gain fame'
-                    fame = arena.raise_fame(PriceCalculator, player)
-                    arena_maker.is_winned = fame
-                if result == 'won':
-                    gladiator2.win_arena = True
-                
-                if fight.is_player_win():
-                    PriceCalculator(gladiator2).add_raiting(fight.enemy_cards_amount ** 2)
-                else:
-                    PriceCalculator(gladiator1).add_raiting(fight.player_cards_amount ** 2)
-                if not fame_changed:
-                    fame_changed = arena.drop_fame(PriceCalculator, player)
-                    fame_message = 'Player lose fame'
-        if gladiator2 is None:
-            return
-
-        if result != 'won' and arena_maker.die_after_fight:
-            'Winner is [fight.winner.name] / player [result]/ [fight.loser.name] is killed'
-        else:
-            'Winner is [fight.winner.name] / player [result]'
-        if fame_changed:
-            '[fame_message]'
-        'You prize is [prize] sparks'
-        python:
-            if fight.loser == player:
-                renpy.full_restart()
-    if choice == 'leave':
+    python:
+        selector = FighterSelector(player, arena_maker)
+        gladiator1 = arena_maker.current_enemy
+        selector.run()
+        gladiator2 = selector.current_fighter()
+        if gladiator2 is not None:
+            arena = MerArena(gladiator1, gladiator2, cards_filter=arena_maker.cards_filter)
+            arena.make_bet(gladiator2)
+            arena.start()
+            fight = arena.fight
+            result = 'won' if fight.is_player_win() else 'lost'
+            fame_changed = False
+            gladiator2.exhausted = True
+            prize = arena_maker.get_prize(arena)
+            player.sparks += prize
+            gladiator2.after_fight()
+            if result != 'won' and fight.loser != player and arena_maker.die_after_fight:
+                player.slaves.remove(gladiator2)
+            rule = player.person_class.tier >= 2 and not arena_maker.die_after_fight
+            print(rule)
+            if result == 'won' and not arena_maker.is_winned and not rule and arena_maker.gain_prestige:
+                fame_changed = True
+                fame_message = 'Player gain fame'
+                fame = arena.raise_fame(PriceCalculator, player)
+                arena_maker.is_winned = fame
+            if result == 'won':
+                gladiator2.win_arena = True
+            
+            if fight.is_player_win():
+                PriceCalculator(gladiator2).add_raiting(fight.enemy_cards_amount ** 2)
+            else:
+                PriceCalculator(gladiator1).add_raiting(fight.player_cards_amount ** 2)
+            if not fame_changed:
+                fame_changed = arena.drop_fame(PriceCalculator, player)
+                fame_message = 'Player lose fame'
+    if gladiator2 is None:
         return
+
+    if result != 'won' and arena_maker.die_after_fight:
+        'Winner is [fight.winner.name] / player [result]/ [fight.loser.name] is killed'
+    else:
+        'Winner is [fight.winner.name] / player [result]'
+    if fame_changed:
+        '[fame_message]'
+    'You prize is [prize] sparks'
+    python:
+        if fight.loser == player:
+            renpy.full_restart()
     return
 
 

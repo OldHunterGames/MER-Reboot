@@ -128,7 +128,7 @@ init python:
             'attack_suits': ['spades', 'clubs'],
             'tag': 'gladiator',
             'cost': 10,
-            'cards': ['trident', 'net', 'knife', 'combat_expirience'],
+            'cards': ['trident', 'net', 'knife'],
         },
         'secutor': {
             'name': __('Secutor'),
