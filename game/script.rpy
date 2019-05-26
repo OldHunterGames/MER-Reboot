@@ -605,9 +605,9 @@ label lbl_arena(arena_maker):
             rule = player.person_class.tier >= 2 and not arena_maker.die_after_fight
             print(rule)
             if result == 'won' and not arena_maker.is_winned and not rule and arena_maker.gain_prestige:
-                fame_changed = True
                 fame_message = 'Player gain fame'
                 fame = arena.raise_fame(PriceCalculator, player)
+                fame_changed = fame
                 arena_maker.is_winned = fame
             if result == 'won':
                 arena_maker.set_gladiator()
