@@ -196,6 +196,10 @@ init python:
             self.current_slave = None
             self.core = core
             self.should_skip_turn = False
+            self.mode = 'stats'
+        
+        def switch_mode(self, value):
+            self.mode = value
 
         def calc_upkeep(self):
             return 5 + len(self.player.slaves) * 5
