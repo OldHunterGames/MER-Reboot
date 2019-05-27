@@ -559,8 +559,8 @@ label lbl_colosseum():
 label lbl_grand_fight(arena_maker):
     python:
         team = []
-        enemies = [make_gladiator_fit_raiting(30, 100)() for i in xrange(2)]
-        enemies.extend([make_gladiator_fit_raiting(100, 150) for i in xrange(2)])
+        enemies = [make_gladiator_fit_raiting(30, 100, PriceCalculator, 3)() for i in xrange(2)]
+        enemies.extend([make_gladiator_fit_raiting(100, 150, PriceCalculator)() for i in xrange(2)])
         enemies.append(make_champion())
         arena_maker.current_enemy = enemies.pop(0)
     'Select you team (3 fighters)'
@@ -571,7 +571,7 @@ label lbl_grand_fight(arena_maker):
             team.append(selector.current_fighter())
     'Tournament is going to begin'
     python:
-        while len(team > 0) or len(enemies) > 0:
+        while len(team) > 0 or len(enemies) > 0:
             selector = FighterSelector(player, arena_maker, team=team)
             selector.run()
             ally = selector.current_fighter()
@@ -589,6 +589,14 @@ label lbl_grand_fight(arena_maker):
         else:
             player_win = False
     'Tournament ended'
+
+    python:
+        if player_win:
+            player.person_class = PersonClass.get_by_id('famous_lanista')
+            for i in team:
+                i.after_fight()
+                i.win_arena = True
+                i.exhausted = True
     return
 
 label lbl_arena(arena_maker):
