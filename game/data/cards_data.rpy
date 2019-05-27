@@ -123,7 +123,7 @@ init python:
             'type': 'equipment',
         },
         'knife': {
-            'name': __("Sword"),
+            'name': __("Knife"),
             'suit': 'spades',
             'value': 1,
             'type': 'equipment',
