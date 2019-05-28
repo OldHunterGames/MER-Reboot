@@ -447,6 +447,7 @@ label start:
     return
 
 label _main:
+    show screen sc_main_stats(core, player)
     while True:
         call lbl_main from _call_lbl_main
     return
@@ -454,7 +455,6 @@ label _main:
 label lbl_main:
     scene expression 'images/bg/vatican.png'
     menu:
-        'Decade: [core.decade]; Sparks: [player.sparks]'
         # 'Me':
         #     $ CharacterInfoScreen(player).show()
         # 'Others':

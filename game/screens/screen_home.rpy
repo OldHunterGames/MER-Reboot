@@ -6,26 +6,29 @@ screen sc_home(home):
     window:
         style 'char_info_window'
         
-        vbox:
-            ypos 10
-            spacing 15
-            if home.player.exhausted:
-                image im.Scale(im.Grayscale(home.player.avatar), 250, 250)
-            else:
-                image im.Scale(home.player.avatar, 250, 250)
+        hbox:
             vbox:
-                xalign 0.5
-                text home.player.name xalign 0.5 color '#fff'
-                text home.player.person_class.colored_name() xalign 0.5
-
-        textbutton 'Leave' xalign 0.3 action Return()
-        textbutton 'Skip turn' xalign 0.3 yalign 0.1 action Function(home.skip_turn), Return()
-        text 'Current upkeep: %s' % home.calc_upkeep() xalign 0.3 yalign 0.2
+                ypos 10
+                spacing 15
+                if home.player.exhausted:
+                    image im.Scale(im.Grayscale(home.player.avatar), 150, 150)
+                else:
+                    image im.Scale(home.player.avatar, 150, 150)
+                vbox:
+                    xalign 0.5
+                    text home.player.name xalign 0.5 color '#fff'
+                    text home.player.person_class.colored_name() xalign 0.5
+            vbox:
+                spacing 5
+                textbutton 'Leave' action Return()
+                textbutton 'Skip turn' action Function(home.skip_turn), Return()
+                text 'Current upkeep: %s' % home.calc_upkeep()
 
         if home.current_slave is not None:
             hbox:
-                xalign 1.0
+                xalign 0.95
                 ypos 10
+                spacing 10
                 hbox:
                     box_wrap True
                     xmaximum 400
@@ -35,11 +38,11 @@ screen sc_home(home):
                 vbox:
                     spacing 15
                     if home.current_slave.exhausted:
-                        image im.Scale(im.Grayscale(home.current_slave.avatar), 250, 250)
+                        image im.Scale(im.Grayscale(home.current_slave.avatar), 150, 150)
                     else:
-                        image im.Scale(home.current_slave.avatar, 250, 250)
+                        image im.Scale(home.current_slave.avatar, 150, 150)
                     hbox:
-                        xsize 250
+                        xsize 150
                         textbutton 'Stats':
                             action Function(home.switch_mode, 'stats')
                             selected home.mode == 'stats'
@@ -88,9 +91,9 @@ screen sc_home(home):
                     spacing 15
                     imagebutton:
                         if slave.exhausted:
-                            idle im.Scale(im.Grayscale(slave.avatar), 250, 250)
+                            idle im.Scale(im.Grayscale(slave.avatar), 150, 150)
                         else:
-                            idle im.Scale(slave.avatar, 250, 250)
+                            idle im.Scale(slave.avatar, 150, 150)
                         action Function(home.select, slave)
                     vbox:
                         xalign 0.5

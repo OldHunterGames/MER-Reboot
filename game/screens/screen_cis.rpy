@@ -118,3 +118,16 @@ screen sc_cis(info, relations=None):
             xpos 620
             for feature in person.get_features():
                 text feature.name()
+
+
+screen sc_main_stats(core, player):
+    frame:
+        xsize 300
+        ysize 30
+        xalign 0.0
+        yalign 0.0
+        background im.Scale('gui/marble_texture_bordered.jpg', 300, 30)
+        hbox:
+            spacing 15
+            text 'Sparks: %s' % player.sparks
+            text 'Decade: %s' % core.decade 

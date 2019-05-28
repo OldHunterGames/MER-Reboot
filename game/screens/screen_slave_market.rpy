@@ -55,9 +55,11 @@ screen sc_slave_market(market):
     window:
         style 'char_info_window'
         hbox:
+            xalign 0.5
+            spacing 25
             for slave in slaves:
                 vbox:
-                    image slave.avatar
+                    image im.Scale(slave.avatar, 150, 150)
                     text slave.name xalign 0.5
                     text slave.person_class.colored_name() xalign 0.5
                     text 'Raiting: %s' % PriceCalculator(slave).training_price() xalign 0.5
