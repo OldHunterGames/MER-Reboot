@@ -197,6 +197,15 @@ init python:
             self.core = core
             self.should_skip_turn = False
             self.mode = 'stats'
+            self.cards_mode = 'combat'
+        
+        def get_cards(self):
+            cards = self.current_slave.get_cards(self.cards_mode)
+            cards.extend(self.current_slave.get_cards(self.cards_mode, get_support=True))
+            return cards
+        
+        def show_cards(self, mode):
+            self.cards_mode = mode
         
         def switch_mode(self, value):
             self.mode = value
@@ -273,6 +282,8 @@ init python:
             person2.exhausted = True
 
         def can_train(self, slave):
+            if self.current_slave == self.player:
+                return False
             cards = self.player.get_cards('combat', True)
             return not slave.exhausted and not self.player.exhausted and len(cards) > 0
 
