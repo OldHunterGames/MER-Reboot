@@ -503,6 +503,7 @@ label lbl_main:
 
 label lbl_market(core, player):
     scene expression 'images/bg/slavemarket.png'
+    show screen sc_main_stats(core, player)
     python:
         slaves = [make_starter_slave() for i in range(5)]
     while len(slaves) > 0:
@@ -521,6 +522,7 @@ label lbl_market(core, player):
             if choice == 'leave':
                 slaves = []
         hide screen sc_slave_representation
+    hide sc_main_stats
     return
 
 
