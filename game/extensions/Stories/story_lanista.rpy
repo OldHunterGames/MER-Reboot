@@ -36,9 +36,9 @@ label lbl_storylanista_start:
 
     show expression "images/bg/serpis_temple.jpg" as bg
     menu:
-        'Начать эпилог':
+        'Начать пролог':
             pass
-        'Пропустить эпилог':
+        'Пропустить пролог':
             return
 
     SerPri "Данной мне властью, возжигаю эту инсигнию в твоей душе и связую её с владыками Дома."

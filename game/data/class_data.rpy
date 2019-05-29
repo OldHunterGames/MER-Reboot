@@ -32,13 +32,13 @@ init python:
                 'class': ['pugilist', 'lucator']
             },
             'type': 'slave',
-            'description': __('Andabants are fighting for most spectacular show, using brutal metal whips and blindfolded helmets protecting only their faces but nothing more. Gruesome yet not lethal combat. Andabant bodies are covered in multiple scars, but faces are cute - some weirdos find this attractive. Traditional punishment for the looser is rape - either by a winner or by the public.'),
+            'description': __('Andabants are fighting for most spectacular show, using brutal bull-whips and blindfolded helmets protecting only their faces but nothing more. Gruesome yet not lethal combat. Andabant bodies are covered in multiple scars, but faces are cute - some weirdos find this attractive. Traditional punishment for the looser is rape - either by a winner or by the public.'),
             'available_garments': ['cloth'],
             'attack_suits': ['hearts'],
             'attack_types': ['melee'],
             'tag': 'gladiator',
             'cost': 5,
-            'cards': ['whip_lash', 'far_reach', 'pain_resilience'],
+            'cards': ['subdual_weapon', 'far_reach', 'pain_resilience'],
         },
         'myrmidon': {
             'name': __('Myrmidon'),
@@ -54,7 +54,7 @@ init python:
             'attack_types': ['melee'],
             'tag': 'gladiator',
             'cost': 10,
-            'cards': ['sword', 'shield', 'combat_expirience'],
+            'cards': ['sword', 'shield', 'mobile_offence'],
         },
         'pugilist': {
             'name': __('Pugilist'),
@@ -98,7 +98,7 @@ init python:
             'attack_suits': ['hearts'],
             'tag': 'gladiator',
             'cost': 5,
-            'cards': ['blunt_weapon', 'padded_armor'],
+            'cards': ['subdual_weapon', 'padded_armor'],
         },
         'dimacheros': {
             'name': __('Dimacheros'),
