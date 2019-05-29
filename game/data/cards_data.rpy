@@ -34,8 +34,8 @@ init python:
         },
         'slippery_skin': {
             'name': __("Slippery skin"),
-            'suit': 'skull',
-            'attribute': 'subtlety',
+            'suit': 'hearts',
+            'value': 1,
             'type': 'skill',
         },
         'whip_lash': {
@@ -46,14 +46,14 @@ init python:
         },
         'far_reach': {
             'name': __("Far reach"),
-            'suit': 'skull',
+            'suit': 'clubs',
             'attribute': 'subtlety',
             'type': 'equipment',
         },
         'pain_resilience': {
             'name': __("Pain resilience"),
-            'suit': 'skull',
-            'attribute': 'soul',
+            'suit': 'diamonds',
+            'value': 1,
             'type': 'skill',
         },
         'punch': {
@@ -64,8 +64,8 @@ init python:
         },
         'evasive': {
             'name': __("Evasive"),
-            'suit': 'skull',
-            'attribute': 'subtlety',
+            'suit': 'spades',
+            'value': 1,
             'type': 'skill',
         },
         'cestus': {
@@ -80,8 +80,8 @@ init python:
             'custom': class_tier_bonus,
             'type': 'skill',
         },
-        'blunt_weapon': {
-            'name': __("Blunt weapon"),
+        'subdual_weapon': {
+            'name': __("Subdual weapon"),
             'suit': 'skull',
             'value': 5,
             'type': 'equipment',
@@ -89,7 +89,7 @@ init python:
         'padded_armor': {
             'name': __("Padded armor"),
             'suit': 'diamonds',
-            'value': 1,
+            'attribute': 'might',
             'type': 'equipment',
         },
         'sword': {
@@ -104,11 +104,17 @@ init python:
             'attribute': 'might',
             'type': 'equipment',
         },
+        'mobile_offence': {
+            'name': __("Mobile offence"),
+            'suit': 'spades',
+            'attribute': 'subtlety',
+            'type': 'skill',
+        },
         'dual_strike': {
             'name': __("Dual strike"),
             'suit': 'spades',
             'attribute': 'subtlety',
-            'type': 'skill',
+            'type': 'equipment',
         },
         'trident': {
             'name': __("Trident"),
@@ -157,6 +163,12 @@ init python:
             'suit': 'spades',
             'attribute': 'charisma',
             'type': 'skill',
+        },
+        'light_armor': {
+            'name': __("Light armor"),
+            'suit': 'diamonds',
+            'value': 2,
+            'type': 'equipment',
         },
         'half_armored': {
             'name': __("Half-armored"),
