@@ -292,6 +292,14 @@ init python:
             slave.set_temporary_card(random.choice(self.player.get_cards('combat', True)), 'support')
             slave.exhausted = True
             self.player.exhausted = True
+        
+        def can_sell(self, slave):
+            return not slave.exhausted and slave != self.player
+        
+        def sell(self, slave):
+            self.player.slaves.remove(slave)
+            self.player.spakrs += PriceCalculator(slave).price()
+            self.current_slave = None
 
     class SimpleSelector(object):
         def __init__(self, items, on_select):
@@ -486,9 +494,30 @@ label lbl_main:
                 if home_manager.should_skip_turn:
                     home_manager.should_skip_turn = False
                     core.skip_turn()
-        'Рынок':
-            call lbl_slave_market()
+        'Skip turn':
+            python:
+                core.skip_turn()
 
+    return
+
+label lbl_market(core, player):
+    scene expression 'images/bg/slavemarket.png'
+    python:
+        slaves = [make_starter_slave() for i in range(5)]
+    while len(slaves) > 0:
+        python:
+            slave = slaves.pop()
+            price = PriceCalculator(slave).price()
+            buy_action = 'buy' if price <= player.sparks else None
+            actions = [('Buy %s sparks' % price, buy_action), ('Skip', 'skip')]
+            
+        show screen sc_slave_representation(slave)
+        $ choice = display_menu(actions)
+        python:
+            if choice == 'buy':
+                player.slaves.append(slave)
+                player.sparks -= price
+        hide screen sc_slave_representation
     return
 
 

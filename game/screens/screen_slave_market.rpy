@@ -79,3 +79,18 @@ screen sc_slave_market(market):
                 action Function(market.switch_mode), SensitiveIf(len(market.player.slaves) > 0)
                 xalign 1.0 
                 yalign 1.0
+
+
+screen sc_slave_representation(slave):
+    window:
+        style 'char_info_window'
+        xsize 300
+        ysize 300
+        vbox:
+            image im.Scale(slave.avatar, 150, 150)
+            text slave.name xalign 0.5
+            text slave.person_class.colored_name() xalign 0.5
+            text 'Raiting: %s' % PriceCalculator(slave).training_price() xalign 0.5
+            text encolor_text(core_souls[slave.soul_level], slave.soul_level) xalign 0.5
+            for attr in slave.show_attributes().values():
+                text attr xalign 0.5

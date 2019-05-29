@@ -114,6 +114,9 @@ screen sc_home(home):
                             textbutton 'Make love' action Function(SimpleSelector(home.persons_for_selection(home.can_make_love), FuncCommand(home.make_love, home.current_slave)).show)
                         if home.can_train(home.current_slave):
                             textbutton 'Train' action Function(home.train, home.current_slave)
+                        if home.can_sell(home.current_slave):
+                            textbutton 'Sell (%s sparks)' % PriceCalculator(home.current_slave).price() action Function(home.sell, home.current_slave)
+
         
         if home.current_slave is not None:
             frame:
