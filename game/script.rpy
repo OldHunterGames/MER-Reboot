@@ -512,7 +512,7 @@ label lbl_market(core, player):
             actions = [('Buy %s sparks' % price, buy_action), ('Skip', 'skip')]
             
         show screen sc_slave_representation(slave)
-        $ choice = display_menu(actions)
+        $ choice = renpy.display_menu(actions)
         python:
             if choice == 'buy':
                 player.slaves.append(slave)
