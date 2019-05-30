@@ -39,9 +39,14 @@ class MERCore(object):
         return income
     
     @Observable
+    def before_skip_turn(self):
+        pass
+
+    @Observable
     def skip_turn(self):
         # self.player.sparks += self.calc_income(self.player)
         # self.player.sparks -= 5
+        self.before_skip_turn()
         if self.player.sparks < 0:
             renpy.call_in_new_context('lbl_gameover')
         self.decade += 1

@@ -259,7 +259,7 @@ init python:
             person2.grove = True
             person1.set_temporary_card(PersonClassCard.get_card('satisfaction', person2), 'love')
             person2.set_temporary_card(PersonClassCard.get_card('satisfaction', person1), 'love')
-            if person1.get_relation('lover') is not None and person1.get_relation('lover') != person2:
+            if person1.get_relation('lover') is not None and person1.get_relation('lover') != person2 and person1 != self.player and person2 != self.player:
                 person1.set_temporary_card(PersonClassCard.get_card('betrayal', person1.get_relation('lover')), 'sabotage')
             person1.add_relation('lover', person2)
             person1.exhausted = True
@@ -456,7 +456,7 @@ label start:
 
         home_manager = HomeManager(player)
         core.skip_turn.add_callback(slavestore.update_slaves)
-        core.skip_turn.add_callback(home_manager.on_skip_turn)
+        core.before_skip_turn.add_callback(home_manager.on_skip_turn)
         # for i in range(10):
         #     test()
 
