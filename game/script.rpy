@@ -298,7 +298,7 @@ init python:
         
         def sell(self, slave):
             self.player.slaves.remove(slave)
-            self.player.spakrs += PriceCalculator(slave).price()
+            self.player.sparks += PriceCalculator(slave).price()
             self.current_slave = None
 
     class SimpleSelector(object):
