@@ -245,9 +245,10 @@ init python:
 
         def upgrade_slave(self, slave, person_class):
             slave.person_class = person_class
-            slave.armor = Armor.random_by_type(slave.person_class.available_garments[0])
             self.player.sparks -= person_class.cost
             slave.exhausted = True
+            if slave.win_arena and person_class.tier == 2:
+                return
             slave.win_arena = False
 
         def can_make_love(self, person1, person2):
@@ -298,7 +299,7 @@ init python:
         
         def sell(self, slave):
             self.player.slaves.remove(slave)
-            self.player.spakrs += PriceCalculator(slave).price()
+            self.player.sparks += PriceCalculator(slave).price()
             self.current_slave = None
 
     class SimpleSelector(object):
