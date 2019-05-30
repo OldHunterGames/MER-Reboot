@@ -17,7 +17,7 @@ init python:
         __('Raul'),__('Renard'),__('Robert'),__('Rojer'),__('Roderik'),
         __('Roland'),__('Sverus'),__('Cesare'),__('Stefano'),__('Theo'),
         __('Tyerri'),__('Fabis'),__('Felix'),__('Fabian'),__('Phillippe'),
-        __('Forest'),__('Frank'),__('Hamon'),__('Honor'),__('Chrles'),
+        __('Forest'),__('Frank'),__('Hamon'),__('Honor'),__('Charles'),
         __('Edvard'),__('Emerik'),__('Etien'),__('Judes'),__('Jurben'),
         __('Adelstain'),__('Adler'),__('Albert'),__('Alfonce'),__('Arnold'),
         __('Bertold'),__('Willie'),__('Wolf'),__('Wolfgang'),__('Ganse'),
