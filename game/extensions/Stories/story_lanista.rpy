@@ -5,7 +5,7 @@ init python:
 
 label lbl_storylanista_start:
     $ player.set_avatar('images/avatar/special/player.png')
-    $ player.firstname = 'Я'
+    $ player.firstname = 'Хозяин'
     $ SerPri = PersonCreator.gen_person()
     $ SerPri.set_avatar('images/avatar/special/princeps_serpis.png')
     $ SerPri.firstname = 'Принцепс дома Серпис'
