@@ -247,7 +247,7 @@ init python:
             slave.person_class = person_class
             self.player.sparks -= person_class.cost
             slave.exhausted = True
-            if slave.win_arena and person_class.tier == 2:
+            if getattr(slave, 'win_arena', False) and person_class.tier == 2:
                 return
             slave.win_arena = False
 
