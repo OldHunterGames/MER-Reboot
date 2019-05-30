@@ -98,7 +98,7 @@ init python:
             'attack_suits': ['hearts'],
             'tag': 'gladiator',
             'cost': 5,
-            'cards': ['subdual_weapon', 'padded_armor'],
+            'cards': ['subdual_weapon', 'shield'],
         },
         'dimacheros': {
             'name': __('Dimacheros'),

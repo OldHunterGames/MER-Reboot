@@ -1,7 +1,7 @@
 init python:
     tabernintro = False
     lupaintro = False
-    arenaintro = False
+    colintro = False
 
 label lbl_storylanista_start:
     $ player.set_avatar('images/avatar/special/player.png')
@@ -31,8 +31,8 @@ label lbl_storylanista_start:
     $ barman.set_avatar('images/avatar/special/bartender.png')
     $ barman.firstname = 'Хозяин Таверны'
     $ bmaman = PersonCreator.gen_person()
-    $ bmaman.set_avatar('images/avatar/special/glad2.png')
-    $ bmaman.firstname = 'Чемпион Ярус'
+    $ bmaman.set_avatar('images/avatar/special/bmaman.png')
+    $ bmaman.firstname = 'Мадам'
 
     show expression "images/bg/serpis_temple.jpg" as bg
     menu:
@@ -235,5 +235,16 @@ label lbl_storylanista_tabernintro:
     return
 
 label lbl_storylanista_lupaintro:
+    scene expression 'images/bg/brothel.png'
+    bmaman ''
+    player ''
+
+    return
+
+label lbl_storylanista_colintro:
+    scene expression 'images/bg/arena.png'
+    'Вы находите Рыжую Соню - легендарную гладиаторшу, которая являетя сейчас распорядительницей Колизея.'
+    redsonya ''
+    player ''
 
     return

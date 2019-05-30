@@ -531,6 +531,9 @@ label lbl_slave_market():
     return
 
 label lbl_lupanarium():
+    if not lupaintro:
+        $ lupaintro = True
+        call lbl_storylanista_lupaintro
     python:
         choices = [('Return', 'return')]
         mudfight = available_arenas['mudfight']
@@ -569,6 +572,9 @@ label lbl_taberna():
     return
 
 label lbl_colosseum():
+    if not colintro:
+        $ colintro = True
+        call lbl_storylanista_colintro
     python:
         choices = [('Return', 'return')]
         chaotic = available_arenas['chaotic_fights']
