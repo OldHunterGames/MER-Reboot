@@ -3,6 +3,7 @@ screen sc_select_fighter(selector):
         fighter1 = selector.current_fighter()
         fighter2 = selector.enemy
         entertainment = PriceCalculator(fighter2).entertainment_raiting_formula()
+        evaluation = 'Опасный противник' if entertainment > PriceCalculator(fighter1).training_price() else 'Скучный противник'
     tag info
     modal True
     zorder 10
@@ -11,11 +12,10 @@ screen sc_select_fighter(selector):
         # image gui_image('arena/UI_overlay.png')
         style 'char_info_window'
         vbox:
-            xalign 0.95
-            yalign 0.05
-            text 'Select fighter'
-            textbutton 'Run away' action Function(selector.escape), Return()
-            textbutton 'select' action Return()
+            xalign 0.5
+            yalign 0.5
+            textbutton 'Отказаться от боя' action Function(selector.escape), Return()
+            textbutton selector.start_text action Return()
 
         hbox:
             spacing 15
@@ -24,9 +24,7 @@ screen sc_select_fighter(selector):
                 image im.Scale(fighter2.avatar, 200, 200)
                 text fighter2.name xalign 0.5 color '#ffffff'
                 text fighter2.person_class.colored_name() xalign 0.5
-                text 'Raiting: %s' % PriceCalculator(fighter2).training_price() xalign 0.5
-                text 'Entertainment raiting %s' % entertainment
-                text encolor_text(core_souls[fighter2.soul_level], fighter2.soul_level) xalign 0.5
+                text evaluation
                 if selector.arena_maker.can_skip_enemy:
                     textbutton 'Skip this enemy' action Function(selector.arena_maker.set_gladiator)
             hbox:
@@ -44,15 +42,10 @@ screen sc_select_fighter(selector):
                 for card in fighter1.get_cards('combat', special_filter=selector.arena_maker.cards_filter):
                     use fight_card_representation(card.suit(fighter1, {}), card.get_power(fighter1, {}), card.name, NullAction())
             vbox:
-                hbox:
-                    xalign 0.5
-                    textbutton 'previous':
-                        action Function(selector.prev), SensitiveIf(selector.prev_active())
-                    textbutton 'next':
-                        action Function(selector.next), SensitiveIf(selector.next_active())
+                if len(selector.fighters) > 1:
+                    textbutton "Сменить бойца" action Function(selector.next)
                 text fighter1.name xalign 0.5 color '#ffffff'
                 text fighter1.person_class.colored_name() xalign 0.5
-                text 'Raiting: %s' % PriceCalculator(fighter1).training_price() xalign 0.5
                 image im.Scale(fighter1.avatar, 200, 200)
             
 

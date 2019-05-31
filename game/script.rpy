@@ -136,13 +136,14 @@ init 1 python:
 
 init python:
     class FighterSelector(object):
-        def __init__(self, player, arena_maker, exclude=None, team=None):
+        def __init__(self, player, arena_maker, exclude=None, team=None, start_text=__('select')):
             self.player = player
             self.index = 0
             self.arena_maker = arena_maker
             self.escaped = False
             self.exclude = exclude or []
             self.team = team or []
+            self.start_text = start_text
         
         @property
         def enemy(self):
@@ -167,15 +168,17 @@ init python:
 
         def next(self):
             self.index += 1
+            if self.index >= len(self.fighters):
+                self.index = 0
 
-        def prev(self):
-            self.index -= 1
+        # def prev(self):
+        #     self.index -= 1
 
-        def next_active(self):
-            return self.index < len(self.fighters) - 1
+        # def next_active(self):
+        #     return self.index < len(self.fighters) - 1
 
-        def prev_active(self):
-            return self.index > 0
+        # def prev_active(self):
+        #     return self.index > 0
 
 
     class FuncCommand(object):
@@ -445,7 +448,7 @@ label start:
     $ player.person_class = PersonClass.get_by_id('famous_lanista')
     $ player.armor = Armor.random_by_type(player.person_class.available_garments[0])
     $ player.slaves = []
-
+    $ player.slaves = [make_starter_slave() for i in range(5)]
     $ core = MERCore()
     $ core.player = player
     # $ core.skip_turn.add_callback(CoreAddCards(player).run)
@@ -578,6 +581,7 @@ label lbl_main:
     return
 
 label lbl_slave_actions(slave):
+    show expression 'images/bg/empty_room.png'
     python:
         icon = 'gui/heart_small.png'
         can_upgrade = home_manager.can_upgrade_slave(slave)
@@ -813,7 +817,7 @@ label lbl_arena(arena_maker):
     $ res = None
 
     python:
-        selector = FighterSelector(player, arena_maker)
+        selector = FighterSelector(player, arena_maker, start_text=__('Начать бой'))
         gladiator1 = arena_maker.current_enemy
         selector.run()
         gladiator2 = selector.current_fighter()
