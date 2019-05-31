@@ -440,6 +440,38 @@ init python:
                 return
             self.should_show_after_turn = False
             renpy.call_in_new_context('lbl_market', player=self.player, core=self.core)
+    
+    class Triggers(object):
+
+        def __init__(self):
+            self.lupanarium_win = False
+            self.taberna_win = False
+            self.lanista_3 = False
+            self.lanista_4 = False
+            self.slave_party = False
+            self.slave_sex = False
+            self.tournament = False
+
+        def lupanarium_first_win(self):
+            self.lupanarium_win = True
+        
+        def taberna_first_win(self):
+            self.taberna_first_win = True
+        
+        def lanista_3_level(self):
+            self.lanista_3 = True
+        
+        def lanista_4_level(self):
+            self.lanista_4 = True
+        
+        def slave_party_first(self):
+            self.slave_party = True
+        
+        def slave_sex_first(self):
+            self.slave_sex = True
+        
+        def win_tournamet(self):
+            self.tournament = True
 
 # The game starts here.
 
@@ -451,6 +483,7 @@ label start:
     $ player.slaves = [make_starter_slave() for i in range(5)]
     $ core = MERCore()
     $ core.player = player
+    $ lanista_triggers = Triggers()
     # $ core.skip_turn.add_callback(CoreAddCards(player).run)
     # $ core.skip_turn.add_callback(CoreDuel.drop_skulls_callback)
     # $ core.skip_turn.add_callback(CoreSexMinigame.decade_skip_callback)
@@ -657,8 +690,12 @@ label lbl_slave_actions(slave):
                         choice = renpy.display_menu(variants)
                         if choice:
                             if choice.gender == slave.gender:
+                                if not triggers.slave_party:
+                                    triggers.slave_party_first()
                                 home_manager.attend_party(choice, slave)
                             else:
+                                if not triggers.slave_sex:
+                                    triggers.slave_sex_first()
                                 home_manager.make_love(choice, slave)
                     if choice:
                         return
@@ -718,7 +755,7 @@ label lbl_lupanarium():
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
-    call lbl_arena(choice)
+    call lbl_arena(choice, location='lupanarium')
     return
 
 label lbl_taberna():
@@ -735,7 +772,7 @@ label lbl_taberna():
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
-    call lbl_arena(choice)
+    call lbl_arena(choice, location='taberna')
     return
 
 label lbl_colosseum():
@@ -811,9 +848,11 @@ label lbl_grand_fight(arena_maker):
                 i.after_fight()
                 i.win_arena = True
                 i.exhausted = True
+            if not triggers.tournament:
+                triggers.win_tournamet()
     return
 
-label lbl_arena(arena_maker):
+label lbl_arena(arena_maker, location=None):
     $ res = None
 
     python:
@@ -841,6 +880,15 @@ label lbl_arena(arena_maker):
                 fame = arena.raise_fame(PriceCalculator, player)
                 fame_changed = fame
                 arena_maker.is_winned = fame
+                if fame:
+                    if location == 'lupanarium' and not triggers.lupanarium_win:
+                        triggers.lupanarium_first_win()
+                    if location == 'taberna' and not triggers.taberna_win:
+                        triggers.taberna_first_win()
+                    if player.person_class.tier == 3 and not triggers.lanista_3:
+                        triggers.lanista_3_level()
+                    if player.person_class.tier == 4 and not triggers.lanista_4:
+                        triggers.lanista_4_level()
             if result == 'won':
                 arena_maker.set_gladiator()
                 gladiator2.win_arena = True
