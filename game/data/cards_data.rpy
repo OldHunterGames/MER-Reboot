@@ -183,7 +183,7 @@ init python:
             'type': 'equipment',
         },
         'lucky': {
-            'name': __("Lucky"),
+            'name': __("Кураж"),
             'suit': 'diamonds',
             'custom': soul_level_bonus,
             'type': 'skill',
@@ -195,25 +195,25 @@ init python:
             'type': 'skill',
         },
         'satisfaction': {
-            'name': __("Satisfaction"),
+            'name': __("Любовь"),
             'suit': 'hearts',
             'attribute': 'charisma',
             'type': 'skill',
         },
         'betrayal': {
-            'name': __("Betrayal"),
+            'name': __("Предательство"),
             'suit': 'hearts',
             'custom': soul_level_bonus,
             'type': 'skill',
         },
         'smart_tactics': {
-            'name': __("Smart tactics"),
+            'name': __("Умная тактика"),
             'suit': 'diamonds',
             'attribute': 'knowledge',
             'case': 'combat',
         },
         'tactical_advice': {
-            'name': __("Tactical advice"),
+            'name': __("Умная тактика"),
             'suit': 'clubs',
             'custom': class_tier_bonus,
             'type': 'support',
@@ -280,7 +280,7 @@ init python:
             'type': 'skill'
         },
         'bravado': {
-            'name': __("Bravado"),
+            'name': __("Дружба"),
             'suit': 'spades',
             'attribute': 'subtlety',
             'tag': 'fellowship',
