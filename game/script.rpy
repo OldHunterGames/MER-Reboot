@@ -480,7 +480,6 @@ label start:
     $ player.person_class = PersonClass.get_by_id('famous_lanista')
     $ player.armor = Armor.random_by_type(player.person_class.available_garments[0])
     $ player.slaves = []
-    $ player.slaves = [make_starter_slave() for i in range(5)]
     $ core = MERCore()
     $ core.player = player
     $ triggers = Triggers()
