@@ -483,7 +483,7 @@ label start:
     $ player.slaves = [make_starter_slave() for i in range(5)]
     $ core = MERCore()
     $ core.player = player
-    $ lanista_triggers = Triggers()
+    $ triggers = Triggers()
     # $ core.skip_turn.add_callback(CoreAddCards(player).run)
     # $ core.skip_turn.add_callback(CoreDuel.drop_skulls_callback)
     # $ core.skip_turn.add_callback(CoreSexMinigame.decade_skip_callback)
@@ -810,9 +810,11 @@ label lbl_colosseum():
 label lbl_grand_fight(arena_maker):
     python:
         team = []
-        enemies = [make_gladiator_fit_raiting(30, 100, PriceCalculator, 3)() for i in xrange(2)]
-        enemies.extend([make_gladiator_fit_raiting(100, 150, PriceCalculator)() for i in xrange(2)])
-        enemies.append(make_champion())
+        # enemies = [make_gladiator_fit_raiting(30, 100, PriceCalculator, 3)() for i in xrange(2)]
+        # enemies.extend([make_gladiator_fit_raiting(100, 150, PriceCalculator)() for i in xrange(2)])
+        # enemies.append(make_champion())
+        class_ids = ['myrmidon', 'retiarius', 'cenobite', 'dimacheros', 'goplynia', 'secutor']
+        enemies = [make_gladiator(allowed_classes=[PersonClass.get_by_id(i)]) for i in class_ids]
         arena_maker.current_enemy = enemies.pop(0)
     'Select you team (3 fighters)'
     python:
@@ -822,8 +824,8 @@ label lbl_grand_fight(arena_maker):
             team.append(selector.current_fighter())
     'Tournament is going to begin'
     python:
-        while len(team) > 0 or len(enemies) > 0:
-            selector = FighterSelector(player, arena_maker, team=team)
+        while len(team) > 0 and len(enemies) > 0:
+            selector = FighterSelector(player, arena_maker, team=team, start_text=__('Начать бой'))
             selector.run()
             ally = selector.current_fighter()
             arena = MerArena(arena_maker.current_enemy, ally, arena_maker.cards_filter)
