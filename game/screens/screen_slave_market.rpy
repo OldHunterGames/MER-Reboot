@@ -3,7 +3,6 @@ init python:
         slave = PersonCreator.gen_person(genus='human')
         slave.person_class = PersonClass.random_by_tag('starter')
         slave.armor = Armor.random_by_type(slave.person_class.available_garments[0])
-        slave.exhausted = True
         return slave
 
     class SlaveMarket(object):

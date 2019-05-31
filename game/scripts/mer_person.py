@@ -24,6 +24,10 @@ class CoreFeature(object):
     @property
     def attribute(self):
         return self._data.get('attribute')
+    
+    @property
+    def market_description(self):
+        return self._data.get('market_description', 'No description %s' % self.id)
 
     def name(self):
         return self._data.get('name')
@@ -426,6 +430,9 @@ class CorePerson(object):
         features = self.features.values()
         features.extend(self.slotless_features)
         return features
+    
+    def feature_by_slot(self, slot):
+        return self.features.get(slot)
     
     def income(self):
         return sum([i.produce_sparks() for i in self.get_host()])

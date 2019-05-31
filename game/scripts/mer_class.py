@@ -167,6 +167,7 @@ class PersonClass(object):
         self.requirements = data.get('prerequisites', {})
         self.cost = data.get('cost', 0)
         self._prototype = data.get('prototype')
+        self.description = data.get('description', '')
     
     @property
     def cards(self):

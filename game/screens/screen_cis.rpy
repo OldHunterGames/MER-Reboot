@@ -122,12 +122,10 @@ screen sc_cis(info, relations=None):
 
 screen sc_main_stats(core, player):
     frame:
-        xsize 300
+        xsize 200
         ysize 30
-        xalign 0.0
+        xalign 0.5
         yalign 0.0
         background im.Scale('gui/marble_texture_bordered.jpg', 300, 30)
-        hbox:
-            spacing 15
-            text 'Sparks: %s' % player.sparks
-            text 'Decade: %s' % core.decade 
+
+        text 'Искры: %s (-%s)' % (player.sparks, home_manager.calc_upkeep()) xalign 0.5

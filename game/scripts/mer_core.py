@@ -53,8 +53,6 @@ class MERCore(object):
         self.player.exhausted = False 
         for i in self.player.slaves:
             i.exhausted = False
-        if self.player.sparks >= 5:
-            renpy.call_in_new_context('lbl_market', self, self.player)
 
 class EventsBook(object):
 

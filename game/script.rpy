@@ -291,7 +291,6 @@ init python:
         def train(self, slave):
             print([i.id for i in self.player.get_cards('combat', True)])
             slave.set_temporary_card(random.choice(self.player.get_cards('combat', True)), 'support')
-            slave.exhausted = True
             self.player.exhausted = True
         
         def can_sell(self, slave):
@@ -301,6 +300,9 @@ init python:
             self.player.slaves.remove(slave)
             self.player.sparks += PriceCalculator(slave).price()
             self.current_slave = None
+        
+        def slave_actions(self):
+            renpy.call_in_new_context('lbl_slave_actions', self.current_slave)
 
     class SimpleSelector(object):
         def __init__(self, items, on_select):
@@ -324,6 +326,7 @@ init python:
     
     class PriceCalculator(object):
         _RAITINGS = defaultdict(int)
+        _WINS = defaultdict(dict)
         attrs_table = {
             0: 0,
             1: 1,
@@ -332,8 +335,23 @@ init python:
             4: 20,
             5: 50,
         }
+        
         def __init__(self, person):
             self.person = person
+        
+        def add_win(self):
+            if self._WINS[self.person].get(self.person.person_class.id) is not None:
+                self._WINS[self.person][self.person.person_class.id] += 1
+            else:
+                self._WINS[self.person][self.person.person_class.id] = 1
+            
+        def current_class_wins(self):
+            return self._WINS[self.person].get(self.person.person_class.id, 0)
+        
+        def total_wins(self):
+            if len(self._WINS[self.person].values()) > 0:
+                return sum(self._WINS[self.person].values())
+            return 0
         
         def add_raiting(self, value):
             self._RAITINGS[self.person] += value - self._rating_modifier()
@@ -368,14 +386,66 @@ init python:
         
         def entertainment_raiting_formula(self):
             return self.training_price() * self.person.person_class.tier ** 2
+    
+    class MarketDescription:
+        def __init__(self, person):
+            self.person = person
+        
+        def make_description(self):
+            top_attr = self.person.max_attribute()
+            gender = self.person.gender
+            attr = slavemarket_attribute[gender][top_attr]
+            genderage = slavemarket_genderage[gender][self.person.age]
+            world = self.person.feature_by_slot('homeworld') and self.person.feature_by_slot('homeworld').market_description
+            profession = self.person.feature_by_slot('profession') and self.person.feature_by_slot('profession').market_description
+            family = self.person.feature_by_slot('family') and self.person.feature_by_slot('family').market_description
+            soul = slavemarket_soul[slave.soul_level]
+            features = self.features_description()
+            price = PriceCalculator(self.person).price()
+            return "{name}, {attr} {genderage} {world}. {profession}{family}. {soul}. Особенности: {features} Цена: {price} искр".format(
+                name=self.person.name,
+                attr=attr,
+                genderage=genderage,
+                world=world,
+                profession=profession,
+                family=family,
+                soul=soul,
+                features=features,
+                price=price,
+            )
+        
+        def features_description(self):
+            description = ""
+            excluded = ['homeworld', 'profession', 'family', 'gender', 'age']
+            features = [i for i in self.person.get_features() if i.slot not in excluded]
+            for i in features:
+                if i.market_description:
+                    description += '{0}'.format(i.market_description)
+            return description
+        
+    class Auction(object):
+        def __init__(self, core, player):
+            self.core = core
+            self.player = player
+            self.should_show_after_turn = False
+        
+        def activate(self):
+            self.should_show_after_turn = True
+        
+        def on_skip_turn(self, *args, **kwargs):
+            if self.player.sparks < 5 or not self.should_show_after_turn:
+                return
+            self.should_show_after_turn = False
+            renpy.call_in_new_context('lbl_market', player=self.player, core=self.core)
 
 # The game starts here.
 
 label start:
     $ player = PersonCreator.gen_person(name='Player', gender='male', genus='human')
-    $ player.person_class = PersonClass.get_by_id('infamous_lanista')
+    $ player.person_class = PersonClass.get_by_id('famous_lanista')
     $ player.armor = Armor.random_by_type(player.person_class.available_garments[0])
     $ player.slaves = []
+
     $ core = MERCore()
     $ core.player = player
     # $ core.skip_turn.add_callback(CoreAddCards(player).run)
@@ -455,6 +525,8 @@ label start:
             core.skip_turn.add_callback(arena.set_gladiator)
 
         home_manager = HomeManager(player)
+        auction = Auction(core, player)
+        core.skip_turn.add_callback(auction.on_skip_turn)
         core.skip_turn.add_callback(slavestore.update_slaves)
         core.before_skip_turn.add_callback(home_manager.on_skip_turn)
         # for i in range(10):
@@ -496,14 +568,106 @@ label lbl_main:
                 if home_manager.should_skip_turn:
                     home_manager.should_skip_turn = False
                     core.skip_turn()
-        'Skip turn':
+        'Отдыхать':
             python:
                 core.skip_turn()
+        'Дождаться аукциона':
+            $ auction.activate()
+            $ core.skip_turn()
 
     return
 
+label lbl_slave_actions(slave):
+    python:
+        icon = 'gui/heart_small.png'
+        can_upgrade = home_manager.can_upgrade_slave(slave)
+        has_temp = slave.temporary_cards['support'] is not None
+        is_all_exhausted = [i.exhausted for i in player.slaves if i != slave]
+        is_all_exhausted.append(player.exhausted)
+        is_all_exhausted = all(is_all_exhausted)
+        description = MarketDescription(slave).make_description()
+    while True:
+        menu:
+            '[description]'
+            'Оценка вариантов':
+                call lbl_storylanista_actionanalys
+            'Продвинутое обучение [[{image=[icon]}]' if can_upgrade:
+                python:
+                    choice = True
+                    while choice:
+                        items = [(i.name, i) for i in home_manager.slave_upgrades(slave)]
+                        items.append(('Передумать', False))
+                        choice = renpy.display_menu(items)
+                        if choice:
+                            variants = []
+                            text = 'Начать тренировки (%s)' % choice.cost
+                            if choice.cost <= player.sparks:
+                                variants.append((text, choice))
+                            else:
+                                variants.append((text, None))
+                            variants.append(('Передумать', False))
+                            renpy.say(None, choice.description, interact=False)
+                            next_choice = renpy.display_menu(variants)
+                            if next_choice:
+                                home_manager.upgrade_slave(slave, next_choice)
+
+            'Продвинутое обучение [[X]' if not can_upgrade:
+                python:
+                    text = ''
+                    if player.person_class.tier <= slave.person_class.tier:
+                        text = 'Простите, хозяин, но прежде чем вы сможете готовить более сильных гладиаторов Вам нужно заработать больше опыта и славы. Нужна достойная победа на новой арене.'
+                    elif not getattr(slave, 'win_arena', False):
+                        text = 'Мне нужно больше боевого опыта прежде чем я смогу выступать с новым снаряжением, Хозяин. Позвольте мне победить хотя бы одного достойного противника.'
+                    elif slave.person_class.tier == 5:
+                        text = 'Я уже чемпион арены. Более сильных гладиаторов Рим не знал.'
+                    
+                slave '[text]'
+            'Отработать тактику боя' if not has_temp:
+                if player.exhausted:
+                    player 'Я слишком устал чтобы этим заниматься'
+                else:
+                    $ home_manager.train(slave)
+                    return
+            'Оплатить развлечение (5 искр)':
+                if is_all_exhausted:
+                    slave "Вы очень щедры, Хозяин, но какой смысл развлекаться водиночку? Мне нужна компания, а все уже заняты другими делами на этой декаде."
+                else:
+                    python:
+                        variants = []
+                        if not player.exhausted:
+                            variants.append((player.name, player))
+                        friend = slave.get_relation('best_friend')
+                        lover = slave.get_relation('lover')
+                        if friend is not None:
+                            variants.append(
+                                ('{0} (лучший друг'.format(friend.name), fiend if not friend.exhausted else None)
+                            )
+                        if lover is not None:
+                            variants.append(
+                                ('{0} (любовник'.format(lover.name), lover if not lover.exhausted else None)
+                            )
+                        for i in player.slaves:
+                            if i != friend and i != lover and i != player and not i.exhausted and i != slave:
+                                variants.append((i.name, i))
+                        variants.append(('Передумать', False))
+                        choice = renpy.display_menu(variants)
+                        if choice:
+                            if choice.gender == slave.gender:
+                                home_manager.attend_party(choice, slave)
+                            else:
+                                home_manager.make_love(choice, slave)
+                    if choice:
+                        return
+            'Продать на рынке':
+                $ home_manager.sell(slave)
+                return
+            'Закончить разговор':
+                return
+
+
+        
 label lbl_market(core, player):
-    scene expression 'images/bg/slavemarket.png'
+    # scene expression 'images/bg/slavemarket.png'
     show screen sc_main_stats(core, player)
     python:
         slaves = [make_starter_slave() for i in range(5)]
@@ -513,16 +677,17 @@ label lbl_market(core, player):
             price = PriceCalculator(slave).price()
             buy_action = 'buy' if price <= player.sparks else None
             actions = [('Buy %s sparks' % price, buy_action), ('Skip', 'skip'), ('Leave', 'leave')]
-            
-        show screen sc_slave_representation(slave)
-        $ choice = renpy.display_menu(actions)
-        python:
-            if choice == 'buy':
-                player.slaves.append(slave)
-                player.sparks -= price
-            if choice == 'leave':
-                slaves = []
-        hide screen sc_slave_representation
+            description = MarketDescription(slave).make_description()
+        menu:
+            '[description]'
+            'Buy' if price <= player.sparks:
+                python:
+                    player.slaves.append(slave)
+                    player.sparks -= price
+            'Skip':
+                $ pass
+            'Leave':
+                $ slaves = []
     hide sc_main_stats
     return
 
@@ -536,18 +701,16 @@ label lbl_lupanarium():
         $ lupaintro = True
         call lbl_storylanista_lupaintro
     python:
-        choices = [('Return', 'return')]
+        choices = []
         mudfight = available_arenas['mudfight']
         whip_fight = available_arenas['whip_fight']
         if mudfight.is_active(player):
             choices.append(('Mudfight', mudfight))
-        else:
-            choices.append(('Mudfight', None))
 
         if whip_fight.is_active(player):
             choices.append(('Whip fight', whip_fight))
-        else:
-            choices.append(('Whip fight', None))
+
+        choices.append(('Return', 'return'))
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
@@ -559,13 +722,12 @@ label lbl_taberna():
         $ tabernintro = True
         call lbl_storylanista_tabernintro
     python:
-        choices = [('Return', 'return')]
+        choices = []
         pitfight = available_arenas['pitfight']
         if pitfight.is_active(player):
             choices.append(('Pitfight', pitfight))
-        else:
-            choices.append(('Pitfight', None))
 
+        choices.append(('Return', 'return'))
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
@@ -577,28 +739,24 @@ label lbl_colosseum():
         $ colintro = True
         call lbl_storylanista_colintro
     python:
-        choices = [('Return', 'return')]
+        choices = []
         chaotic = available_arenas['chaotic_fights']
         common_fight = available_arenas['common_fight']
         premium_fight = available_arenas['premium_fights']
         tournament = available_arenas['tournament']
         if chaotic.is_active(player):
             choices.append(('Chaotic fights', chaotic))
-        else:
-            choices.append(('Chaotic fights', None))
+
         if common_fight.is_active(player):
             choices.append(('Common fight', common_fight))
-        else:
-            choices.append(('Common fight', None))
+
         if premium_fight.is_active(player):
             choices.append(('Premium fight', premium_fight))
-        else:
-            choices.append(('Premium fight', None))
 
         if tournament.is_active(player) and len(tournament.filter_fighters(player)) >= 3:
             choices.append(('Tournament', tournament))
-        else:
-            choices.append(('Tournament', None))
+    
+        choices.append(('Return', 'return'))
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
