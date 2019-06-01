@@ -1,6 +1,6 @@
-Mists of Ethernal Rome
+Mists of Ethernal Rome: Way of gladiator
 (very) early access
-v 0.10.1 unstable
+v 0.11.1 unstable
 
 ----Disclaimer----
 
@@ -18,8 +18,6 @@ To pass the bug, try to press "ignore" in error screen.
 Twitter: https://twitter.com/OldHuntsman
 
 Steem: https://steemit.com/@oldhuntsman
-
-Голос: https://golos.io/@oldhuntsman
 
 e-mail: old_huntsman@yahoo.com
 
