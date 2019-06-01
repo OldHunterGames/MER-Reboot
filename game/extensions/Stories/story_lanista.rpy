@@ -438,9 +438,14 @@ label lbl_storylanista_sonyabang:
     scene expression 'images/bg/arena.png'
     show expression 'images/special/sonya_bang.png' as bang at top with dissolve
     'Плейсхолдер. Тут будет сцена секса с Рыжей Соней и гладиаторами-чемпионами.'
-    show expression 'images/special/luctator_bang2.png'as bang at top with dissolve
+    show expression 'images/special/sonya_bang2.png'as bang at top with dissolve
     'Вот так!'
     hide bang
+
+    return
+
+label lbl_storylanista_coleventpunish:
+    'Ты достиг нового уровня ланисты'
 
     return
 

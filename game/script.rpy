@@ -454,24 +454,31 @@ init python:
 
         def lupanarium_first_win(self):
             self.lupanarium_win = True
+            renpy.call_in_new_context('lbl_storylanista_luctatorbang')
         
         def taberna_first_win(self):
             self.taberna_first_win = True
+            renpy.call_in_new_context('lbl_storylanista_wenchsex')
         
         def lanista_3_level(self):
             self.lanista_3 = True
+            renpy.call_in_new_context('lbl_storylanista_coleventpunish')
         
         def lanista_4_level(self):
             self.lanista_4 = True
+            renpy.call_in_new_context('lbl_storylanista_sonyabang')
         
         def slave_party_first(self):
             self.slave_party = True
+            renpy.call_in_new_context('lbl_storylanista_brobang')
         
         def slave_sex_first(self):
             self.slave_sex = True
+            renpy.call_in_new_context('lbl_storylanista_slavesex')
         
         def win_tournamet(self):
             self.tournament = True
+            renpy.call_in_new_context('lbl_storylanista_endofstory')
 
 # The game starts here.
 
