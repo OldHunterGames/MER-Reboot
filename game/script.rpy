@@ -477,7 +477,7 @@ init python:
 
 label start:
     $ player = PersonCreator.gen_person(name='Player', gender='male', genus='human')
-    $ player.person_class = PersonClass.get_by_id('famous_lanista')
+    $ player.person_class = PersonClass.get_by_id('infamous_lanista')
     $ player.armor = Armor.random_by_type(player.person_class.available_garments[0])
     $ player.slaves = []
     $ core = MERCore()
@@ -534,27 +534,6 @@ label start:
                 default_arena_prize,
                 min_player_level=4,
             )
-            # 'practice': MerArenaMaker(
-            #     make_gladiator,
-            #     2,
-            #     allowed_classes=[PersonClass.get_by_id('pegniarius')],
-            #     sparks=5,
-            #     die_after_fight=False
-            # ),
-            # 'heat_up': MerArenaMaker(
-            #     make_gladiator,
-            #     3,
-            #     allowed_classes=heat_up_classes,
-            #     fixed_enemy=enemies,
-            #     sparks=15,
-            # ),
-            # 'grand_fight': MerArenaMaker(
-            #     make_gladiator,
-            #     4,
-            #     allowed_classes=grand_fight_classes,
-            #     fixed_enemy=enemies,
-            #     sparks=50,
-            # ),
         }
         for arena in available_arenas.values():
             core.skip_turn.add_callback(arena.set_gladiator)
@@ -612,8 +591,12 @@ label lbl_main:
 
     return
 
+# Anton is awesome!
+# 01/06/2019 - 17:48
+
 label lbl_slave_actions(slave):
     show expression 'images/bg/empty_room.png'
+    show expression im.Scale(slave.avatar, 150, 150) at left
     python:
         icon = 'gui/heart_small.png'
         can_upgrade = home_manager.can_upgrade_slave(slave)
