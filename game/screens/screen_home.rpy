@@ -87,42 +87,34 @@ screen sc_home(home):
             ysize 720
             background im.Scale('gui/marble_texture_bordered.jpg', 1280-600, 720)
             if home.current_slave is not None:
-                vbox:
-                    spacing 15
+                hbox:
                     xpos 15
                     ypos 15
-                    if home.current_slave.exhausted:
-                        image im.Scale(im.Grayscale(home.current_slave.avatar), 150, 150)
-                    else:
-                        imagebutton:
-                            idle im.Scale(home.current_slave.avatar, 150, 150)
-                            action Function(home.slave_actions)
+                    spacing 15
                     vbox:
-                        textbutton 'Вызвать' action Function(home.slave_actions)
-                        text home.current_slave.name color '#fff'
-                        text home.current_slave.person_class.colored_name()
-                        text 'Raiting: %s' % PriceCalculator(home.current_slave).training_price()
-                        text 'Победы: %s (%s)' % (PriceCalculator(home.current_slave).current_class_wins(), PriceCalculator(home.current_slave).total_wins())
-                        text encolor_text(core_souls[home.current_slave.soul_level], home.current_slave.soul_level)
-                        for attr in home.current_slave.show_attributes().values():
-                            text attr
+                        spacing 15
+                        
+                        if home.current_slave.exhausted:
+                            image im.Scale(im.Grayscale(home.current_slave.avatar), 150, 150)
+                        else:
+                            imagebutton:
+                                idle im.Scale(home.current_slave.avatar, 150, 150)
+                                action Function(home.slave_actions)
+                        vbox:
+                            textbutton 'Вызвать' action Function(home.slave_actions)
+                            text home.current_slave.name color '#fff'
+                            text home.current_slave.person_class.colored_name()
+                            text 'Raiting: %s' % PriceCalculator(home.current_slave).training_price()
+                            text 'Победы: %s (%s)' % (PriceCalculator(home.current_slave).current_class_wins(), PriceCalculator(home.current_slave).total_wins())
+                            text encolor_text(core_souls[home.current_slave.soul_level], home.current_slave.soul_level)
+                            for attr in home.current_slave.show_attributes().values():
+                                text attr
 
-                # hbox:
-                #     xalign 0.05
-                #     yalign 0.02
-                #     textbutton 'Combat':
-                #         action Function(home.show_cards, 'combat')
-                #         selected home.cards_mode == 'combat'
-                #     textbutton 'Social':
-                #         action Function(home.show_cards, 'social')
-                #         selected home.cards_mode == 'social'
-                # hbox:
-                #     yalign 0.1
-                #     xalign 0.05
-                #     box_wrap True
-                #     spacing 5
-                #     for card in home.get_cards():
-                #         use fight_card_representation(card.suit(home.current_slave, {}), card.get_power(home.current_slave, {}), card.name, NullAction())
+                    hbox:
+                        box_wrap True
+                        spacing 5
+                        for card in home.get_cards():
+                            use fight_card_representation(card.suit(home.current_slave, {}), card.get_power(home.current_slave, {}), card.name, NullAction())
                 
 
         
