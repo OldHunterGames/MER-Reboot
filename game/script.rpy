@@ -697,7 +697,7 @@ label lbl_slave_actions(slave):
 
         
 label lbl_market(core, player):
-    # scene expression 'images/bg/slavemarket.png'
+    scene expression 'images/bg/slavemarket.png'
     show screen sc_main_stats(core, player)
     python:
         slaves = [make_starter_slave() for i in range(5)]
