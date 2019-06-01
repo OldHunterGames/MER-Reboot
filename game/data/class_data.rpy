@@ -123,7 +123,7 @@ init python:
             'prerequisites': {
                 'class': ['pegniarius']
             },
-            'description': __("Fast moving unarmored gladiator, armed with a net, trident and a knife."),
+            'description': __("Fast moving unarmored gladiator, armed with a net, trident and a knife. Classic!"),
             'available_garments': ['cloth'],
             'attack_suits': ['spades', 'clubs'],
             'tag': 'gladiator',

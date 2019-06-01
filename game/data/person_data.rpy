@@ -196,7 +196,7 @@ init python:
     }
 
     core_profession_features = {
-        'warrior': {'slot': 'profession', 'name': __('Warrior'), 'market_description': __('Боеврй ветеран'), 'attribute': 'might', 'might': 1, 'knowledge': -1},
+        'warrior': {'slot': 'profession', 'name': __('Warrior'), 'market_description': __('Боевой ветеран'), 'attribute': 'might', 'might': 1, 'knowledge': -1},
         'servant': {'slot': 'profession', 'name': __('Servant'), 'market_description': __('Прислуга'), 'attribute': 'subtlety', 'subtlety': 1, 'charisma': -1},
         'scholar': {'slot': 'profession', 'name': __('Scholar'), 'market_description': __('Знаток книг'), 'attribute': 'knowledge', 'knowledge': 1, 'subtlety': -1},
         'artist': {'slot': 'profession', 'name': __('Artist'), 'market_description': __('Творческая натура'), 'attribute': 'charisma', 'charisma': 1, 'might': -1},
