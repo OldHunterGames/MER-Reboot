@@ -23,7 +23,7 @@ screen sc_home(home):
                                 idle im.Scale(im.Grayscale(home.player.avatar), 150, 150)
                             else:
                                 idle im.Scale(home.player.avatar, 150, 150)
-                            action Function(home.select, home.player)
+                            action NullAction()
                         vbox:
                             text home.player.name color '#333333'
                             text 'Бюджет %s (-%s)' % (home.player.sparks, home.calc_upkeep())
@@ -105,7 +105,9 @@ screen sc_home(home):
                                 action Function(home.slave_actions)
                         vbox:
                             if not home.current_slave.exhausted:
-                                textbutton 'Вызвать' action Function(home.slave_actions)
+                                imagebutton:
+                                    idle 'gui/btn_callslave.png'
+                                    action Function(home.slave_actions)
                             text home.current_slave.name color '#fff'
                             text home.current_slave.person_class.colored_name()
                             text 'Raiting: %s' % PriceCalculator(home.current_slave).training_price()

@@ -612,6 +612,7 @@ label lbl_slave_actions(slave):
         is_all_exhausted.append(player.exhausted)
         is_all_exhausted = all(is_all_exhausted)
         description = MarketDescription(slave).make_description()
+        price = PriceCalculator(slave).price()
     while True:
         menu:
             '[description]'
@@ -620,8 +621,9 @@ label lbl_slave_actions(slave):
             'Продвинутое обучение [[{image=[icon]}]' if can_upgrade:
                 python:
                     choice = True
+                    upgraded = False
                     while choice:
-                        items = [(i.name, i) for i in home_manager.slave_upgrades(slave)]
+                        items = [('{0} ({1})'.format(i.name, i.cost), i) for i in home_manager.slave_upgrades(slave) if i.cost <= player.sparks]
                         items.append(('Передумать', False))
                         choice = renpy.display_menu(items)
                         if choice:
@@ -636,6 +638,10 @@ label lbl_slave_actions(slave):
                             next_choice = renpy.display_menu(variants)
                             if next_choice:
                                 home_manager.upgrade_slave(slave, next_choice)
+                                choice = False
+                                upgraded = True
+                if upgraded:
+                    return
 
             'Продвинутое обучение [[X]' if not can_upgrade:
                 python:
@@ -679,16 +685,16 @@ label lbl_slave_actions(slave):
                         choice = renpy.display_menu(variants)
                         if choice:
                             if choice.gender == slave.gender:
-                                if not triggers.slave_party:
+                                if not triggers.slave_party and choice == player:
                                     triggers.slave_party_first()
                                 home_manager.attend_party(choice, slave)
                             else:
-                                if not triggers.slave_sex:
+                                if not triggers.slave_sex and choice == player:
                                     triggers.slave_sex_first()
                                 home_manager.make_love(choice, slave)
                     if choice:
                         return
-            'Продать на рынке':
+            'Продать на рынке [price] искр':
                 $ home_manager.sell(slave)
                 return
             'Закончить разговор':
@@ -708,9 +714,9 @@ label lbl_market(core, player):
             buy_action = 'buy' if price <= player.sparks else None
             actions = [('Buy %s sparks' % price, buy_action), ('Skip', 'skip'), ('Leave', 'leave')]
             description = MarketDescription(slave).make_description()
-        show expression im.Scale(slave.avatar, 150, 150):
+        show expression im.Scale(slave.avatar, 170, 170):
             xalign 0.05
-            yalign 0.95
+            yalign 0.98
         menu:
             '[description]'
             'Купить' if price <= player.sparks:
@@ -854,6 +860,7 @@ label lbl_arena(arena_maker, location=None):
         gladiator1 = arena_maker.current_enemy
         selector.run()
         gladiator2 = selector.current_fighter()
+        fame = False
         if gladiator2 is not None:
             arena = MerArena(gladiator1, gladiator2, cards_filter=arena_maker.cards_filter)
             arena.make_bet(gladiator2)
@@ -874,15 +881,7 @@ label lbl_arena(arena_maker, location=None):
                 fame = arena.raise_fame(PriceCalculator, player)
                 fame_changed = fame
                 arena_maker.is_winned = fame
-                if fame:
-                    if location == 'lupanarium' and not triggers.lupanarium_win:
-                        triggers.lupanarium_first_win()
-                    if location == 'taberna' and not triggers.taberna_win:
-                        triggers.taberna_first_win()
-                    if player.person_class.tier == 3 and not triggers.lanista_3:
-                        triggers.lanista_3_level()
-                    if player.person_class.tier == 4 and not triggers.lanista_4:
-                        triggers.lanista_4_level()
+                
             if result == 'won':
                 arena_maker.set_gladiator()
                 gladiator2.win_arena = True
@@ -896,6 +895,16 @@ label lbl_arena(arena_maker, location=None):
             #     fame_message = 'Player lose fame'
     if gladiator2 is None:
         return
+    python:
+        if fame:
+            if location == 'lupanarium' and not triggers.lupanarium_win:
+                triggers.lupanarium_first_win()
+            if location == 'taberna' and not triggers.taberna_win:
+                triggers.taberna_first_win()
+            if player.person_class.tier == 3 and not triggers.lanista_3:
+                triggers.lanista_3_level()
+            if player.person_class.tier == 4 and not triggers.lanista_4:
+                triggers.lanista_4_level()
 
     if result != 'won' and arena_maker.die_after_fight:
         'Winner is [fight.winner.name] / player [result]/ [fight.loser.name] is killed'

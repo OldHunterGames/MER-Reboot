@@ -15,6 +15,8 @@ screen sc_select_fighter(selector):
             xalign 0.5
             yalign 0.5
             textbutton 'Отказаться от боя' action Function(selector.escape), Return()
+            if len(selector.fighters) > 1:
+                textbutton "Сменить бойца" action Function(selector.next)
             textbutton selector.start_text action Return()
 
         hbox:
@@ -42,8 +44,7 @@ screen sc_select_fighter(selector):
                 for card in fighter1.get_cards('combat', special_filter=selector.arena_maker.cards_filter):
                     use fight_card_representation(card.suit(fighter1, {}), card.get_power(fighter1, {}), card.name, NullAction())
             vbox:
-                if len(selector.fighters) > 1:
-                    textbutton "Сменить бойца" action Function(selector.next)
+                
                 text fighter1.name xalign 0.5 color '#ffffff'
                 text fighter1.person_class.colored_name() xalign 0.5
                 image im.Scale(fighter1.avatar, 200, 200)
