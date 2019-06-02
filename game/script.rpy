@@ -478,7 +478,7 @@ init python:
         
         def win_tournamet(self):
             self.tournament = True
-            renpy.call_in_new_context('lbl_storylanista_endofstory'. {})
+            renpy.call_in_new_context('lbl_storylanista_endofstory', {})
 
 # The game starts here.
 
@@ -750,6 +750,7 @@ label lbl_lupanarium():
     if not lupaintro:
         $ lupaintro = True
         call lbl_storylanista_lupaintro
+    show expression 'images/bg/brothel.png'
     python:
         choices = []
         mudfight = available_arenas['mudfight']
@@ -771,6 +772,7 @@ label lbl_taberna():
     if not tabernintro:
         $ tabernintro = True
         call lbl_storylanista_tabernintro
+    show expression 'images/bg/tavern_empty.png'
     python:
         choices = []
         pitfight = available_arenas['pitfight']
@@ -788,6 +790,7 @@ label lbl_colosseum():
     if not colintro:
         $ colintro = True
         call lbl_storylanista_colintro
+    show expression 'images/bg/arena.png'
     python:
         choices = []
         chaotic = available_arenas['chaotic_fights']
@@ -925,7 +928,7 @@ label lbl_arena(arena_maker, location=None):
         return
     show expression img
     python:
-        if fame:F
+        if fame:
             if location == 'lupanarium' and not triggers.lupanarium_win:
                 triggers.lupanarium_first_win()
             if location == 'taberna' and not triggers.taberna_win:
