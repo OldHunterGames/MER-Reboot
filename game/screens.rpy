@@ -414,6 +414,10 @@ screen main_menu():
 
     ## The use statement includes another screen inside this one. The actual
     ## contents of the main menu are in the navigation screen.
+    imagebutton:
+        idle im.Scale('gui/patreon.png', 275, 100)
+        yalign 0.2
+        action OpenURL('https://www.patreon.com/oldhuntsman')
     use navigation
 
     if gui.show_name:
@@ -515,7 +519,6 @@ screen game_menu(title, scroll=None, yinitial=0.0):
                 else:
 
                     transclude
-
     use navigation
 
     textbutton _("Return"):

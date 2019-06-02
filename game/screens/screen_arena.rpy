@@ -80,13 +80,12 @@ screen sc_arena(arena):
                         text fighter2.name color '#fff'
                         text fighter2.person_class.colored_name()
                     image im.Scale(fighter2.avatar, 200, 200)
-                
-                
 
         if arena.state == 'prefight':
             $ standoff = arena.fight
             $ enemy_card = standoff.enemy_current_card
-            background gui_image('arena/Arena_BG.png')
+            $ back = 'images/bg/' + arena.background + '_fight.png' or 'images/arena/Arena_BG.png'
+            image back
             vbox:
                 xalign 0.5
                 yalign 0.5
@@ -104,10 +103,10 @@ screen sc_arena(arena):
                 xalign 0.5
                 yalign 0.6
                 if standoff.message == 'success':
-                    text standoff.message color '#00ff00'
+                    image 'images/special/strike_hit.png'
                     timer 1.0 action Function(standoff.clear_message)
                 elif standoff.message == 'fail':
-                    text standoff.message color '#ff0000'
+                    image 'images/special/strike_fail.png'
                     timer 1.0 action Function(standoff.clear_message)
 
 
@@ -120,7 +119,6 @@ screen sc_arena(arena):
                         xalign 0.5
                         text arena.enemy.name color '#fff'
                         text arena.enemy.person_class.colored_name()
-                        text 'Raiting: %s' % PriceCalculator(arena.enemy).training_price()
                 if enemy_card is not None:
                     use fight_card_representation(enemy_card.suit(arena.enemy, {}), enemy_card.get_power(arena.enemy, {}), enemy_card.name, NullAction())
             hbox:
@@ -138,7 +136,6 @@ screen sc_arena(arena):
                         xalign 0.5
                         text arena.ally.name color '#fff'
                         text arena.ally.person_class.colored_name()
-                        text 'Raiting: %s' % PriceCalculator(arena.ally).training_price()
                     image im.Scale(arena.ally.avatar, 200, 200)
 
 

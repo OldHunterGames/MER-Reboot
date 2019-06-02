@@ -275,7 +275,7 @@ class PersonClassCard(object):
 
 class MerArena(object):
 
-    def __init__(self, fighter1, fighter2, sparks=0, cards_filter=None):
+    def __init__(self, fighter1, fighter2, sparks=0, cards_filter=None, background=None):
         self.fighter1 = fighter1
         self.fighter2 = fighter2
         self.state = 'selection'
@@ -284,6 +284,7 @@ class MerArena(object):
         self.fight = None
         self.sparks = sparks
         self.cards_filter = cards_filter
+        self.background = background
 
     def start(self):
         return renpy.call_screen('sc_arena', arena=self)
@@ -322,7 +323,7 @@ class MerArena(object):
 
 class MerArenaMaker(object):
 
-    def __init__(self, maker_func, allowed_checker, sparks_calculator, min_player_level=0, die_after_fight=True, cards_filter=None, can_skip_enemy=False, gain_prestige=True):
+    def __init__(self, maker_func, allowed_checker, sparks_calculator, min_player_level=0, die_after_fight=True, cards_filter=None, can_skip_enemy=False, gain_prestige=True, arena_bg=None):
         self.min_player_level = min_player_level
         self.maker_func = maker_func
         self.allowed_checker = allowed_checker
@@ -334,6 +335,7 @@ class MerArenaMaker(object):
         self.can_skip_enemy = can_skip_enemy
         self.gain_prestige = gain_prestige
         self.team = []
+        self.arena_bg = arena_bg
 
     def is_active(self, player):
         return player.person_class.tier >= self.min_player_level and self.can_put_fighter(player)

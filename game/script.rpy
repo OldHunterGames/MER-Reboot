@@ -468,13 +468,13 @@ init python:
             self.lanista_4 = True
             renpy.call_in_new_context('lbl_storylanista_sonyabang')
         
-        def slave_party_first(self):
+        def slave_party_first(self, context):
             self.slave_party = True
-            renpy.call_in_new_context('lbl_storylanista_brobang')
+            renpy.call_in_new_context('lbl_storylanista_brobang', context)
         
-        def slave_sex_first(self):
+        def slave_sex_first(self, context):
             self.slave_sex = True
-            renpy.call_in_new_context('lbl_storylanista_slavesex')
+            renpy.call_in_new_context('lbl_storylanista_slavesex', context)
         
         def win_tournamet(self):
             self.tournament = True
@@ -506,14 +506,19 @@ label start:
         enemies = list(set(heat_up_classes).intersection(set(PersonClass.get_by_tier(3))))
         grand_fight_classes = PersonClass.get_by_tag('gladiator')
         available_arenas = {
-            'mudfight': MerArenaMaker(make_mudfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, die_after_fight=False, cards_filter=filter_equipment),
-            'whip_fight': MerArenaMaker(make_whipfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, min_player_level=3, die_after_fight=False),
+            'mudfight': MerArenaMaker(
+                make_mudfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, die_after_fight=False, cards_filter=filter_equipment, arena_bg='brothel'
+            ),
+            'whip_fight': MerArenaMaker(
+                make_whipfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, min_player_level=3, die_after_fight=False, arena_bg='whip'
+            ),
             'pitfight': MerArenaMaker(
                 make_pitfight_gladiator,
                 lambda person: person.gender == 'male',
                 default_arena_prize,
                 die_after_fight=False,
                 cards_filter=filter_equipment,
+                arena_bg='pit'
             ),
             'chaotic_fights': MerArenaMaker(
                 make_gladiator,
@@ -522,24 +527,28 @@ label start:
                 die_after_fight=False,
                 gain_prestige=False,
                 can_skip_enemy=True,
+                arena_bg='arena'
             ),
             'common_fight': MerArenaMaker(
                 make_gladiator_fit_raiting(30, 100, PriceCalculator, max_tier=3),
                 lambda person: True,
                 default_arena_prize,
                 min_player_level=2,
+                arena_bg='arena',
             ),
             'premium_fights': MerArenaMaker(
                 make_gladiator_fit_raiting(100, 150, PriceCalculator),
                 lambda person: True,
                 default_arena_prize,
                 min_player_level=3,
+                arena_bg='arena',
             ),
             'tournament': MerArenaMaker(
                 make_gladiator,
                 lambda person: True,
                 default_arena_prize,
                 min_player_level=4,
+                arena_bg='arena',
             )
         }
         for arena in available_arenas.values():
@@ -686,11 +695,11 @@ label lbl_slave_actions(slave):
                         if choice:
                             if choice.gender == slave.gender:
                                 if not triggers.slave_party and choice == player:
-                                    triggers.slave_party_first()
+                                    triggers.slave_party_first({'slave': slave})
                                 home_manager.attend_party(choice, slave)
                             else:
                                 if not triggers.slave_sex and choice == player:
-                                    triggers.slave_sex_first()
+                                    triggers.slave_sex_first({'slave': slave})
                                 home_manager.make_love(choice, slave)
                     if choice:
                         return
@@ -703,11 +712,13 @@ label lbl_slave_actions(slave):
 
         
 label lbl_market(core, player):
+    if len(player.slaves) >= 5:
+        return
     scene expression 'images/bg/slavemarket.png'
     show screen sc_main_stats(core, player)
     python:
         slaves = [make_starter_slave() for i in range(5)]
-    while len(slaves) > 0:
+    while len(slaves) > 0 and len(player.slaves) < 5:
         python:
             slave = slaves.pop()
             price = PriceCalculator(slave).price()
@@ -826,7 +837,7 @@ label lbl_grand_fight(arena_maker):
             selector = FighterSelector(player, arena_maker, team=team, start_text=__('Начать бой'))
             selector.run()
             ally = selector.current_fighter()
-            arena = MerArena(arena_maker.current_enemy, ally, arena_maker.cards_filter)
+            arena = MerArena(arena_maker.current_enemy, ally, arena_maker.cards_filter, background=arena_maker.arena_bg)
             arena.make_bet(ally)
             arena.start()
             fight = arena.fight
@@ -862,7 +873,7 @@ label lbl_arena(arena_maker, location=None):
         gladiator2 = selector.current_fighter()
         fame = False
         if gladiator2 is not None:
-            arena = MerArena(gladiator1, gladiator2, cards_filter=arena_maker.cards_filter)
+            arena = MerArena(gladiator1, gladiator2, cards_filter=arena_maker.cards_filter, background=arena_maker.arena_bg)
             arena.make_bet(gladiator2)
             arena.start()
             fight = arena.fight
@@ -888,13 +899,31 @@ label lbl_arena(arena_maker, location=None):
             
             if fight.is_player_win():
                 PriceCalculator(gladiator2).add_raiting(fight.enemy_cards_amount ** 2)
+                PriceCalculator(gladiator2).add_win()
             else:
                 PriceCalculator(gladiator1).add_raiting(fight.player_cards_amount ** 2)
             # if not fame_changed:
             #     fame_changed = arena.drop_fame(PriceCalculator, player)
             #     fame_message = 'Player lose fame'
+
+            result_message = ''
+            if fame_changed and result == 'won':
+                result_message = 'одерживает славную победу.'
+            elif result == 'won' and not fame_changed:
+                result_message = 'легко побеждает слабого противника.'
+            elif result != 'won' and location == 'lupanarium':
+                result_message = 'проиграла и ей пришлось стать развлечением для толпы.'
+            elif result != 'won' and location == 'taberna':
+                result_message = 'проиграл бой. Он побит но скоро оправится'
+            elif result != 'won':
+                result_message = 'получает смертельную рану'
+            if result == 'won':
+                img = 'images/bg/' + arena_maker.arena_bg + '_win.png'
+            else:
+                img = 'images/bg/' + arena_maker.arena_bg + '_lose.png'
     if gladiator2 is None:
         return
+    show expression img
     python:
         if fame:
             if location == 'lupanarium' and not triggers.lupanarium_win:
@@ -906,13 +935,9 @@ label lbl_arena(arena_maker, location=None):
             if player.person_class.tier == 4 and not triggers.lanista_4:
                 triggers.lanista_4_level()
 
-    if result != 'won' and arena_maker.die_after_fight:
-        'Winner is [fight.winner.name] / player [result]/ [fight.loser.name] is killed'
-    else:
-        'Winner is [fight.winner.name] / player [result]'
-    if fame_changed:
-        '[fame_message]'
-    'You prize is [prize] sparks'
+    '[gladiator2.name] [result_message]. Доход от боя: [prize]'
+    if fame:
+        $ pass
     python:
         if fight.loser == player:
             renpy.full_restart()
