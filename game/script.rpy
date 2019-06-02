@@ -708,7 +708,9 @@ label lbl_market(core, player):
             buy_action = 'buy' if price <= player.sparks else None
             actions = [('Buy %s sparks' % price, buy_action), ('Skip', 'skip'), ('Leave', 'leave')]
             description = MarketDescription(slave).make_description()
-        show expression im.Scale(slave.avatar, 150, 150) at left
+        show expression im.Scale(slave.avatar, 150, 150):
+            xalign 0.05
+            yalign 0.95
         menu:
             '[description]'
             'Купить' if price <= player.sparks:
