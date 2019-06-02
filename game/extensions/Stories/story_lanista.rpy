@@ -405,11 +405,22 @@ label lbl_storylanista_marketintro:
     'Теперь нужно позаботиться о своём главном капитале - приобрести рабов.'
     scene expression 'images/bg/slavemarket.png'
     'Я отправился на центральный невольничий рынок'
-    slaver "Приветствую тебя, о Солнцеликий! Прошу сюда, погляди на мой товар!"
+    slaver "Прыветствую тебя, о Солнцеликий! Я Фарид, скромный торговец живым товаром. Прошу сюда, погляди что я могу тебе предложить!"
+    player 'Ты продаёшь гладиаторов?'
+    slaver 'О, нэт, тарагой. Это било бы нарущение. Только ланиста с лицензией может обучать, выставлять на бой и продавать гладиаторов.'
+    player 'Я - ланиста с лицензией.'
+    slayer 'Тогда я точно знаю что тебэ нужно! Вэдь ти толко начинаишь? Не пакупай готових гладыатаров - слишьком дорого. Купи у Фарида харощий материал.'
+    player 'И как это устоено?'
+    slaver 'Очэнь просто. Я торгую клэйплёными и нэ клэйлёными рабами. Нэклеймлёные тэбе нэ нужны - их нада воспитывать. Нэклеймленых пакупают трэнеры рабов.'
+    slaver 'Когда раб начинает слушаться, ему ставят клэймо и присваивают катэгорию. Особо пэрпективных трэнеруют дальше, а большинство отправляют обратно ка мнэ.'
+    slaver 'Раз в дэкаду я провожу аукцыон - продаю обученных послушанию, но в остальном ничего нэ умеющих рабов по одному.'
+    slaver 'Сэйчас как раз будет аукцыон. Нэ найдёшь подходяшэго в этот раз - прихады через декада!'
+    player 'Ладно, давай посмотрим что у тебя есть...'
+    'Я присоединяюсь к группе покупателей ожидающих начала аукциона возле подиума для демонстрации товара.'
 
     return
 
-label lbl_storylanista_luctatorbang:
+label lbl_storylanista_luctatorbang(context):
     scene expression 'images/bg/brothel.png'
     show expression 'images/special/luctator_bang.png' as bang at top with dissolve
     'Плейсхолдер. Тут будет сцена секса с проигравшей луктаторшей.'
@@ -419,18 +430,20 @@ label lbl_storylanista_luctatorbang:
 
     return
 
-label lbl_storylanista_wenchsex:
+label lbl_storylanista_wenchsex(context):
     scene expression 'images/special/wench_bang.png'
     'Плейсхолдер. Тут будет сцена секса с официанткой Хлоей из таверны.'
 
     return
 
-label lbl_storylanista_brobang:
+label lbl_storylanista_brobang(context):
+    player 'Пойдём развлечёмся, дружище!'
     scene expression 'images/special/brosex.png'
     'Плейсхолдер. Тут будет сцена двойного проникновения на пару с гладиатором.'
     return
 
-label lbl_storylanista_slavesex:
+label lbl_storylanista_slavesex(context):
+    player 'Давай развлекаться!'
     scene expression 'images/special/slavesex.png'
     'Плейсхолдер. Тут будет сцена любви со своей гладиаторшей.'
     return
@@ -457,6 +470,7 @@ label lbl_storylanista_endofstory:
     'Ну а пробился на вершину славы которой способен достичь ланиста'
     redsonya 'Наслаждаешься моментом?'
     scene expression 'images/special/sonya_love.png'
+    'Плейсхолдер для сцены с Рыжей Соней'
     player 'Я ПОБЕДИЛ!'
     $ renpy.full_restart()
     return
