@@ -12,7 +12,7 @@
 ##
 ## The _() surrounding the string marks it as eligible for translation.
 
-define config.name = _("Mists of Eternal Rome")
+define config.name = _("{b}{color=#fff}ТВР: Путь гладиатора{/color}{/b}")
 
 
 ## Determines if the title given above is shown on the main menu screen. Set
@@ -23,7 +23,7 @@ define gui.show_name = True
 
 ## The version of the game.
 
-define config.version = "0.10.1"
+define config.version = "0.11.1"
 
 
 ## Text that is placed on the game's about screen. Place the text between the
@@ -39,15 +39,13 @@ The version is unstable.
 ----Bugtracking----
 
 Not yet implemented. If you find a bug, just don't bother, existing code will be refactored immensly anyways )
-To pass the bug, try to press "ignore" in error screen.
+To pass the bug, try to press "ignore" in error screen if possible.
 
 -----Links-----
 
 Twitter: https://twitter.com/OldHuntsman
 
 Steem: https://steemit.com/@oldhuntsman
-
-Голос: https://golos.io/@oldhuntsman
 
 e-mail: old_huntsman@yahoo.com
 
@@ -67,7 +65,7 @@ Monero:  42kTnBCG65Z9VFLDcKRfZL97NrGVy7UR9Sz6AmAFmSC8NmJFfah1BWV2smimQpQmxceQ8YX
 ## distribution. This must be ASCII-only, and must not contain spaces, colons,
 ## or semicolons.
 
-define build.name = "MER-Reboot"
+define build.name = "MER: Way of lanista"
 
 
 ## Sounds and music ############################################################

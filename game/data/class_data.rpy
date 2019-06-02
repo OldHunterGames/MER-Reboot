@@ -113,7 +113,7 @@ init python:
             'attack_suits': ['spades'],
             'tag': 'gladiator',
             'cost': 10,
-            'cards': ['sword', 'dual_strike', 'evasive', 'combat_expirience'],
+            'cards': ['sword', 'dual_strike', 'evasive', 'light_armor'],
         },
         'retiarius': {
             'name': __('Retiarius'),

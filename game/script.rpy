@@ -577,13 +577,13 @@ label lbl_main:
         #     python:
         #         angel = AngelMaker.gen_archon()
         #         MistTravel(angel.world, player, core).run()
-        'Taberna':
+        'Таверна':
             call lbl_taberna()
-        'Lupanarium':
+        'Лупанарий':
             call lbl_lupanarium()
-        'Colosseum':
+        'Колизей':
             call lbl_colosseum()
-        'Home':
+        'Домой':
             python:
                 home_manager.call()
                 if home_manager.should_skip_turn:
@@ -641,11 +641,11 @@ label lbl_slave_actions(slave):
                 python:
                     text = ''
                     if player.person_class.tier <= slave.person_class.tier:
-                        text = 'Простите, хозяин, но прежде чем вы сможете готовить более сильных гладиаторов Вам нужно заработать больше опыта и славы. Нужна достойная победа на новой арене.'
+                        text = __('Простите, хозяин, но прежде чем вы сможете готовить более сильных гладиаторов Вам нужно заработать больше опыта и славы. Нужна достойная победа на новой арене.')
                     elif not getattr(slave, 'win_arena', False):
-                        text = 'Мне нужно больше боевого опыта прежде чем я смогу выступать с новым снаряжением, Хозяин. Позвольте мне победить хотя бы одного достойного противника.'
+                        text = __('Мне нужно больше боевого опыта прежде чем я смогу выступать с новым снаряжением, Хозяин. Позвольте мне победить хотя бы одного достойного противника.')
                     elif slave.person_class.tier == 5:
-                        text = 'Я уже чемпион арены. Более сильных гладиаторов Рим не знал.'
+                        text = __('Я уже чемпион арены. Более сильных гладиаторов Рим не знал.')
                     
                 slave '[text]'
             'Отработать тактику боя' if not has_temp:
@@ -656,7 +656,7 @@ label lbl_slave_actions(slave):
                     return
             'Оплатить развлечение (5 искр)':
                 if is_all_exhausted:
-                    slave "Вы очень щедры, Хозяин, но какой смысл развлекаться водиночку? Мне нужна компания, а все уже заняты другими делами на этой декаде."
+                    slave "Вы очень щедры, Хозяин, но какой смысл развлекаться в одиночку? Мне нужна компания, а все уже заняты другими делами на этой декаде."
                 else:
                     python:
                         variants = []
@@ -711,13 +711,13 @@ label lbl_market(core, player):
         show expression im.Scale(slave.avatar, 150, 150) at left
         menu:
             '[description]'
-            'Buy' if price <= player.sparks:
+            'Купить' if price <= player.sparks:
                 python:
                     player.slaves.append(slave)
                     player.sparks -= price
-            'Skip':
+            'Пропустить':
                 $ pass
-            'Leave':
+            'Уйти':
                 $ slaves = []
     hide sc_main_stats
     return
@@ -736,12 +736,12 @@ label lbl_lupanarium():
         mudfight = available_arenas['mudfight']
         whip_fight = available_arenas['whip_fight']
         if mudfight.is_active(player):
-            choices.append(('Mudfight', mudfight))
+            choices.append(('Борьба в масле', mudfight))
 
         if whip_fight.is_active(player):
-            choices.append(('Whip fight', whip_fight))
+            choices.append(('Дуэль на кнутах', whip_fight))
 
-        choices.append(('Return', 'return'))
+        choices.append(('Назад', 'return'))
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
@@ -756,9 +756,9 @@ label lbl_taberna():
         choices = []
         pitfight = available_arenas['pitfight']
         if pitfight.is_active(player):
-            choices.append(('Pitfight', pitfight))
+            choices.append(('Кулачный бой', pitfight))
 
-        choices.append(('Return', 'return'))
+        choices.append(('Назад', 'return'))
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
@@ -776,18 +776,18 @@ label lbl_colosseum():
         premium_fight = available_arenas['premium_fights']
         tournament = available_arenas['tournament']
         if chaotic.is_active(player):
-            choices.append(('Chaotic fights', chaotic))
+            choices.append(('Случайные схватки', chaotic))
 
         if common_fight.is_active(player):
-            choices.append(('Common fight', common_fight))
+            choices.append(('Рядовой поединок', common_fight))
 
         if premium_fight.is_active(player):
-            choices.append(('Premium fight', premium_fight))
+            choices.append(('Ключевой поединок', premium_fight))
 
         if tournament.is_active(player) and len(tournament.filter_fighters(player)) >= 3:
-            choices.append(('Tournament', tournament))
+            choices.append(('Турнир', tournament))
     
-        choices.append(('Return', 'return'))
+        choices.append(('Назад', 'return'))
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
@@ -806,13 +806,13 @@ label lbl_grand_fight(arena_maker):
         class_ids = ['myrmidon', 'retiarius', 'cenobite', 'dimacheros', 'goplynia', 'secutor']
         enemies = [make_gladiator(allowed_classes=[PersonClass.get_by_id(i)]) for i in class_ids]
         arena_maker.current_enemy = enemies.pop(0)
-    'Select you team (3 fighters)'
+    'Собери команду (нужно 3 бойца)'
     python:
         while len(team) < 3:
             selector = FighterSelector(player, arena_maker, team)
             selector.run()
             team.append(selector.current_fighter())
-    'Tournament is going to begin'
+    'Турнир начинается'
     python:
         while len(team) > 0 and len(enemies) > 0:
             selector = FighterSelector(player, arena_maker, team=team, start_text=__('Начать бой'))
@@ -831,7 +831,7 @@ label lbl_grand_fight(arena_maker):
             player_win = True
         else:
             player_win = False
-    'Tournament ended'
+    'Турнир окончен'
 
     python:
         if player_win:
@@ -1017,7 +1017,8 @@ label lbl_world_dummy(world):
 
 
 label lbl_gameover():
-    'You are broke'
+    player 'Проклятье... у меня больше нет Искр чтобы поддерживать инсигнию'
+    phoenix 'Прощай, Барашек...'
     'GAME OVER'
     $ renpy.full_restart()
     return
