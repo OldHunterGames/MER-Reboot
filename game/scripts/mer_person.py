@@ -65,7 +65,7 @@ class CoreFeature(object):
 class PersonCreator(object):
 
     AGE_SLOTS = {
-        'junior': 1,
+        # 'junior': 1,
         'elder': 2,
         'adolescent': 3,
         'mature': 4,
