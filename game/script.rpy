@@ -454,19 +454,19 @@ init python:
 
         def lupanarium_first_win(self):
             self.lupanarium_win = True
-            renpy.call_in_new_context('lbl_storylanista_luctatorbang')
+            renpy.call_in_new_context('lbl_storylanista_luctatorbang', {})
         
         def taberna_first_win(self):
             self.taberna_first_win = True
-            renpy.call_in_new_context('lbl_storylanista_wenchsex')
+            renpy.call_in_new_context('lbl_storylanista_wenchsex', {})
         
         def lanista_3_level(self):
             self.lanista_3 = True
-            renpy.call_in_new_context('lbl_storylanista_coleventpunish')
+            renpy.call_in_new_context('lbl_storylanista_coleventpunish', {})
         
         def lanista_4_level(self):
             self.lanista_4 = True
-            renpy.call_in_new_context('lbl_storylanista_sonyabang')
+            renpy.call_in_new_context('lbl_storylanista_sonyabang', {})
         
         def slave_party_first(self, context):
             self.slave_party = True
@@ -478,7 +478,7 @@ init python:
         
         def win_tournamet(self):
             self.tournament = True
-            renpy.call_in_new_context('lbl_storylanista_endofstory')
+            renpy.call_in_new_context('lbl_storylanista_endofstory'. {})
 
 # The game starts here.
 
@@ -925,7 +925,7 @@ label lbl_arena(arena_maker, location=None):
         return
     show expression img
     python:
-        if fame:
+        if fame:F
             if location == 'lupanarium' and not triggers.lupanarium_win:
                 triggers.lupanarium_first_win()
             if location == 'taberna' and not triggers.taberna_win:
