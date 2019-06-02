@@ -681,7 +681,7 @@ label lbl_slave_actions(slave):
                         lover = slave.get_relation('lover')
                         if friend is not None:
                             variants.append(
-                                ('{0} (лучший друг'.format(friend.name), fiend if not friend.exhausted else None)
+                                ('{0} (лучший друг'.format(friend.name), friend if not friend.exhausted else None)
                             )
                         if lover is not None:
                             variants.append(
