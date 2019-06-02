@@ -438,7 +438,7 @@ label lbl_storylanista_wenchsex(context):
     return
 
 label lbl_storylanista_brobang(context):
-    glad = context['slave']
+    $ glad = context['slave']
     player 'Пойдём развлечёмся, дружище!'
     glad 'Развлечёмся? Это как, хозяин?'
     player 'Пойдём бухнём в таверне. Может быть снимем девку или набьём кому-нибудь морду. А может быть и то и другое.'
@@ -501,7 +501,7 @@ label lbl_storylanista_brobang(context):
     return
 
 label lbl_storylanista_slavesex(context):
-    glad = context['slave']
+    $ glad = context['slave']
     player 'Давай развлекаться!'
     glad 'Развлекаться, хозяин?'
     player 'Да не напрягайся ты так. Ты заслужила немного отдыха и ласки.'
