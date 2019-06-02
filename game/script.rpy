@@ -510,7 +510,7 @@ label start:
                 make_mudfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, die_after_fight=False, cards_filter=filter_equipment, arena_bg='brothel'
             ),
             'whip_fight': MerArenaMaker(
-                make_whipfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, min_player_level=3, die_after_fight=False, arena_bg='whip'
+                make_whipfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, min_player_level=3, die_after_fight=False, arena_bg='brothel'
             ),
             'pitfight': MerArenaMaker(
                 make_pitfight_gladiator,
