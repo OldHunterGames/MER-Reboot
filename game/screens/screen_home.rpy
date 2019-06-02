@@ -110,8 +110,7 @@ screen sc_home(home):
                                     action Function(home.slave_actions)
                             text home.current_slave.name color '#fff'
                             text home.current_slave.person_class.colored_name()
-                            text 'Raiting: %s' % PriceCalculator(home.current_slave).training_price()
-                            text 'Победы: %s (%s)' % (PriceCalculator(home.current_slave).current_class_wins(), PriceCalculator(home.current_slave).total_wins())
+                            text 'Победы: %s (%s)' % (PriceCalculator(home.current_slave).total_wins(), PriceCalculator(home.current_slave).current_class_wins())
                             text encolor_text(core_souls[home.current_slave.soul_level], home.current_slave.soul_level)
                             for attr in home.current_slave.show_attributes().values():
                                 text attr
