@@ -239,3 +239,5 @@ init python:
 ## by a slash.
 
 # define build.itch_project = "renpytom/test-project"
+
+define config.has_autosave = False

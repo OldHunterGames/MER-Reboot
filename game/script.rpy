@@ -59,80 +59,8 @@ init 1 python:
     for suit in CoreDuelSuit.get_suits():
         data = {'suit': suit}
         CoreDuelCard.register_card(suit.id, CoreDuelCard(suit.id, data))
-
-    def make_gladiator(allowed_classes=None, person_generator_params=None, min_tier=0, max_tier=5):
-        if person_generator_params is None:
-            person_generator_params = {}
-        while True:
-            gladiator = PersonCreator.gen_person(genus='human', **person_generator_params)
-            if allowed_classes is not None:
-                classes = allowed_classes
-            else:
-                classes = PersonClass.pipe_filters(PersonClass.class_filter, PersonClass.gender_filter)(
-                   gladiator, PersonClass.get_by_tag('gladiator'))
-                classes = [i for i in classes if i.tier >= min_tier and i.tier <= max_tier]
-            classes_to_give = []
-            for i in classes:
-                if gladiator.attribute(i.key_attributes[0]) >= i.tier:
-                    classes_to_give.append(i)
-            if len(classes_to_give) < 1:
-                continue
-            gladiator.person_class = random.choice(classes_to_give)
-
-            return gladiator
-
-        return gladiator
     
-    def make_mudfight_gladiator():
-        return make_gladiator(PersonClass.get_by_ids(['lucator']), {'gender': 'female'})
-    
-    def make_whipfight_gladiator():
-        return make_gladiator(PersonClass.get_by_ids(['andabant']), {'gender': 'female'})
-    
-    def make_pitfight_gladiator():
-        return make_gladiator(PersonClass.get_by_ids(['pugilist']), {'gender': 'male'})
-    
-    def make_gladiator_fit_raiting(low, high, calculator, max_tier=5):
-        min_tier = 0
-        def inner():
-            while True:
-                if low >= 30:
-                    min_tier = 2
-                if low >= 100:
-                    min_tier = 3
-                glad = make_gladiator(min_tier=min_tier, max_tier=max_tier)
-                price = calculator(glad).training_price()
-                if price >= low and price <= high:
-                    return glad
-        return inner
-    
-    def make_champion():
-        return make_gladiator(PersonClass.get_by_tag('gladiator', PersonClass.get_by_tier(5)))
-    
-    def default_arena_prize(arena):
-        sparks = arena.enemy.person_class.tier * 5
-        if arena.fight.is_player_win():
-            sparks *= 2
-        return sparks
-    
-    def lupanarium_prize(arena):
-        if arena.fight.is_player_win():
-            prize = 15
-        else:
-            value = arena.fight.player_combatant.attribute('charisma')
-            if value < 0:
-                prize = 1
-            else:
-                prize = 5 + 5 * value
-        if arena.fight.player_combatant.person_class == PersonClass.get_by_id('lucator'):
-            prize += 5
-        return prize
-    
-    def whipfight_prize(arena):
-        return PriceCalculator(arena.enemy).training_price()
-    
-    def filter_equipment(card):
-        return card.type != 'equipment'
+    from mer_settings import *
 
 init python:
     class FighterSelector(object):
@@ -327,69 +255,6 @@ init python:
         def show(self):
             return renpy.show_screen('sc_simple_selector', selector=self)
     
-    class PriceCalculator(object):
-        _RAITINGS = defaultdict(int)
-        _WINS = defaultdict(dict)
-        attrs_table = {
-            0: 0,
-            1: 1,
-            2: 5,
-            3: 10,
-            4: 20,
-            5: 50,
-        }
-        
-        def __init__(self, person):
-            self.person = person
-        
-        def add_win(self):
-            if self._WINS[self.person].get(self.person.person_class.id) is not None:
-                self._WINS[self.person][self.person.person_class.id] += 1
-            else:
-                self._WINS[self.person][self.person.person_class.id] = 1
-            
-        def current_class_wins(self):
-            return self._WINS[self.person].get(self.person.person_class.id, 0)
-        
-        def total_wins(self):
-            if len(self._WINS[self.person].values()) > 0:
-                return sum(self._WINS[self.person].values())
-            return 0
-        
-        def add_raiting(self, value):
-            self._RAITINGS[self.person] += value - self._rating_modifier()
-        
-        def potential_price(self):
-            price = 0
-            for value in self.person.attributes().values():
-                price += self.attrs_table.get(value, -10)
-            price += self.attrs_table.get(self.person.soul_level, -10)
-            return price
-        
-        def training_price(self):
-            price = 0
-            for card in self.person.get_cards('combat', get_temporary=False):
-                suit = card.suit(self.person)
-                if suit == Suits.SKULL:
-                    price += card.get_power(self.person)
-                elif suit == Suits.JOKER:
-                    price += 100
-                else:
-                    price += 10 + 5 * card.get_power(self.person)
-            return price
-        
-        def raiting_price(self):
-            return self._RAITINGS.get(self.person, 0)
-        
-        def _rating_modifier(self):
-            return self.raiting_price() / 20
-        
-        def price(self):
-            return max(5, max(self.potential_price(), self.training_price(), self.raiting_price()))
-        
-        def entertainment_raiting_formula(self):
-            return self.training_price() * self.person.person_class.tier ** 2
-    
     class MarketDescription:
         def __init__(self, person):
             self.person = person
@@ -485,7 +350,7 @@ init python:
 label start:
     $ player = PersonCreator.gen_person(name='Player', gender='male', genus='human')
     $ player.person_class = PersonClass.get_by_id('infamous_lanista')
-    $ player.armor = Armor.random_by_type(player.person_class.available_garments[0])
+    # $ player.armor = Armor.random_by_type(player.person_class.available_garments[0])
     $ player.slaves = []
     $ core = MERCore()
     $ core.player = player
@@ -493,80 +358,29 @@ label start:
     # $ core.skip_turn.add_callback(CoreAddCards(player).run)
     # $ core.skip_turn.add_callback(CoreDuel.drop_skulls_callback)
     # $ core.skip_turn.add_callback(CoreSexMinigame.decade_skip_callback)
+    $ setup_arenas(core)
 
     python:
+        pass
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
-
-        slavestore = SlaveMarket(player, PriceCalculator)
-        pitfight_classes = PersonClass.get_by_ids(['lucator', 'pugilist', 'menial_slave'])
-        heat_up_classes = list(set(PersonClass.get_by_tag('gladiator'))
-            .difference(set(PersonClass.get_by_tier(4)))
-            .difference(set(PersonClass.get_by_tier(5)))
-        )
-        enemies = list(set(heat_up_classes).intersection(set(PersonClass.get_by_tier(3))))
-        grand_fight_classes = PersonClass.get_by_tag('gladiator')
-        available_arenas = {
-            'mudfight': MerArenaMaker(
-                make_mudfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, die_after_fight=False, cards_filter=filter_equipment, arena_bg='brothel'
-            ),
-            'whip_fight': MerArenaMaker(
-                make_whipfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, min_player_level=3, die_after_fight=False, arena_bg='brothel'
-            ),
-            'pitfight': MerArenaMaker(
-                make_pitfight_gladiator,
-                lambda person: person.gender == 'male',
-                default_arena_prize,
-                die_after_fight=False,
-                cards_filter=filter_equipment,
-                arena_bg='pit'
-            ),
-            'chaotic_fights': MerArenaMaker(
-                make_gladiator,
-                lambda person: True,
-                lambda _: 0,
-                die_after_fight=False,
-                gain_prestige=False,
-                can_skip_enemy=True,
-                arena_bg='arena'
-            ),
-            'common_fight': MerArenaMaker(
-                make_gladiator_fit_raiting(30, 100, PriceCalculator, max_tier=3),
-                lambda person: True,
-                default_arena_prize,
-                min_player_level=2,
-                arena_bg='arena',
-            ),
-            'premium_fights': MerArenaMaker(
-                make_gladiator_fit_raiting(100, 150, PriceCalculator),
-                lambda person: True,
-                default_arena_prize,
-                min_player_level=3,
-                arena_bg='arena',
-            ),
-            'tournament': MerArenaMaker(
-                make_gladiator,
-                lambda person: True,
-                default_arena_prize,
-                min_player_level=4,
-                arena_bg='arena',
-            )
-        }
-        for arena in available_arenas.values():
-            core.skip_turn.add_callback(arena.set_gladiator)
+        
 
         home_manager = HomeManager(player)
         auction = Auction(core, player)
         core.skip_turn.add_callback(auction.on_skip_turn)
-        core.skip_turn.add_callback(slavestore.update_slaves)
         core.before_skip_turn.add_callback(home_manager.on_skip_turn)
+
         # for i in range(10):
         #     test()
-
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
     call lbl_storylanista_start
     call lbl_market(core, player)
     call _main from _call__main
 
+    return
+
+label lbl_test1:
+    'test1'
     return
 
 label _main:
@@ -1070,3 +884,12 @@ label lbl_world_return():
     else:
         $ renpy.set_return_stack([])
     return
+
+label quit:
+    python:
+        try:
+            FileSave('mer_saving', confirm=False)()
+        except Exception as e:
+            print(e)
+            with open('save_failed.log', 'wb') as f:
+                f.write(str(e))

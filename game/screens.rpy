@@ -352,15 +352,10 @@ screen navigation():
         if main_menu:
 
             textbutton _("Start") action Start()
-
-        else:
-
-            textbutton _("History") action ShowMenu("history")
-
-            textbutton _("Save") action ShowMenu("save")
+            if renpy.can_load('mer_autosave'):
+                textbutton _("Continue") action FileLoad('mer_saving')
 
         textbutton _("Load") action ShowMenu("load")
-
         textbutton _("Preferences") action ShowMenu("preferences")
 
         if _in_replay:

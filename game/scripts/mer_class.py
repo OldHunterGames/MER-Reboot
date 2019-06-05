@@ -1,4 +1,5 @@
 import random
+from collections import defaultdict
 
 import renpy.store as store
 import renpy.exports as renpy
@@ -320,6 +321,13 @@ class MerArena(object):
             return True
         return False
 
+class ArenaSetGladiator(object):
+
+    def __init__(self, arena):
+        self.arena = arena
+    
+    def __call__(self):
+        self.arena.set_gladiator()
 
 class MerArenaMaker(object):
 
@@ -358,3 +366,65 @@ class MerArenaMaker(object):
     def get_prize(self, arena):
         return self.sparks_calculator(arena)
 
+class PriceCalculator(object):
+        _RAITINGS = defaultdict(int)
+        _WINS = defaultdict(dict)
+        attrs_table = {
+            0: 0,
+            1: 1,
+            2: 5,
+            3: 10,
+            4: 20,
+            5: 50,
+        }
+        
+        def __init__(self, person):
+            self.person = person
+        
+        def add_win(self):
+            if self._WINS[self.person].get(self.person.person_class.id) is not None:
+                self._WINS[self.person][self.person.person_class.id] += 1
+            else:
+                self._WINS[self.person][self.person.person_class.id] = 1
+            
+        def current_class_wins(self):
+            return self._WINS[self.person].get(self.person.person_class.id, 0)
+        
+        def total_wins(self):
+            if len(self._WINS[self.person].values()) > 0:
+                return sum(self._WINS[self.person].values())
+            return 0
+        
+        def add_raiting(self, value):
+            self._RAITINGS[self.person] += value - self._rating_modifier()
+        
+        def potential_price(self):
+            price = 0
+            for value in self.person.attributes().values():
+                price += self.attrs_table.get(value, -10)
+            price += self.attrs_table.get(self.person.soul_level, -10)
+            return price
+        
+        def training_price(self):
+            price = 0
+            for card in self.person.get_cards('combat', get_temporary=False):
+                suit = card.suit(self.person)
+                if suit == Suits.SKULL:
+                    price += card.get_power(self.person)
+                elif suit == Suits.JOKER:
+                    price += 100
+                else:
+                    price += 10 + 5 * card.get_power(self.person)
+            return price
+        
+        def raiting_price(self):
+            return self._RAITINGS.get(self.person, 0)
+        
+        def _rating_modifier(self):
+            return self.raiting_price() / 20
+        
+        def price(self):
+            return max(5, max(self.potential_price(), self.training_price(), self.raiting_price()))
+        
+        def entertainment_raiting_formula(self):
+            return self.training_price() * self.person.person_class.tier ** 2
