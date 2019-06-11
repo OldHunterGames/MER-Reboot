@@ -65,7 +65,7 @@ Monero:  42kTnBCG65Z9VFLDcKRfZL97NrGVy7UR9Sz6AmAFmSC8NmJFfah1BWV2smimQpQmxceQ8YX
 ## distribution. This must be ASCII-only, and must not contain spaces, colons,
 ## or semicolons.
 
-define build.name = "MER Way of lanista"
+define build.name = "MER-WofL"
 
 
 ## Sounds and music ############################################################
