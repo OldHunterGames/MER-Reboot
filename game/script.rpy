@@ -741,6 +741,9 @@ label lbl_arena(arena_maker, location=None):
     if gladiator2 is None:
         return
     show expression img
+    
+
+    '[gladiator2.name] [result_message]. Доход от боя: [prize]'
     python:
         if fame:
             if location == 'lupanarium' and not triggers.lupanarium_win:
@@ -751,8 +754,6 @@ label lbl_arena(arena_maker, location=None):
                 triggers.lanista_3_level()
             if player.person_class.tier == 4 and not triggers.lanista_4:
                 triggers.lanista_4_level()
-
-    '[gladiator2.name] [result_message]. Доход от боя: [prize]'
     if fame:
         $ pass
     python:

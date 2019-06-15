@@ -103,10 +103,10 @@ screen sc_arena(arena):
                 xalign 0.5
                 yalign 0.6
                 if standoff.message == 'success':
-                    text 'success'
+                    image 'images/special/strike_hit.png'
                     timer 1.0 action Function(standoff.clear_message)
                 elif standoff.message == 'fail':
-                    text 'fail'
+                    image 'images/special/strike_fail.png'
                     timer 1.0 action Function(standoff.clear_message)
 
 
