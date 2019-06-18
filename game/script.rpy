@@ -317,21 +317,21 @@ init python:
             self.slave_sex = False
             self.tournament = False
 
-        def lupanarium_first_win(self):
+        def lupanarium_first_win(self, context):
             self.lupanarium_win = True
-            renpy.call_in_new_context('lbl_storylanista_luctatorbang', {})
+            renpy.call_in_new_context('lbl_storylanista_luctatorbang', context)
         
         def taberna_first_win(self, context):
             self.taberna_first_win = True
             renpy.call_in_new_context('lbl_storylanista_wenchsex', context)
         
-        def lanista_3_level(self):
+        def lanista_3_level(self, context):
             self.lanista_3 = True
-            renpy.call_in_new_context('lbl_storylanista_coleventpunish', {})
+            renpy.call_in_new_context('lbl_storylanista_coleventpunish', context)
         
-        def lanista_4_level(self):
+        def lanista_4_level(self, context):
             self.lanista_4 = True
-            renpy.call_in_new_context('lbl_storylanista_sonyabang', {})
+            renpy.call_in_new_context('lbl_storylanista_sonyabang', context)
         
         def slave_party_first(self, context):
             self.slave_party = True
@@ -747,13 +747,13 @@ label lbl_arena(arena_maker, location=None):
     python:
         if fame:
             if location == 'lupanarium' and not triggers.lupanarium_win:
-                triggers.lupanarium_first_win()
+                triggers.lupanarium_first_win({'slave': gladiator2})
             if location == 'taberna' and not triggers.taberna_win:
                 triggers.taberna_first_win({'slave': gladiator2})
             if player.person_class.tier == 3 and not triggers.lanista_3:
-                triggers.lanista_3_level()
+                triggers.lanista_3_level({'slave': gladiator2})
             if player.person_class.tier == 4 and not triggers.lanista_4:
-                triggers.lanista_4_level()
+                triggers.lanista_4_level({'slave': gladiator2})
     if fame:
         $ pass
     python:
