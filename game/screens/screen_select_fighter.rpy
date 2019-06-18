@@ -9,6 +9,7 @@ screen sc_select_fighter(selector):
     zorder 10
     window:
         background '#777777'
+        image selector.arena_maker.selection_bg
         # image gui_image('arena/UI_overlay.png')
         style 'char_info_window'
         vbox:

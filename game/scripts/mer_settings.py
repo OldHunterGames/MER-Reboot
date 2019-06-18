@@ -85,10 +85,10 @@ enemies = list(set(heat_up_classes).intersection(set(PersonClass.get_by_tier(3))
 grand_fight_classes = PersonClass.get_by_tag('gladiator')
 available_arenas = {
     'mudfight': MerArenaMaker(
-        make_mudfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, die_after_fight=False, cards_filter=filter_equipment, arena_bg='brothel'
+        make_mudfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, die_after_fight=False, cards_filter=filter_equipment, arena_bg='brothel', selection_bg='images/bg/brothel.png'
     ),
     'whip_fight': MerArenaMaker(
-        make_whipfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, min_player_level=3, die_after_fight=False, arena_bg='brothel'
+        make_whipfight_gladiator, lambda person: person.gender == 'female', lupanarium_prize, min_player_level=3, die_after_fight=False, arena_bg='brothel', selection_bg='images/bg/brothel.png'
     ),
     'pitfight': MerArenaMaker(
         make_pitfight_gladiator,
@@ -96,7 +96,8 @@ available_arenas = {
         default_arena_prize,
         die_after_fight=False,
         cards_filter=filter_equipment,
-        arena_bg='pit'
+        arena_bg='pit',
+        selection_bg='images/bg/tavern_empty.png',
     ),
     'chaotic_fights': MerArenaMaker(
         make_gladiator,
@@ -105,7 +106,8 @@ available_arenas = {
         die_after_fight=False,
         gain_prestige=False,
         can_skip_enemy=True,
-        arena_bg='arena'
+        arena_bg='arena',
+        selection_bg='images/bg/arena.png',
     ),
     'common_fight': MerArenaMaker(
         make_gladiator_fit_raiting(30, 100, PriceCalculator, max_tier=3),
@@ -113,6 +115,7 @@ available_arenas = {
         default_arena_prize,
         min_player_level=2,
         arena_bg='arena',
+        selection_bg='images/bg/arena.png',
     ),
     'premium_fights': MerArenaMaker(
         make_gladiator_fit_raiting(100, 150, PriceCalculator),
@@ -120,6 +123,7 @@ available_arenas = {
         default_arena_prize,
         min_player_level=3,
         arena_bg='arena',
+        selection_bg='images/bg/arena.png',
     ),
     'tournament': MerArenaMaker(
         make_gladiator,
@@ -127,6 +131,7 @@ available_arenas = {
         default_arena_prize,
         min_player_level=4,
         arena_bg='arena',
+        selection_bg='images/bg/arena.png',
     )
 }
 

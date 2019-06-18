@@ -73,9 +73,9 @@ define build.name = "MER-WofL"
 ## These three variables control which mixers are shown to the player by
 ## default. Setting one of these to False will hide the appropriate mixer.
 
-define config.has_sound = False
-define config.has_music = False
-define config.has_voice = False
+define config.has_sound = True
+define config.has_music = True
+define config.has_voice = True
 
 
 ## To allow the user to play a test sound on the sound or voice channel,

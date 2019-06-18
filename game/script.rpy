@@ -321,9 +321,9 @@ init python:
             self.lupanarium_win = True
             renpy.call_in_new_context('lbl_storylanista_luctatorbang', {})
         
-        def taberna_first_win(self):
+        def taberna_first_win(self, context):
             self.taberna_first_win = True
-            renpy.call_in_new_context('lbl_storylanista_wenchsex', {})
+            renpy.call_in_new_context('lbl_storylanista_wenchsex', context)
         
         def lanista_3_level(self):
             self.lanista_3 = True
@@ -749,7 +749,7 @@ label lbl_arena(arena_maker, location=None):
             if location == 'lupanarium' and not triggers.lupanarium_win:
                 triggers.lupanarium_first_win()
             if location == 'taberna' and not triggers.taberna_win:
-                triggers.taberna_first_win()
+                triggers.taberna_first_win({'slave': gladiator2})
             if player.person_class.tier == 3 and not triggers.lanista_3:
                 triggers.lanista_3_level()
             if player.person_class.tier == 4 and not triggers.lanista_4:

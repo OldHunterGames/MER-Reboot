@@ -85,6 +85,7 @@ screen sc_arena(arena):
             $ standoff = arena.fight
             $ enemy_card = standoff.enemy_current_card
             $ back = 'images/bg/' + arena.background + '_fight.png' or 'images/arena/Arena_BG.png'
+
             image back
             vbox:
                 xalign 0.5
@@ -104,10 +105,10 @@ screen sc_arena(arena):
                 yalign 0.6
                 if standoff.message == 'success':
                     image 'images/special/strike_hit.png'
-                    timer 1.0 action Function(standoff.clear_message)
+                    timer 2.0 action Function(standoff.clear_message), If(standoff.winner is not None, Return())
                 elif standoff.message == 'fail':
                     image 'images/special/strike_fail.png'
-                    timer 1.0 action Function(standoff.clear_message)
+                    timer 2.0 action Function(standoff.clear_message), If(standoff.winner is not None, Return())
 
 
             hbox:
@@ -130,7 +131,7 @@ screen sc_arena(arena):
                     spacing 15
                     if standoff.winner is None:
                         for card in standoff.player_cards:
-                            use fight_card_representation(card.suit(arena.ally, {}), card.get_power(arena.ally, {}), card.name, Function(standoff.select_card, card))
+                            use fight_card_representation(card.suit(arena.ally, {}), card.get_power(arena.ally, {}), card.name, [Function(standoff.select_card, card), If(standoff.will_win(card), true=Play('sound', 'sound/cheer.mp3'), false=Play('sound', 'sound/boo.mp3'))])
                 vbox:
                     vbox:
                         xalign 0.5

@@ -77,4 +77,20 @@ class Standoff(object):
         self.player_cards.remove(self.player_current_card)
         self.player_current_card = None
         self.calc_winner()
-
+    
+    def will_win(self, card):
+        if self.enemy_current_card is None:
+            return True
+        else:
+            player_suit, enemy_suit = suits_value(
+                card.suit(self.player_combatant, {}),
+                self.enemy_current_card.suit(self.enemy, {})
+            )
+            if player_suit > enemy_suit:
+                return True
+            elif player_suit == enemy_suit:
+                player_power = card.get_power(self.player_combatant, {'isEnemy': False})
+                enemy_power = self.enemy_current_card.get_power(self.enemy, {'isEnemy': True})
+                if player_power > enemy_power:
+                    return True
+            return False

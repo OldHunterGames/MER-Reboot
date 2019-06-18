@@ -331,7 +331,7 @@ class ArenaSetGladiator(object):
 
 class MerArenaMaker(object):
 
-    def __init__(self, maker_func, allowed_checker, sparks_calculator, min_player_level=0, die_after_fight=True, cards_filter=None, can_skip_enemy=False, gain_prestige=True, arena_bg=None):
+    def __init__(self, maker_func, allowed_checker, sparks_calculator, min_player_level=0, die_after_fight=True, cards_filter=None, can_skip_enemy=False, gain_prestige=True, arena_bg=None, selection_bg=None):
         self.min_player_level = min_player_level
         self.maker_func = maker_func
         self.allowed_checker = allowed_checker
@@ -344,6 +344,7 @@ class MerArenaMaker(object):
         self.gain_prestige = gain_prestige
         self.team = []
         self.arena_bg = arena_bg
+        self.selection_bg = selection_bg
 
     def is_active(self, player):
         return player.person_class.tier >= self.min_player_level and self.can_put_fighter(player)
