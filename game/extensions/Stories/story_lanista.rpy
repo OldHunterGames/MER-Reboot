@@ -683,7 +683,7 @@ label lbl_storylanista_sonyabang(context):
     return
 
 label lbl_storylanista_coleventpunish(context):
-    'Я определённо достиг нового уровня известности. Надо найти Рыжую Соню.'
+    player 'Я определённо достиг нового уровня известности.'
 
     return
 
