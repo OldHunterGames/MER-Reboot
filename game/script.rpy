@@ -447,16 +447,16 @@ label lbl_slave_actions(slave):
                     upgraded = False
                     while choice:
                         items = [('{0} ({1})'.format(i.name, i.cost), i) for i in home_manager.slave_upgrades(slave) if i.cost <= player.sparks]
-                        items.append(('Передумать', False))
+                        items.append((__('Передумать'), False))
                         choice = renpy.display_menu(items)
                         if choice:
                             variants = []
-                            text = 'Начать тренировки (%s)' % choice.cost
+                            text = __('Начать тренировки (%s)') % choice.cost
                             if choice.cost <= player.sparks:
                                 variants.append((text, choice))
                             else:
                                 variants.append((text, None))
-                            variants.append(('Передумать', False))
+                            variants.append((__('Передумать'), False))
                             renpy.say(None, choice.description, interact=False)
                             next_choice = renpy.display_menu(variants)
                             if next_choice:
@@ -495,16 +495,16 @@ label lbl_slave_actions(slave):
                         lover = slave.get_relation('lover')
                         if friend is not None:
                             variants.append(
-                                ('{0} (лучший друг'.format(friend.name), friend if not friend.exhausted else None)
+                                (__('{0} (лучший друг').format(friend.name), friend if not friend.exhausted else None)
                             )
                         if lover is not None:
                             variants.append(
-                                ('{0} (любовник'.format(lover.name), lover if not lover.exhausted else None)
+                                (__('{0} (любовник').format(lover.name), lover if not lover.exhausted else None)
                             )
                         for i in player.slaves:
                             if i != friend and i != lover and i != player and not i.exhausted and i != slave:
                                 variants.append((i.name, i))
-                        variants.append(('Передумать', False))
+                        variants.append((__('Передумать'), False))
                         choice = renpy.display_menu(variants)
                         if choice:
                             if choice.gender == slave.gender:
@@ -570,12 +570,12 @@ label lbl_lupanarium():
         mudfight = available_arenas['mudfight']
         whip_fight = available_arenas['whip_fight']
         if mudfight.is_active(player):
-            choices.append(('Борьба в масле', mudfight))
+            choices.append((__('Борьба в масле'), mudfight))
 
         if whip_fight.is_active(player):
-            choices.append(('Дуэль на кнутах', whip_fight))
+            choices.append((__('Дуэль на кнутах'), whip_fight))
 
-        choices.append(('Назад', 'return'))
+        choices.append((__('Назад'), 'return'))
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
@@ -591,9 +591,9 @@ label lbl_taberna():
         choices = []
         pitfight = available_arenas['pitfight']
         if pitfight.is_active(player):
-            choices.append(('Кулачный бой', pitfight))
+            choices.append((__('Кулачный бой'), pitfight))
 
-        choices.append(('Назад', 'return'))
+        choices.append((__('Назад'), 'return'))
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
@@ -612,18 +612,18 @@ label lbl_colosseum():
         premium_fight = available_arenas['premium_fights']
         tournament = available_arenas['tournament']
         if chaotic.is_active(player):
-            choices.append(('Случайные схватки', chaotic))
+            choices.append((__('Случайные схватки'), chaotic))
 
         if common_fight.is_active(player):
-            choices.append(('Рядовой поединок', common_fight))
+            choices.append((__('Рядовой поединок'), common_fight))
 
         if premium_fight.is_active(player):
-            choices.append(('Ключевой поединок', premium_fight))
+            choices.append((__('Ключевой поединок'), premium_fight))
 
         if tournament.is_active(player) and len(tournament.filter_fighters(player)) >= 3:
-            choices.append(('Турнир', tournament))
+            choices.append((__('Турнир'), tournament))
     
-        choices.append(('Назад', 'return'))
+        choices.append((__('Назад'), 'return'))
         choice = renpy.display_menu(choices)
     if choice == 'return':
         return
@@ -725,15 +725,15 @@ label lbl_arena(arena_maker, location=None):
 
             result_message = ''
             if fame_changed and result == 'won':
-                result_message = 'одерживает славную победу.'
+                result_message = __('одерживает славную победу.')
             elif result == 'won' and not fame_changed:
-                result_message = 'легко побеждает слабого противника.'
+                result_message = __('легко побеждает слабого противника.')
             elif result != 'won' and location == 'lupanarium':
-                result_message = 'проиграла и ей пришлось стать развлечением для толпы.'
+                result_message = __('проиграла и ей пришлось стать развлечением для толпы.')
             elif result != 'won' and location == 'taberna':
-                result_message = 'проиграл бой. Он побит но скоро оправится'
+                result_message = __('проиграл бой. Он побит но скоро оправится')
             elif result != 'won':
-                result_message = 'получает смертельную рану'
+                result_message = __('получает смертельную рану')
             if result == 'won':
                 img = 'images/bg/' + arena_maker.arena_bg + '_win.png'
             else:
