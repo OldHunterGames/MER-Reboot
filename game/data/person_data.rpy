@@ -181,10 +181,10 @@ init python:
     }
 
     core_homeworld_features = {
-        'prehistoric': {'slot': 'homeworld', 'name': __('Prehistoric world'), 'market_description': __(' из дикого, неразвитого мира'), 'might': 1, 'knowledge': -1},
-        'industrial': {'slot': 'homeworld', 'name': __('Industrial world'), 'market_description': __('из индустриального мира'), 'might': -1, 'knowledge': 1},
-        'postapoc': {'slot': 'homeworld', 'name': __('Postapocalyptic world'), 'market_description': __('из мира разрушенного катаклизмом'), 'subtlety': 1, 'charisma': -1},
-        'utopia': {'slot': 'homeworld', 'name': __('Utopic world'), 'market_description': __('из счастливой утопической цивилизации'), 'subtlety': -1, 'charisma': 1},
+        'prehistoric': {'slot': 'homeworld', 'name': __('Prehistoric world'), 'market_description': __(' из дикого, неразвитого мира'), 'might': 1, 'knowledge': -1, 'backgrounds': ['commoner', 'worker', 'housewife', 'soldier', 'whore', 'scholar', 'noon', 'nobleman', 'noblewoman', 'king', 'princess',]},
+        'industrial': {'slot': 'homeworld', 'name': __('Industrial world'), 'market_description': __('из индустриального мира'), 'might': -1, 'knowledge': 1, 'backgrounds': ['commoner', 'worker', 'housewife', 'soldier', 'whore', 'scholar', 'noon', 'nobleman', 'noblewoman', 'king', 'princess',]},
+        'postapoc': {'slot': 'homeworld', 'name': __('Postapocalyptic world'), 'market_description': __('из мира разрушенного катаклизмом'), 'subtlety': 1, 'charisma': -1, 'backgrounds': ['commoner', 'worker', 'housewife', 'soldier', 'whore', 'scholar', 'noon', 'nobleman', 'noblewoman', 'king', 'princess',]},
+        'utopia': {'slot': 'homeworld', 'name': __('Utopic world'), 'market_description': __('из счастливой утопической цивилизации'), 'subtlety': -1, 'charisma': 1, 'backgrounds': ['commoner', 'worker', 'housewife', 'soldier', 'whore', 'scholar', 'noon', 'nobleman', 'noblewoman', 'king', 'princess',]},
     }
 
     core_family_features = {
