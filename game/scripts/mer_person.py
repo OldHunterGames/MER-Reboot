@@ -26,6 +26,13 @@ class CoreFeature(object):
         return self._data.get('attribute')
     
     @property
+    def prerequisites(self):
+        return self._data.get('prerequisites', [])
+    
+    def get(self, key, default=None):
+        return self._data.get(key, default)
+    
+    @property
     def market_description(self):
         return self._data.get('market_description', 'No description %s' % self.id)
 
@@ -134,36 +141,44 @@ class PersonCreator(object):
     def gen_person(cls, **kwargs):
         gender = kwargs.get('gender')
         genus = kwargs.get('genus')
-        age = kwargs.get('age')
-        # temporary genus is always human
-        genus = 'human'
+        genus_preset = kwargs.get('genus_preset')
+        if genus_preset is None and genus is None:
+            # raise Exception('No genus or genus preset provided for get_person')
+            genus_preset = store.serpsis_genus_preset
         if gender is None:
             gender = CoreFeature.random_by_slot('gender')
         else:
             gender = CoreFeature.get_feature(gender)
         if genus is None:
-            genus = random.choice(store.person_genuses)
-        if age is None:
-            age = weighted_random(cls.AGE_SLOTS)
-            age = CoreFeature.get_feature(age)
+            genus_id = weighted_random(genus_preset)
+            genus = CoreFeature.get_feature(genus_id)
+        else:
+            genus = CoreFeature.get_feature(genus)
+
         name = kwargs.get('name', PersonCreator.get_name(gender.id))
-        person = CorePerson(name, gender, age, genus)
+        person = CorePerson(name, gender, genus)
         for i in cls.make_features():
             person.add_feature(i)
         for i in cls.gender_features(gender.id):
             person.add_feature(i)
 
-        if person.age != 'junior':
-            attr = person.max_attribute()
-            features = CoreFeature.get_by_slot('profession')
-            for i in features:
-                if i.attribute == attr:
-                    person.add_feature(i)
-                    break
-        person.set_avatar(PersonCreator.gen_avatar(gender.id, age.id, genus))
+        cls.gen_background(person)
+        # person.set_avatar(PersonCreator.gen_avatar(gender.id, genus))
         cls.gen_initial_hand(person)
         return person
-
+    @classmethod
+    def gen_background(cls, person):
+        soul = person.soul_level
+        features = CoreFeature.get_by_slot('background')
+        person_features_id = [i.id for i in person.get_features()]
+        available_features = []
+        for feat in features:
+            if len(feat.prerequisites) < 1 and feat.get('tier', 0) <= person.soul_level:
+                available_features.append(feat)
+            else:
+                if all([i in person_features_id for i in feat.prerequisites]) and feat.get('tier', 0) <= person.soul_level:
+                    available_features.append(feat)
+        person.add_feature(random.choice(available_features))
     @classmethod
     def gen_initial_hand(cls, person):
         cards = person.sexuality.deck.get_cards()
@@ -264,7 +279,7 @@ class CorePerson(object):
     def __str__(self):
         return 'person: %s' % self.name
 
-    def __init__(self, firstname, gender, age, genus):
+    def __init__(self, firstname, gender, genus):
 
         self._firstname = firstname
         self.genus = genus
@@ -275,7 +290,6 @@ class CorePerson(object):
         self._successors = list()
         self.features = dict()
         self.slotless_features = list()
-        self.add_feature(age)
         self.add_feature(gender)
         self.sexuality = CorePersonSexuality()
         self.player_relations = Relations()
@@ -380,23 +394,33 @@ class CorePerson(object):
     def gender(self):
         return self.features['gender'].id
 
-    @property
-    def age(self):
-        return self.features['age'].id
-
     def attribute(self, attr):
-        return self.count_modifiers(attr)
+        return max(-2, min(5, self.get_attribute_value(attr)))
 
     def max_attribute(self):
         return max(self.attributes().keys(), key=lambda x: self.attributes()[x])
     
-    def count_modifiers(self, attr):
+    def count_modifiers(self, attr, skip_slots=None):
+        if skip_slots is None:
+            skip_slots = []
         value = 0
         for i in self.features.values():
-            value += i.count_modifiers(attr)
+            if i.slot not in skip_slots:
+                value += i.count_modifiers(attr)
         for i in self.slotless_features:
             value += i.count_modifiers(attr)
-        return max(-2, min(value, 5))
+        return value
+    
+    def get_attribute_value(self, attr):
+        background = self.feature_by_slot('background')
+        if attr in background.get('high_attributes', []):
+            attribute = self.genus.get(attr, (0, 0))[1]
+            attribute += self.count_modifiers(attr, ['background', 'genus'])
+            return attribute
+        elif attr in background.get('low_attributes', []):
+            return -1
+        else:
+            return self.genus.get(attr, (0, 0))[0]
 
     def attributes(self):
         attrs = dict()

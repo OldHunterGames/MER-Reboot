@@ -1,3 +1,5 @@
+import renpy.store as store
+
 from mer_class import PersonClass, PriceCalculator, MerArenaMaker
 from mer_person import PersonCreator
 import random
@@ -6,7 +8,7 @@ def make_gladiator(allowed_classes=None, person_generator_params=None, min_tier=
         if person_generator_params is None:
             person_generator_params = {}
         while True:
-            gladiator = PersonCreator.gen_person(genus='human', **person_generator_params)
+            gladiator = PersonCreator.gen_person(genus_preset=store.serpsis_genus_preset, **person_generator_params)
             if allowed_classes is not None:
                 classes = allowed_classes
             else:
@@ -136,7 +138,7 @@ available_arenas = {
 }
 
 def make_starter_slave():
-    slave = PersonCreator.gen_person(genus='human')
+    slave = PersonCreator.gen_person(genus_preset=store.serpsis_genus_preset)
     slave.person_class = PersonClass.random_by_tag('starter')
     return slave
 

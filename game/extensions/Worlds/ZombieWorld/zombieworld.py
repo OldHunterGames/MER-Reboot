@@ -169,7 +169,7 @@ class ZombieWorldPersonMaker(object):
     @classmethod
     def make_person(cls, person=None, person_maker=None):
         if person_maker is not None:
-            person = person_maker.gen_person(genus='human')
+            person = person_maker.gen_person(genus_preset=serpsis_genus_preset)
         world_person = ZombieWorldPerson(person)
         return world_person
 

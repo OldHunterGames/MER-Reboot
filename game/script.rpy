@@ -29,17 +29,25 @@ init 1 python:
     for key, value in core_alignment_features.items():
         CoreFeature.register_feature(key, CoreFeature(key, value))
 
-    for key, value in core_age_features.items():
-        CoreFeature.register_feature(key, CoreFeature(key, value))
+    # for key, value in core_age_features.items():
+    #     CoreFeature.register_feature(key, CoreFeature(key, value))
 
     for key, value in core_homeworld_features.items():
         CoreFeature.register_feature(key, CoreFeature(key, value))
     
-    for key, value in core_profession_features.items():
-        CoreFeature.register_feature(key, CoreFeature(key, value))
+    # for key, value in core_profession_features.items():
+    #     CoreFeature.register_feature(key, CoreFeature(key, value))
     
     for key, value in core_family_features.items():
         CoreFeature.register_feature(key, CoreFeature(key, value))
+
+    for key, value in person_genus_data.items():
+        CoreFeature.register_feature(key, CoreFeature(key, value))
+
+    for key, value in mer_background_data.items():
+        new_value = copy.copy(value)
+        new_value['slot'] = 'background'
+        CoreFeature.register_feature(key, CoreFeature(key, new_value))
 
     for key, value in sex_cards_data.items():
         CoreSexCard.register_card(key, CoreSexCard(key, value))
@@ -263,17 +271,17 @@ init python:
             top_attr = self.person.max_attribute()
             gender = self.person.gender
             attr = slavemarket_attribute[gender][top_attr]
-            genderage = slavemarket_genderage[gender][self.person.age]
+            # genderage = slavemarket_genderage[gender][self.person.age]
             world = self.person.feature_by_slot('homeworld') and self.person.feature_by_slot('homeworld').market_description
             profession = self.person.feature_by_slot('profession') and self.person.feature_by_slot('profession').market_description
             family = self.person.feature_by_slot('family') and self.person.feature_by_slot('family').market_description
             soul = slavemarket_soul[slave.soul_level]
             features = self.features_description()
             price = PriceCalculator(self.person).price()
-            return "{name}, {attr} {genderage} {world}. {profession}{family}. {soul}. Особенности: {features} Цена: {price} искр".format(
+            return "{name}, {attr} {world}. {profession}{family}. {soul}. Особенности: {features} Цена: {price} искр".format(
                 name=self.person.name,
                 attr=attr,
-                genderage=genderage,
+                # genderage=genderage,
                 world=world,
                 profession=profession,
                 family=family,
@@ -348,7 +356,7 @@ init python:
 # The game starts here.
 
 label start:
-    $ player = PersonCreator.gen_person(name='Player', gender='male', genus='human')
+    $ player = PersonCreator.gen_person(name='Player', gender='male', genus_preset=serpsis_genus_preset)
     $ player.person_class = PersonClass.get_by_id('infamous_lanista')
     # $ player.armor = Armor.random_by_type(player.person_class.available_garments[0])
     $ player.slaves = []
@@ -786,14 +794,14 @@ label lbl_make_initial_characters():
 label lbl_make_patrician():
     python:
         angel = AngelMaker.gen_archon()
-        person = PersonCreator.gen_person()
+        person = PersonCreator.gen_person(genus_preset=serpsis_genus_preset)
         SetAngelApostol(angel, person).run()
         core.add_character(person)
     return person
 
 label lbl_make_senator():
     python:
-        senator = PersonCreator.gen_person()
+        senator = PersonCreator.gen_person(genus_preset=serpsis_genus_preset)
         angel = AngelMaker.gen_ellochim()
         for i in range(2):
             a = AngelMaker.gen_archon()
@@ -805,7 +813,7 @@ label lbl_make_senator():
 
 label lbl_make_noble():
     python:
-        noble = PersonCreator.gen_person()
+        noble = PersonCreator.gen_person(genus_preset=serpsis_genus_preset)
         cherub = AngelMaker.gen_cherub()
         ellohims = [AngelMaker.gen_ellochim() for i in range(2)]
         archons = [AngelMaker.gen_archon() for i in range(4)]
@@ -823,7 +831,7 @@ label lbl_make_noble():
 
 label lbl_make_princeps(house):
     python:
-        princeps = PersonCreator.gen_person()
+        princeps = PersonCreator.gen_person(genus_preset=serpsis_genus_preset)
         seraph = AngelMaker.gen_seraph(house)
         cherubs = [AngelMaker.gen_cherub() for i in range(2)]
         ellohims = [AngelMaker.gen_ellochim() for i in range(4)]

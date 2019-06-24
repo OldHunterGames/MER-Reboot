@@ -98,6 +98,16 @@ init python:
     person_genuses = ['human', 'undead', 'canine', 'fairy', 'slime']
     person_ages = ['junior', 'adolescent', 'mature', 'elder']
 
+    serpsis_genus_preset = {
+        'elder': 1,
+        'adolescent': 3,
+        'mature': 4,
+    }
+    person_genus_data = {
+        'elder': {'name': __("Elder"), 'might': (-1, 2), 'subtlety': (0, 3), 'knowledge': (1, 4), 'charisma': (0, 3)},
+        'adolescent': {'name': __("Adolescent"), 'might': (0, 3), 'subtlety': (1, 3), 'knowledge': (0, 3), 'charisma': (0, 3)},
+        'mature': {'name': __("Mature"), 'might': (1, 3), 'subtlety': (0, 3), 'knowledge': (0, 4), 'charisma': (0, 3)},
+    }
     core_attributes = {
         'might': {'name': __('Might'), 'low': __('Weak'), 'high': __('Hardy')},
         'subtlety': {'name': __('Subtlety'), 'low': __('Naive'), 'high': __('Subtle')},
@@ -106,37 +116,37 @@ init python:
     }
 
     core_features = {
-        'male': {'slot': 'gender', 'name': __('Male'), 'might': 1, 'subtlety': -1},
-        'female': {'slot': 'gender', 'name': __('Female'), 'subtlety': 1, 'might': -1},
+        'male': {'slot': 'gender', 'name': __('Male'), 'might': 1},
+        'female': {'slot': 'gender', 'name': __('Female'), 'subtlety': 1, 'charisma': 1, 'might': -1},
     }
 
-    core_age_features = {
-        'junior': {
-            'slot': 'age',
-            'name': __("Junior"),
-            'might': -1,
-            'knowledge': -1,
-            'charisma': 1,
-        },
-        'elder': {
-            'slot': 'age',
-            'name': __("Elder"),
-            'might': -1,
-            'knowledge': 1,
-        },
-        'adolescent': {
-            'slot': 'age',
-            'name': __("Adolescent"),
-            'knowledge': -1,
-            'subtlety': 1,
-            'charisma': 1,
-        },
-        'mature': {
-            'slot': 'age',
-            'name': __("Mature"),
-            'might': 1,
-        },
-    }
+    # core_age_features = {
+    #     'junior': {
+    #         'slot': 'age',
+    #         'name': __("Junior"),
+    #         'might': -1,
+    #         'knowledge': -1,
+    #         'charisma': 1,
+    #     },
+    #     'elder': {
+    #         'slot': 'age',
+    #         'name': __("Elder"),
+    #         'might': -1,
+    #         'knowledge': 1,
+    #     },
+    #     'adolescent': {
+    #         'slot': 'age',
+    #         'name': __("Adolescent"),
+    #         'knowledge': -1,
+    #         'subtlety': 1,
+    #         'charisma': 1,
+    #     },
+    #     'mature': {
+    #         'slot': 'age',
+    #         'name': __("Mature"),
+    #         'might': 1,
+    #     },
+    # }
 
     core_physical_features = {
         'tall': {'slot': 'height', 'name': __('Tall'), 'market_description': __('Высокий рост. '), 'might': 1, 'subtlety': -1},
@@ -195,12 +205,12 @@ init python:
         'lowborn': {'slot': 'family', 'name': __('Lowborn'), 'market_description': __(' из бедной семьи'), 'subtlety': 1, 'charisma': -1},
     }
 
-    core_profession_features = {
-        'warrior': {'slot': 'profession', 'name': __('Warrior'), 'market_description': __('Боевой ветеран'), 'attribute': 'might', 'might': 1, 'knowledge': -1},
-        'servant': {'slot': 'profession', 'name': __('Servant'), 'market_description': __('Прислуга'), 'attribute': 'subtlety', 'subtlety': 1, 'charisma': -1},
-        'scholar': {'slot': 'profession', 'name': __('Scholar'), 'market_description': __('Знаток книг'), 'attribute': 'knowledge', 'knowledge': 1, 'subtlety': -1},
-        'artist': {'slot': 'profession', 'name': __('Artist'), 'market_description': __('Творческая натура'), 'attribute': 'charisma', 'charisma': 1, 'might': -1},
-    }
+    # core_profession_features = {
+    #     'warrior': {'slot': 'profession', 'name': __('Warrior'), 'market_description': __('Боевой ветеран'), 'attribute': 'might', 'might': 1, 'knowledge': -1},
+    #     'servant': {'slot': 'profession', 'name': __('Servant'), 'market_description': __('Прислуга'), 'attribute': 'subtlety', 'subtlety': 1, 'charisma': -1},
+    #     'scholar': {'slot': 'profession', 'name': __('Scholar'), 'market_description': __('Знаток книг'), 'attribute': 'knowledge', 'knowledge': 1, 'subtlety': -1},
+    #     'artist': {'slot': 'profession', 'name': __('Artist'), 'market_description': __('Творческая натура'), 'attribute': 'charisma', 'charisma': 1, 'might': -1},
+    # }
 
     core_souls = {
         0: __('darksoul'),
