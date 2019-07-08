@@ -356,6 +356,7 @@ init python:
 # The game starts here.
 
 label start:
+
     $ player = PersonCreator.gen_person(name='Player', gender='male', genus_preset=serpsis_genus_preset)
     $ player.person_class = PersonClass.get_by_id('infamous_lanista')
     # $ player.armor = Armor.random_by_type(player.person_class.available_garments[0])

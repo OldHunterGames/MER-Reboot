@@ -163,7 +163,7 @@ class PersonCreator(object):
             person.add_feature(i)
 
         cls.gen_background(person)
-        # person.set_avatar(PersonCreator.gen_avatar(gender.id, genus))
+        person.set_avatar(PersonCreator.gen_avatar(gender.id, genus.id))
         cls.gen_initial_hand(person)
         return person
     @classmethod
@@ -196,17 +196,12 @@ class PersonCreator(object):
         return {'male': 'masculine', 'female': 'feminine'}[gender]
 
     @staticmethod
-    def gen_avatar(gender, age, genus):
-        start_path = 'images/avatar/'
+    def gen_avatar(gender, genus):
+        start_path = 'images/avatar/' + genus
         # TODO: Generate cultures instead of hardcode
-        if genus == 'human':
-            start_path += genus + '/'
-            cultures = ['african', 'arabic', 'native', 'nordic', 'oriental', 'slavic', 'western']
-            start_path += random.choice(cultures)
-        else:
-            start_path += genus
+        cultures = ['african', 'arabic', 'native', 'nordic', 'oriental', 'slavic', 'western']
         start_path = PersonCreator._check_avatar(start_path, PersonCreator.appearance_type(gender))
-        start_path = PersonCreator._check_avatar(start_path, age)
+        start_path = PersonCreator._check_avatar(start_path, random.choice(cultures))
         try:
             avatar = random.choice(PersonCreator._get_avatars(start_path))
         except IndexError:
