@@ -191,7 +191,7 @@ screen sc_arena(arena):
         #                 use fight_card_representation(enemy_card.suit(arena.enemy, {}), enemy_card.get_power(arena.enemy, {}), enemy_card.name, NullAction())
 
 screen fight_card_representation(suit, power, name, card_action):
-    $ corners = [(0, 0), (0, 1.0), (1.0, 0), (1.0, 1.0)]
+    $ corners = [(0.0, 0), (0.0, 1.0), (1.0, 0), (1.0, 1.0)]
     python:
         if len(name) > 8:
             name_text = ''
@@ -201,7 +201,7 @@ screen fight_card_representation(suit, power, name, card_action):
         else:
             name_text = name
     frame:
-        background '#59300D'
+        image Solid(default_background_color())
         xsize 100
         ysize 150
         for corner in corners:

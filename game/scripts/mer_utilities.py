@@ -14,6 +14,9 @@ def min_max(min_value, max_value):
 def gui_image(path):
     return 'gui/{}'.format(path)
 
+def default_background_color():
+    return '#000000b0'
+
 def value_color(value):
     keyworded = {
         'red': 'ff0000', 'green': '00ff00', 'cyan': '00ffff',
@@ -21,8 +24,8 @@ def value_color(value):
     if value in keyworded:
         colors = keyworded
     else:
-        colors = ['ff0000', 'ff00ff', '00ffff',
-                  '0000FF', '00ff00', 'DAA520', '000000']
+        colors = ['9d9d9d', 'ffffff', '1eff00',
+                  '0070dd', 'a335ee', 'ffb300', '000000']
         if value < 0:
             value = 0
         if value > 6:
