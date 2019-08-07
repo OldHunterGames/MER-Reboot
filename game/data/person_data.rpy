@@ -134,6 +134,36 @@ init python:
         'utopia': {'slot': 'homeworld', 'name': __('Utopic world'), 'market_description': __('из счастливой утопической цивилизации'), 'subtlety': -1, 'charisma': 1, 'backgrounds': ['commoner', 'worker', 'housewife', 'soldier', 'whore', 'scholar', 'noon', 'nobleman', 'noblewoman', 'king', 'princess',]},
     }
 
+    person_genusgender = {
+        'juniormale': _('мальчик'),
+        'juniorfemale': _('девочка'),
+        'adolescentmale': _('юноша'),
+        'adolescentfemale': _('девушка'),
+        'maturemale': _('мужчина'),
+        'maturefemale': _('женщина'),
+        'eldermale': _('старик'),
+        'elderfemale': _('старуха'),                                                        
+    }
+    
+    core_souls = {
+        0: __('darksoul'),
+        1: __('dimsoul'),
+        2: __('firesoul'),
+        3: __('soulblaze'),
+        4: __('hellfire'),
+        5: __('infernal'),
+    }
+
+    
+    core_soul_weights = {
+            5: 1,
+            4: 2,
+            3: 4,
+            2: 8,
+            1: 16
+            0: 4
+        }
+
     # core_family_features = {
     #    'orphan': {'slot': 'family', 'name': __('Orphan'), 'market_description': __(', сирота'), 'subtlety': 1, 'knowledge': -1},
     #    'matrial': {'slot': 'family', 'name': __('Matrial'), 'market_description': __(' из семьи военных'), 'might': 1, 'subtlety': -1},
@@ -218,22 +248,3 @@ init python:
     #     'coward': {'slot': 'safety', 'name': __('Coward'), 'market_description': __('Осторожность. '), 'subtlety': 1},
     #     'zealous': {'slot': 'safety', 'name': __('Zealous'), 'market_description': __('Отвага. '), 'might': 1},
     # }
-    
-    core_souls = {
-        0: __('darksoul'),
-        1: __('dimsoul'),
-        2: __('firesoul'),
-        3: __('soulblaze'),
-        4: __('hellfire'),
-        5: __('infernal'),
-    }
-
-    
-    core_soul_weights = {
-            5: 1,
-            4: 2,
-            3: 4,
-            2: 8,
-            1: 16
-            0: 4
-        }
