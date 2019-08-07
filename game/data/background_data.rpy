@@ -1,13 +1,85 @@
 init python:
     mer_background_data = {
-        'commoner': {
-            'name': __('обыватель'),
+        'beggar': {
+            'name': __('чумичка'),
+            'prerequisites': ['female'],
+            'tier': 0,
+            'high_attributes': [],
+            'low_attributes': ['charisma'],
+            'type': 'background',
+            'description': __('Отверженная замарашка, она скиталась по миру, спала в грязи и выживала как могла.'),
+            'cards': [],
+            'support': [],
+        },
+
+        'vargant': {
+            'name': __('доходяга'),
+            'prerequisites': ['male'],
+            'tier': 0,
+            'high_attributes': [],
+            'low_attributes': ['might'],
+            'type': 'background',
+            'description': __('Проведший большую часть жизни в лишениях и скитаниях, этот доходяга едва ли способен на физический труд.'),
+            'cards': [],
+            'support': [],
+        },
+
+        'moron': {
+            'name': __('раздолбай'),
             'prerequisites': [],
             'tier': 0,
             'high_attributes': [],
             'low_attributes': ['knowledge'],
             'type': 'background',
-            'description': __('Плейсхолдер.'),
+            'description': __('Из за своей граничащей со слабоумием тупости, не имеет практически никаких полезных умений.'),
+            'cards': [],
+            'support': [],
+        },
+
+        'bitch': {
+            'name': __('уличная бядь'),
+            'prerequisites': ['female'],
+            'tier': 0,
+            'high_attributes': [],
+            'low_attributes': ['subtlety'],
+            'type': 'background',
+            'description': __('Не обладая никакими талантами, эта уличная девка из за своей наивности не смогла даже толком освоить древнейшую профессию и давала за еду.'),
+            'cards': [],
+            'support': [],
+        },
+
+        'tribesman': {
+            'name': __('первобытный охотник'),
+            'prerequisites': ['male'],
+            'tier': 1,
+            'high_attributes': ['might'],
+            'low_attributes': ['knowledge'],
+            'type': 'background',
+            'description': __('Ничем не примечательный первобытный охотник из дикого племени, сильный но туповатый.'),
+            'cards': ['hide_cloth', 'stone_spear', 'combat_expirience'],
+            'support': [],
+        },
+
+        'tribeswoman': {
+            'name': __('первобытная собирательница'),
+            'prerequisites': ['female'],
+            'tier': 1,
+            'high_attributes': ['subtlety'],
+            'low_attributes': ['knowledge'],
+            'type': 'background',
+            'description': __('Ничем не примечательная женщина из дикого племени, проворная но недалёкая. '),
+            'cards': ['stone_knife', 'natural_charm', 'sociable'],
+            'support': [],
+        },
+        
+        'commoner': {
+            'name': __('обыватель'),
+            'prerequisites': [],
+            'tier': 1,
+            'high_attributes': [],
+            'low_attributes': [],
+            'type': 'background',
+            'description': __('Ничем не примечательный обыватель.'),
             'cards': [],
             'support': [],
         },
