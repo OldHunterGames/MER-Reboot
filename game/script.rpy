@@ -23,11 +23,11 @@ init 1 python:
     for key, value in core_features.items():
         CoreFeature.register_feature(key, CoreFeature(key, value))
 
-    for key, value in core_physical_features.items():
-        CoreFeature.register_feature(key, CoreFeature(key, value))
+    # for key, value in core_physical_features.items():
+    #     CoreFeature.register_feature(key, CoreFeature(key, value))
 
-    for key, value in core_alignment_features.items():
-        CoreFeature.register_feature(key, CoreFeature(key, value))
+    # for key, value in core_alignment_features.items():
+    #     CoreFeature.register_feature(key, CoreFeature(key, value))
 
     # for key, value in core_age_features.items():
     #     CoreFeature.register_feature(key, CoreFeature(key, value))
@@ -38,8 +38,8 @@ init 1 python:
     # for key, value in core_profession_features.items():
     #     CoreFeature.register_feature(key, CoreFeature(key, value))
     
-    for key, value in core_family_features.items():
-        CoreFeature.register_feature(key, CoreFeature(key, value))
+    # for key, value in core_family_features.items():
+    #     CoreFeature.register_feature(key, CoreFeature(key, value))
 
     for key, value in person_genus_data.items():
         CoreFeature.register_feature(key, CoreFeature(key, value))
@@ -271,21 +271,22 @@ init python:
             top_attr = self.person.max_attribute()
             gender = self.person.gender
             attr = slavemarket_attribute[gender][top_attr]
-            # genderage = slavemarket_genderage[gender][self.person.age]
+            background = self.person.feature_by_slot('background')
+            background_name = background.name()
+            background_description = background.description()
+            genderage = person_genusgender[self.person.genus.id + gender]
             world = self.person.feature_by_slot('homeworld') and self.person.feature_by_slot('homeworld').market_description
-            profession = self.person.feature_by_slot('profession') and self.person.feature_by_slot('profession').market_description
-            family = self.person.feature_by_slot('family') and self.person.feature_by_slot('family').market_description
             soul = slavemarket_soul[slave.soul_level]
+            name = '{color=%s}%s{/color}' % (value_color(slave.soul_level), self.person.name)
             features = self.features_description()
             price = PriceCalculator(self.person).price()
-            return "{name}, {attr} {world}. {profession}{family}. {soul}. Особенности: {features} Цена: {price} искр".format(
-                name=self.person.name,
+            return "{name}, {genderage} {background_name} {world}. {background_description} Цена: {price} искр".format(
+                name=name,
                 attr=attr,
-                # genderage=genderage,
+                background_name=background_name,
+                background_description=background_description,
+                genderage=genderage,
                 world=world,
-                profession=profession,
-                family=family,
-                soul=soul,
                 features=features,
                 price=price,
             )

@@ -185,9 +185,9 @@ class PersonClass(object):
             cards = [i for i in self.cards]
         else:
             if get_suport:
-                cards = [i for i in self.cards if (i.case == case or i.case is None) and i.type == 'support']
+                cards = [i for i in self.cards if (i.case == case or i.case == 'universal') and i.type == 'support']
             else:
-                cards = [i for i in self.cards if (i.case == case or i.case is None) and i.type != 'support']
+                cards = [i for i in self.cards if (i.case == case or i.case == 'universal') and i.type != 'support']
         if self.prototype is not None:
             cards.extend(self.prototype.get_cards(case, get_suport))
         return cards
@@ -226,7 +226,7 @@ class PersonClassCard(object):
     
     @property
     def case(self):
-        return self.data.get('case')
+        return self.data.get('case', 'universal')
 
     def suit(self, user, context=None):
         if context is None:

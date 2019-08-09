@@ -32,6 +32,7 @@ init python:
             'suit': 'hearts',
             'custom': soul_level_bonus,
             'type': 'skill',
+            'case': 'universal',
         },        
         'bravado': {
             'name': __("Дружба"),

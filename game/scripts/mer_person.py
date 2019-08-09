@@ -35,6 +35,9 @@ class CoreFeature(object):
     @property
     def market_description(self):
         return self._data.get('market_description', 'No description %s' % self.id)
+    
+    def description(self):
+        return self._data.get('description', 'No description %s' % self.id)
 
     def name(self):
         return self._data.get('name')
@@ -100,7 +103,6 @@ class PersonCreator(object):
     
     BACKGROUND_SLOTS = [
         'homeworld',
-        'family',
     ]
 
     GENDER_SLOTS = {
@@ -159,8 +161,8 @@ class PersonCreator(object):
         person = CorePerson(name, gender, genus)
         for i in cls.make_features():
             person.add_feature(i)
-        for i in cls.gender_features(gender.id):
-            person.add_feature(i)
+        # for i in cls.gender_features(gender.id):
+        #     person.add_feature(i)
 
         cls.gen_background(person)
         person.set_avatar(PersonCreator.gen_avatar(gender.id, genus.id))
@@ -263,8 +265,9 @@ class PersonCreator(object):
 
     @classmethod
     def make_features(cls):
-        features = cls.make_alignments()
-        features.extend(cls.make_physical())
+        features = []
+        # features = cls.make_alignments()
+        # features.extend(cls.make_physical())
         features.extend(cls.make_background())
         return features
 
