@@ -50,7 +50,7 @@ screen sc_arena(arena):
                 hbox:
                     spacing 5
                     for card in fighter1.get_cards('combat'):
-                        use fight_card_representation(card.suit(fighter1, {}), card.get_power(fighter1, {}), card.name, NullAction())
+                        use fight_card_representation(card, card.suit(fighter1, {}), card.get_power(fighter1, {}), card.name, NullAction())
             
             vbox:
                 xalign 0.5
@@ -70,7 +70,7 @@ screen sc_arena(arena):
                     spacing 5
                     yalign 1.0
                     for card in fighter2.get_cards('combat'):
-                        use fight_card_representation(card.suit(fighter2, {}), card.get_power(fighter2, {}), card.name, NullAction())
+                        use fight_card_representation(card, card.suit(fighter2, {}), card.get_power(fighter2, {}), card.name, NullAction())
 
                 
                 vbox:
@@ -121,7 +121,7 @@ screen sc_arena(arena):
                         text arena.enemy.name color '#fff'
                         text arena.enemy.person_class.colored_name()
                 if enemy_card is not None:
-                    use fight_card_representation(enemy_card.suit(arena.enemy, {}), enemy_card.get_power(arena.enemy, {}), enemy_card.name, NullAction())
+                    use fight_card_representation(enemy_card, enemy_card.suit(arena.enemy, {}), enemy_card.get_power(arena.enemy, {}), enemy_card.name, NullAction())
             hbox:
                 yalign 0.95
                 xalign 1.0
@@ -131,7 +131,7 @@ screen sc_arena(arena):
                     spacing 15
                     if standoff.winner is None:
                         for card in standoff.player_cards:
-                            use fight_card_representation(card.suit(arena.ally, {}), card.get_power(arena.ally, {}), card.name, [Function(standoff.select_card, card), If(standoff.will_win(card), true=Play('sound', 'sound/cheer.mp3'), false=Play('sound', 'sound/boo.mp3'))])
+                            use fight_card_representation(card, card.suit(arena.ally, {}), card.get_power(arena.ally, {}), card.name, [Function(standoff.select_card, card), If(standoff.will_win(card), true=Play('sound', 'sound/cheer.mp3'), false=Play('sound', 'sound/boo.mp3'))])
                 vbox:
                     vbox:
                         xalign 0.5
@@ -190,7 +190,7 @@ screen sc_arena(arena):
         #             if enemy_card is not None:
         #                 use fight_card_representation(enemy_card.suit(arena.enemy, {}), enemy_card.get_power(arena.enemy, {}), enemy_card.name, NullAction())
 
-screen fight_card_representation(suit, power, name, card_action):
+screen fight_card_representation(card, suit, power, name, card_action):
     $ corners = [(0.0, 0), (0.0, 1.0), (1.0, 0), (1.0, 1.0)]
     python:
         if len(name) > 8:
@@ -201,7 +201,7 @@ screen fight_card_representation(suit, power, name, card_action):
         else:
             name_text = name
     frame:
-        image Solid(default_background_color())
+        background im.Scale(card.image, 100, 150)
         xsize 100
         ysize 150
         for corner in corners:

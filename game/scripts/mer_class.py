@@ -217,6 +217,14 @@ class PersonClassCard(object):
         return self.id
     
     @property
+    def image(self):
+        img = 'images/cards/%s.png' % self.id
+        if renpy.exists(img):
+            return img
+        else:
+            return 'images/blank.png'
+    
+    @property
     def permanent_context(self):
         return {'giver': self.giver}
 

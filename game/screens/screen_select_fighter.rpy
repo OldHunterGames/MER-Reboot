@@ -33,7 +33,7 @@ screen sc_select_fighter(selector):
             hbox:
                 spacing 5
                 for card in fighter2.get_cards('combat', special_filter=selector.arena_maker.cards_filter):
-                    use fight_card_representation(card.suit(fighter2, {}), card.get_power(fighter2, {}), card.name, NullAction())
+                    use fight_card_representation(card, card.suit(fighter2, {}), card.get_power(fighter2, {}), card.name, NullAction())
 
         hbox:
             spacing 15
@@ -43,7 +43,7 @@ screen sc_select_fighter(selector):
                 spacing 5
                 yalign 1.0
                 for card in fighter1.get_cards('combat', special_filter=selector.arena_maker.cards_filter):
-                    use fight_card_representation(card.suit(fighter1, {}), card.get_power(fighter1, {}), card.name, NullAction())
+                    use fight_card_representation(card, card.suit(fighter1, {}), card.get_power(fighter1, {}), card.name, NullAction())
             vbox:
                 
                 text fighter1.name xalign 0.5 color '#ffffff'

@@ -119,7 +119,7 @@ screen sc_home(home):
                         box_wrap True
                         spacing 5
                         for card in home.get_cards():
-                            use fight_card_representation(card.suit(home.current_slave, {}), card.get_power(home.current_slave, {}), card.name, NullAction())
+                            use fight_card_representation(card, card.suit(home.current_slave, {}), card.get_power(home.current_slave, {}), card.name, NullAction())
                 
 
         
