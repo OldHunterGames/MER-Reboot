@@ -121,10 +121,10 @@ init python:
     }
 
     temper_features = {
-        'sanguine': {'slot': 'temper', 'name': __('Сангвиник'), 'slavemarket_text':_('Наблюдает за ходом аукциона с живым интересом.'),},
-        'choleric': {'slot': 'temper', 'name': __('Холерик'), 'slavemarket_text':_('Бросает злобные взгляды на аукционера и покупателей.'),},
-        'phlegmatic': {'slot': 'temper', 'name': __('Флегматик'), 'slavemarket_text':_('Стоит сохраняя полное спокойствие и безразличие.'),},
-        'melancholic': {'slot': 'temper', 'name': __('Меланхолик'), 'slavemarket_text':_('Стоит понурив голову, с мрачным выражением лица.'),},                
+        'sanguine': {'slot': 'temper', 'name': __('Сангвиник'), 'market_description':_('Наблюдает за ходом аукциона с живым интересом.'),},
+        'choleric': {'slot': 'temper', 'name': __('Холерик'), 'market_description':_('Бросает злобные взгляды на аукционера и покупателей.'),},
+        'phlegmatic': {'slot': 'temper', 'name': __('Флегматик'), 'market_description':_('Стоит сохраняя полное спокойствие и безразличие.'),},
+        'melancholic': {'slot': 'temper', 'name': __('Меланхолик'), 'market_description':_('Стоит понурив голову, с мрачным выражением лица.'),},                
     }
 
     core_homeworld_features = {

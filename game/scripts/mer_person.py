@@ -31,6 +31,20 @@ class CoreFeature(object):
     
     def get(self, key, default=None):
         return self._data.get(key, default)
+
+    @property
+    def cards(self):
+        return [PersonClassCard.get_card(i) for i in self._data.get('cards', [])]
+    
+    def get_cards(self, case, get_suport=False):
+        if case == 'all':
+            cards = [i for i in self.cards]
+        else:
+            if get_suport:
+                cards = [i for i in self.cards if (i.case == case or i.case == 'universal') and i.type == 'support']
+            else:
+                cards = [i for i in self.cards if (i.case == case or i.case == 'universal') and i.type != 'support']
+        return cards
     
     @property
     def market_description(self):
@@ -174,13 +188,42 @@ class PersonCreator(object):
         features = CoreFeature.get_by_slot('background')
         person_features_id = [i.id for i in person.get_features()]
         available_features = []
+        world = person.feature_by_slot('homeworld')
+        available_classes_by_world = world.get('backgrounds', [])
         for feat in features:
-            if len(feat.prerequisites) < 1 and feat.get('tier', 0) <= person.soul_level:
+            if len(feat.prerequisites) < 1 and feat.get('tier', 0) == person.soul_level:
                 available_features.append(feat)
             else:
-                if all([i in person_features_id for i in feat.prerequisites]) and feat.get('tier', 0) <= person.soul_level:
+                if all([i in person_features_id for i in feat.prerequisites]) and feat.get('tier', 0) == person.soul_level:
                     available_features.append(feat)
-        person.add_feature(random.choice(available_features))
+        if len(available_features) < 1:
+            feats = [i.id for i in person.get_features()]
+            raise Exception(
+                """
+                Failed to generate background for person.
+                Soul level: %s.
+                Features: %s.
+                World: %s.
+                Failed to find features by prerequisites and soul level.
+                """ % (soul, feats, world.id)
+            )
+        available_by_world = [i for i in available_features if i.id in available_classes_by_world]
+        try:
+            person.add_feature(random.choice(available_by_world))
+        except IndexError:
+            feats = [i.id for i in person.get_features()]
+            raise Exception(
+                """
+                Failed to generate background for person.
+                Soul level: %s.
+                Person Features: %s.
+                World: %s.
+                Features available for person prerequisites and soul level
+                are not available for this world
+                Features found: %s.
+                Features available for world: %s.
+                """ % (soul, feats, world.id, [i.id for i in available_features], available_classes_by_world)
+            )
     @classmethod
     def gen_initial_hand(cls, person):
         cards = person.sexuality.deck.get_cards()
@@ -266,6 +309,7 @@ class PersonCreator(object):
     @classmethod
     def make_features(cls):
         features = []
+        features.append(CoreFeature.random_by_slot('temper'))
         # features = cls.make_alignments()
         # features.extend(cls.make_physical())
         features.extend(cls.make_background())
@@ -311,6 +355,8 @@ class CorePerson(object):
 
     def get_cards(self, case, get_support=False, get_temporary=True, special_filter=None):
         cards = self.person_class.get_cards(case, get_support)
+        # background = self.feature_by_slot('background')
+        # cards.extend(background.get_cards(case, get_support))
         if special_filter is not None:
             cards = [i for i in cards if special_filter(i)]
         if get_support:

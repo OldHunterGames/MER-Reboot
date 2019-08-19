@@ -35,6 +35,9 @@ init 1 python:
     for key, value in core_homeworld_features.items():
         CoreFeature.register_feature(key, CoreFeature(key, value))
     
+    for key, value in temper_features.items():
+        CoreFeature.register_feature(key, CoreFeature(key, value))
+    
     # for key, value in core_profession_features.items():
     #     CoreFeature.register_feature(key, CoreFeature(key, value))
     
@@ -280,7 +283,8 @@ init python:
             name = '{color=%s}%s{/color}' % (value_color(slave.soul_level), self.person.name)
             features = self.features_description()
             price = PriceCalculator(self.person).price()
-            return "{name}, {genderage} {background_name} {world}. {background_description} Цена: {price} искр".format(
+            temper = self.person.feature_by_slot('temper')
+            return "{name}, {genderage} {background_name} {world}. {temper}. {background_description} Цена: {price} искр".format(
                 name=name,
                 attr=attr,
                 background_name=background_name,
@@ -289,6 +293,7 @@ init python:
                 world=world,
                 features=features,
                 price=price,
+                temper=temper.market_description
             )
         
         def features_description(self):
