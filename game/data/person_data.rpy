@@ -121,28 +121,28 @@ init python:
     }
 
     temper_features = {
-        'sanguine': {'slot': 'temper', 'name': __('Сангвиник'), 'market_description':_('Наблюдает за ходом аукциона с живым интересом.'),},
-        'choleric': {'slot': 'temper', 'name': __('Холерик'), 'market_description':_('Бросает злобные взгляды на аукционера и покупателей.'),},
-        'phlegmatic': {'slot': 'temper', 'name': __('Флегматик'), 'market_description':_('Стоит сохраняя полное спокойствие и безразличие.'),},
-        'melancholic': {'slot': 'temper', 'name': __('Меланхолик'), 'market_description':_('Стоит понурив голову, с мрачным выражением лица.'),},                
+        'sanguine': {'slot': 'temper', 'name': __('Сангвиник'), 'market_description':_('Наблюдает за ходом аукциона с живым интересом'),},
+        'choleric': {'slot': 'temper', 'name': __('Холерик'), 'market_description':_('Бросает злобные взгляды на аукционера и покупателей'),},
+        'phlegmatic': {'slot': 'temper', 'name': __('Флегматик'), 'market_description':_('Стоит сохраняя полное спокойствие и безразличие'),},
+        'melancholic': {'slot': 'temper', 'name': __('Меланхолик'), 'market_description':_('Стоит понурив голову, с мрачным выражением лица'),},                
     }
 
     core_homeworld_features = {
-        'prehistoric': {'slot': 'homeworld', 'name': __('Prehistoric world'), 'market_description': __(' из дикого, неразвитого мира, где люди крепки телом, а не умом'), 'might': 1, 'knowledge': -1, 'backgrounds': ['moron', 'tribesman', 'tribeswoman', 'brute', 'wisewoman', 'shaman', 'chiefwife', 'cheften', 'epic_hero',]},
-        'industrial': {'slot': 'homeworld', 'name': __('Industrial world'), 'market_description': __('из индустриального мира, с хорошим образованием но плохим здоровьем'), 'might': -1, 'knowledge': 1, 'backgrounds': ['commoner', 'worker', 'housewife', 'soldier', 'whore', 'comander', 'ballerina', 'playboy', 'idol', 'epic_hero',]},
-        'postapoc': {'slot': 'homeworld', 'name': __('Postapocalyptic world'), 'market_description': __('из мира разрушенного катаклизмом, где мало хитрость ценнее красоты'), 'subtlety': 1, 'charisma': -1, 'backgrounds': ['moron', 'tribesman', 'tribeswoman', 'brute', 'wisewoman', 'shaman', 'chiefwife', 'cheften', 'epic_hero',]},
-        'utopia': {'slot': 'homeworld', 'name': __('Utopic world'), 'market_description': __('из счастливой утопической цивилизации, где ценится красота но люди слишком наивны'), 'subtlety': -1, 'charisma': 1, 'backgrounds': ['commoner', 'nerd', 'muse', 'model', 'atlete', 'fitgirl', 'poet', 'vigilante', 'opinion_leader', 'epic_hero']},
+        'prehistoric': {'slot': 'homeworld', 'name': __('Prehistoric world'), 'market_description': __(' из дикого, неразвитого мира, где люди крепки телом, но ещё не существует письменности'), 'might': 1, 'knowledge': -1, 'backgrounds': ['moron', 'tribesman', 'tribeswoman', 'brute', 'wisewoman', 'shaman', 'chiefwife', 'cheften', 'wildflower', 'amazon', 'epic_hero',]},
+        'industrial': {'slot': 'homeworld', 'name': __('Industrial world'), 'market_description': __('из индустриального мира, с развитой наукой но плохой экологией'), 'might': -1, 'knowledge': 1, 'backgrounds': ['beggar', 'vargant', 'moron',  'bitch', 'commoner', 'worker', 'housewife', 'soldier', 'whore', 'comander', 'ballerina', 'playboy', 'idol', 'epic_hero',]},
+        'postapoc': {'slot': 'homeworld', 'name': __('Postapocalyptic world'), 'market_description': __('из мира разрушенного катаклизмом, где подлость ценнее красоты'), 'subtlety': 1, 'charisma': -1, 'backgrounds': ['beggar', 'vargant', 'bitch', 'tribesman', 'tribeswoman', 'brute', 'wisewoman', 'shaman', 'chiefwife', 'cheften', 'amazon',  'epic_hero',]},
+        'utopia': {'slot': 'homeworld', 'name': __('Utopic world'), 'market_description': __('из счастливой утопической цивилизации, где ценится красота но люди бесхитростны и наивны'), 'subtlety': -1, 'charisma': 1, 'backgrounds': ['moron', 'commoner', 'nerd', 'muse', 'model', 'atlete', 'fitgirl', 'poet', 'vigilante', 'opinion_leader', 'epic_hero']},
     }
 
     person_genusgender = {
         'juniormale': _('мальчик'),
         'juniorfemale': _('девочка'),
-        'adolescentmale': _('юноша'),
-        'adolescentfemale': _('девушка'),
-        'maturemale': _('мужчина'),
-        'maturefemale': _('женщина'),
-        'eldermale': _('старик'),
-        'elderfemale': _('старуха'),                                                        
+        'adolescentmale': _('юный'),
+        'adolescentfemale': _('юная'),
+        'maturemale': _('зрелый'),
+        'maturefemale': _('зрелая'),
+        'eldermale': _('старый'),
+        'elderfemale': _('старая'),                                                        
     }
     
     core_souls = {

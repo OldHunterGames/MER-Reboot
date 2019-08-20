@@ -144,6 +144,18 @@ init python:
             'support': [],
         },
 
+        'amazon': {
+            'name': __('принцесса-амазонка'),
+            'prerequisites': ['female'],
+            'tier': 4,
+            'high_attributes': ['might', 'charisma', 'subtlety'],
+            'low_attributes': [],
+            'type': 'background',
+            'description': __('В её суровом мире женщинам приходится нелегко. Но эта дева-воин возглавила племя отчаянных всадниц, что наводили ужас на армии мужчин.'),
+            'cards': ['stone_knife', 'natural_charm', 'sociable'],
+            'support': [],
+        },
+
         'epic_hero': {
             'name': __('прославленный герой'),
             'prerequisites': [],
