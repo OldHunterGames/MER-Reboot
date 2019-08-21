@@ -192,7 +192,29 @@ screen sc_arena(arena):
 
 screen fight_card_representation(card, suit, power, name, card_action):
     $ corners = [(0.0, 0), (0.0, 1.0), (1.0, 0), (1.0, 1.0)]
+    $ mapping = {
+        'combat': 'battle',
+        'social': 'social',
+        'universal': 'universal',
+    }
+    $ source_mapping = {
+        'skill': 'skill',
+        'equipment': 'equipment',
+        'courage': 'courage',
+        'support': 'attitude'
+    }
+    $ suit_mapping = {
+        'skull': 'skulls',
+        'jocker': 'jockers',
+    }
     python:
+        card_img = im.Composite(
+            (148, 248),
+            (0, 0), card.image,
+            (0, 0), 'gui/card_constructor/border_%s.png' % mapping[card.case],
+            (0, 0), 'gui/card_constructor/source_%s.png' % source_mapping.get(card.type, 'skill'),
+            (0, 0), 'gui/card_constructor/%s_%s.png' % (suit_mapping.get(suit, suit), power),
+        )
         if len(name) > 8:
             name_text = ''
             steps = len(name) // 8
@@ -201,13 +223,15 @@ screen fight_card_representation(card, suit, power, name, card_action):
         else:
             name_text = name
     frame:
-        background im.Scale(card.image, 100, 150)
-        xsize 100
-        ysize 150
-        for corner in corners:
-            image get_card_suit_image(suit, power):
-                xalign corner[0]
-                yalign corner[1]
+        xsize 148
+        ysize 248
+        background card_img
+            # xsize 100
+            # ysize 150
+            # for corner in corners:
+            #     image get_card_suit_image(suit, power):
+            #         xalign corner[0]
+            #         yalign corner[1]
         textbutton name_text:
             text_color value_color(power)
             text_hover_color '#fff'

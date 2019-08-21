@@ -31,7 +31,7 @@ init python:
             'name': __("Предательство"),
             'suit': 'hearts',
             'custom': soul_level_bonus,
-            'type': 'skill',
+            'type': 'sabotage',
             'case': 'universal',
         },        
         'bravado': {
@@ -40,18 +40,21 @@ init python:
             'attribute': 'subtlety',
             'tag': 'fellowship',
             'type': 'support',
+            'case': 'universal',
         },        
         'cestus': {
             'name': __("Cestus"),
             'suit': 'spades',
             'attribute': 'might',
             'type': 'equipment',
+            'case': 'combat',
         },
         'combat_expirience': {
             'name': __("Combat expirience"),
             'suit': 'spades',
             'custom': class_tier_bonus,
             'type': 'skill',
+            'case': 'combat',
         },
         'deception': {
             'name': __("Обман"),
@@ -64,36 +67,42 @@ init python:
             'suit': 'spades',
             'attribute': 'charisma',
             'type': 'skill',
+            'case': 'universal',
         },        
         'dual_strike': {
             'name': __("Dual strike"),
             'suit': 'spades',
             'attribute': 'subtlety',
             'type': 'equipment',
+            'case': 'combat',
         },        
         'evasive': {
             'name': __("Evasive"),
             'suit': 'spades',
             'value': 1,
             'type': 'skill',
+            'case': 'combat',
         },     
         'exotic_weapon': {
             'name': __("Exotic weapon"),
             'suit': best_attr_suit,
             'custom': best_attr_bonus,
             'type': 'equipment',
+            'case': 'combat',
         },        
         'far_reach': {
             'name': __("Far reach"),
             'suit': 'clubs',
             'attribute': 'subtlety',
             'type': 'equipment',
+            'case': 'combat',
         },
         'half_armored': {
             'name': __("Half-armored"),
             'suit': 'diamonds',
             'value': 3,
             'type': 'equipment',
+            'case': 'combat',
         },        
         'hide_cloth': {
             'name': __("Накидка из шкур"),
@@ -106,12 +115,14 @@ init python:
             'suit': 'hearts',
             'attribute': 'charisma',
             'type': 'skill',
+            'case': 'combat',
         },        
         'champion': {
             'name': __("Champion"),
             'suit': 'joker',
             'custom': joker_power,
-            'type': 'skill'
+            'type': 'skill',
+            'case': 'combat',
         },        
         'common_sense': {
             'name': __("Common sense"),
@@ -124,12 +135,14 @@ init python:
             'suit': 'spades',
             'value': 1,
             'type': 'equipment',
+            'case': 'combat',
         },            
         'light_armor': {
             'name': __("Легкая броня"),
             'suit': 'diamonds',
             'value': 2,
             'type': 'equipment',
+            'case': 'combat',
         },        
         'living_legend': {
             'name': __("Living legend"),
@@ -148,6 +161,7 @@ init python:
             'suit': 'spades',
             'attribute': 'subtlety',
             'type': 'skill',
+            'case': 'combat',
         },        
         'natural_charm': {
             'name': __("Natural charm"),
@@ -160,6 +174,7 @@ init python:
             'suit': 'hearts',
             'attribute': 'subtlety',
             'type': 'equipment',
+            'case': 'combat',
         },        
         'padded_armor': {
             'name': __("Padded armor"),
@@ -172,6 +187,7 @@ init python:
             'suit': 'diamonds',
             'value': 1,
             'type': 'skill',
+            'case': 'combat'
         },
         'public_approval': {
             'name': __("Public approval"),
@@ -190,6 +206,7 @@ init python:
             'suit': 'clubs',
             'value': 3,
             'type': 'equipment',
+            'case': 'combat',
         },         
         'satisfaction': {
             'name': __("Любовь"),
@@ -208,6 +225,7 @@ init python:
             'suit': 'clubs',
             'attribute': 'might',
             'type': 'equipment',
+            'case': 'combat',
         },        
         'sociable': {
             'name': __("Общительность"),
@@ -220,6 +238,7 @@ init python:
             'suit': 'hearts',
             'value': 1,
             'type': 'skill',
+            'case': 'combat',
         },
         'slippery_words': {
             'name': __("Slippery words"),
@@ -244,12 +263,14 @@ init python:
             'suit': 'spades',
             'attribute': 'subtlety',
             'type': 'equipment',
+            'case': 'combat',
         },        
         'stone_knife': {
             'name': __("Каменный нож"),
             'suit': 'spades',
             'value': 1,
             'type': 'equipment',
+            'case': 'combat',
         },        
         'struggle': {
             'name': __("Struggle"),
@@ -268,12 +289,14 @@ init python:
             'suit': 'skull',
             'value': 5,
             'type': 'equipment',
+            'case': 'combat',
         },        
         'sword': {
             'name': __("Sword"),
             'suit': 'spades',
             'attribute': 'might',
             'type': 'equipment',
+            'case': 'combat',
         },        
         'tactical_advice': {
             'name': __("Умная тактика"),
@@ -287,12 +310,14 @@ init python:
             'suit': 'clubs',
             'attribute': 'might',
             'type': 'equipment',
+            'case': 'combat',
         },
         'two_handed_sword': {
             'name': __("Two-handed sword"),
             'suit': 'hearts',
             'attribute': 'might',
             'type': 'equipment',
+            'case': 'combat',
         },        
         'wisdom_of_many_lives': {
             'name': __("Wisdom of many lives"),
@@ -305,6 +330,7 @@ init python:
             'suit': 'skull',
             'attribute': 'might',
             'type': 'skill',
+            'case': 'combat',
         },
         'whip_lash': {
             'name': __("Whip lash"),

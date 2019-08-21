@@ -222,7 +222,7 @@ class PersonClassCard(object):
         if renpy.exists(img):
             return img
         else:
-            return 'images/blank.png'
+            return 'gui/card_constructor/bg_null.png'
     
     @property
     def permanent_context(self):
