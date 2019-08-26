@@ -18,6 +18,7 @@ init -10 python:
     from mer_class import *
     from mer_legacy_system import CoreRiteOfLegacy
     from mer_basics import *
+    from mer_sex import *
 
 init 1 python:
     for key, value in core_features.items():
@@ -66,6 +67,9 @@ init 1 python:
 
     for key, value in mer_class_data.items():
         PersonClass.register_class(key, value)
+
+    for key, value in new_sex_cards.items():
+        SexAction.register_action(key, value)
 
     for suit in CoreDuelSuit.get_suits():
         data = {'suit': suit}
@@ -387,6 +391,8 @@ label start:
 
         # for i in range(10):
         #     test()
+        sex = MerSex([SexParticipant(player, True)])
+        sex.start()
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
     call lbl_storylanista_start
     call lbl_market(core, player)
