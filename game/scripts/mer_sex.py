@@ -1,4 +1,5 @@
 import renpy.exports as renpy
+import renpy.store as store
 
 
 class SexParticipant(object):
@@ -21,7 +22,7 @@ class MerSex(object):
         self.state = state or []
         self.participants = participants
         self.actions = {}
-
+    
     def apply_action(self, action):
         self.actions[action.type()] = action
 
@@ -33,6 +34,14 @@ class MerSex(object):
         for i in self.actions.values():
             text += i.description() + '\n'
         return text
+    
+    def action_multikey_description(self):
+        try:
+            next(i for i in self.actions.values() if i.type() == 'action')
+        except StopIteration:
+            return ""
+        key = frozenset([i.id for i in self.actions.values()])
+        return store.actions_descriptions.get(key, 'No description for %s' % key)
 
     def type(self):
         if len(self.participants) == 1:

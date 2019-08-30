@@ -20,7 +20,7 @@ screen sc_sex(sex):
         frame:
             yalign 0.3
             xsize 1260
-            text sex.description()
+            text sex.action_multikey_description()
 
         frame:
             yalign 1.0

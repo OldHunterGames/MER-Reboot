@@ -72,3 +72,8 @@ init python:
             'type': 'action',
         },
     }
+
+    # example of multikey descriptions
+    actions_descriptions = {
+        frozenset(('speak', 'sadly', 'sit')): 'Speak while sadly sitting',
+    }
