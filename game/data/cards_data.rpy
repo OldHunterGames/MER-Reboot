@@ -154,7 +154,7 @@ init python:
             'name': __("Хрень!"),
             'suit': 'diamonds',
             'custom': soul_level_bonus,
-            'type': 'skill',
+            'type': 'courage',
         },        
         'mobile_offence': {
             'name': __("Mobile offence"),
