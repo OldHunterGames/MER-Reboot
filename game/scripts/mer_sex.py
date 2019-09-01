@@ -41,7 +41,7 @@ class MerSex(object):
         except StopIteration:
             return ""
         key = frozenset([i.id for i in self.actions.values()])
-        return store.actions_descriptions.get(key, 'No description for %s' % key)
+        return store.actions_descriptions.get(key, 'No description for %s' % '-'.join(list(key)))
 
     def type(self):
         if len(self.participants) == 1:
