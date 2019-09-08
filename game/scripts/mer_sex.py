@@ -36,10 +36,6 @@ class MerSex(object):
         return text
     
     def action_multikey_description(self):
-        try:
-            next(i for i in self.actions.values() if i.type() == 'action')
-        except StopIteration:
-            return ""
         key = frozenset([i.id for i in self.actions.values()])
         return store.actions_descriptions.get(key, 'No description for %s' % '-'.join(list(key)))
 
