@@ -25,6 +25,11 @@ class MerSex(object):
     
     def apply_action(self, action):
         self.actions[action.type()] = action
+        if action.type() == 'pose':
+            try:
+                del self.actions['action']
+            except KeyError:
+                pass
 
     def remove_action(self, action):
         del self.actions[action.type()]
