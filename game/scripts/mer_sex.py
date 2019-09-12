@@ -7,7 +7,8 @@ class SexParticipant(object):
     def __init__(self, person, controlled_by_player=False):
         self.person = person
         self.controlled_by_player = controlled_by_player
-
+        self.thrill = 0
+        self.interest = 5
 
 class SexType(object):
     Solo = 'Solo'
@@ -21,15 +22,25 @@ class MerSex(object):
             raise Exception('There is should be at least one participant in sex')
         self.state = state or []
         self.participants = participants
-        self.actions = {}
+        self.actions = {
+            'pose': SexAction.get_action('sit'),
+            'behavior': SexAction.get_action('sadly')
+        }
+
     
     def apply_action(self, action):
         self.actions[action.type()] = action
-        if action.type() == 'pose':
+        if action.type() == 'pose' or action.type() == 'behavior':
             try:
                 del self.actions['action']
             except KeyError:
                 pass
+        else:
+            self.participants[0].thrill += 1
+            self.participants[0].interest -= 1
+
+    def is_active_behavior(self, action):
+        return action == self.actions.get('behavior')
 
     def remove_action(self, action):
         del self.actions[action.type()]
@@ -41,7 +52,10 @@ class MerSex(object):
         return text
     
     def action_multikey_description(self):
-        key = frozenset([i.id for i in self.actions.values()])
+        if self.actions.get('action') is None:
+            key = frozenset([self.actions.get('pose').id])
+        else:
+            key = frozenset([i.id for i in self.actions.values()])
         return store.actions_descriptions.get(key, 'No description for %s' % '-'.join(list(key)))
 
     def type(self):

@@ -11,7 +11,10 @@ screen sc_sex(sex):
             xalign 1.0
             yalign 1.0
         frame:
-            image im.Scale(sex.participants[0].person.avatar, 100, 100)
+            vbox:
+                image im.Scale(sex.participants[0].person.avatar, 100, 100)
+                text 'thrill: %s' % sex.participants[0].thrill
+                text 'interest: %s' % sex.participants[0].interest
 
         frame:
             xalign 0.5
@@ -33,6 +36,7 @@ screen sc_sex(sex):
                 vbox:
                     for i in behaviors:
                         textbutton i.name():
+                            text_bold sex.is_active_behavior(i)
                             action Function(sex.apply_action, i)
                 vbox:
                     for i in actions:
