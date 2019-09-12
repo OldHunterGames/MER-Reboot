@@ -9,6 +9,14 @@ class SexParticipant(object):
         self.controlled_by_player = controlled_by_player
         self.thrill = 0
         self.interest = 5
+        self.used_actions = set()
+
+    def use_action(self, action):
+        self.interest -= 1
+        if action in self.used_actions:
+            return
+        self.used_actions.add(action)
+        self.thrill += 1
 
 class SexType(object):
     Solo = 'Solo'
@@ -36,8 +44,7 @@ class MerSex(object):
             except KeyError:
                 pass
         else:
-            self.participants[0].thrill += 1
-            self.participants[0].interest -= 1
+            self.participants[0].use_action(action)
 
     def is_active_behavior(self, action):
         return action == self.actions.get('behavior')
