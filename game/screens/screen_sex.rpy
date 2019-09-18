@@ -30,15 +30,15 @@ screen sc_sex(sex):
 
             hbox:
                 vbox:
-                    for i in positions:
+                    for i in sex.filter_actions(positions):
                         textbutton i.name():
                             action Function(sex.apply_action, i)
                 vbox:
-                    for i in behaviors:
+                    for i in sex.filter_actions(behaviors):
                         textbutton i.name():
                             text_bold sex.is_active_behavior(i)
                             action Function(sex.apply_action, i)
                 vbox:
-                    for i in actions:
+                    for i in sex.filter_actions(actions):
                         textbutton i.name():
                             action Function(sex.apply_action, i)

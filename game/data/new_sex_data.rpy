@@ -62,6 +62,10 @@ init python:
             'description': __("Undress"),
             'conditions': [],
             'personal_conditions': ['cloth'],
+            'edit_personal_conditions': {
+                'remove': ['cloth'],
+                'add': [],
+            },
             'type': 'action',
         },
         'speak': {
@@ -69,6 +73,10 @@ init python:
             'description': __("Speak"),
             'conditions': [],
             'personal_conditions': ['free_mouth'],
+            'temp_personal_conditions': {
+                'remove': ['free_mouth'],
+                'add': [],
+            },
             'type': 'action',
         },
     }

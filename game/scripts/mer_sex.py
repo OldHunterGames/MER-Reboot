@@ -10,7 +10,36 @@ class SexParticipant(object):
         self.thrill = 0
         self.interest = 5
         self.used_actions = set()
+        self._conditions = ['cloth', 'free_mouth']
+        self.actions = {
+            'pose': SexAction.get_action('sit'),
+            'behavior': SexAction.get_action('sadly')
+        }
 
+    @property
+    def conditions(self):
+        temp_added = set()
+        temp_removed = set()
+        for value in self.actions.values():
+            temp_added = temp_added.union(set(value.temp_personal_conditions().get('add')))
+            temp_removed = temp_removed.union(set(value.temp_personal_conditions().get('remove')))
+        return list(set(self._conditions).union(temp_added).difference(temp_removed))
+
+    def apply_action(self, action):
+        self.actions[action.type()] = action
+        data = action.edit_personal_conditions()
+        for removed in data.get('remove', []):
+            self._conditions.remove(removed)
+        for added in data.get('add', []):
+            self._conditions.aappend(added)
+        if action.type() == 'pose' or action.type() == 'behavior':
+            try:
+                del self.actions['action']
+            except KeyError:
+                pass
+        else:
+            self.use_action(action)
+    
     def use_action(self, action):
         self.interest -= 1
         if action in self.used_actions:
@@ -30,24 +59,22 @@ class MerSex(object):
             raise Exception('There is should be at least one participant in sex')
         self.state = state or []
         self.participants = participants
-        self.actions = {
-            'pose': SexAction.get_action('sit'),
-            'behavior': SexAction.get_action('sadly')
-        }
 
-    
+    def filter_actions(self, actions):
+        personal_conditions = self.participants[0].conditions
+        filtered = []
+        for i in actions:
+            if (all([cond in personal_conditions for cond in i.personal_conditions()])
+                and all([cond in self.state for cond in i.conditions()])):
+                    filtered.append(i)
+        return filtered
+
     def apply_action(self, action):
-        self.actions[action.type()] = action
-        if action.type() == 'pose' or action.type() == 'behavior':
-            try:
-                del self.actions['action']
-            except KeyError:
-                pass
-        else:
-            self.participants[0].use_action(action)
+        self.participants[0].apply_action(action)
 
     def is_active_behavior(self, action):
-        return action == self.actions.get('behavior')
+        actions = self.participants[0].actions
+        return action == actions.get('behavior')
 
     def remove_action(self, action):
         del self.actions[action.type()]
@@ -59,10 +86,11 @@ class MerSex(object):
         return text
     
     def action_multikey_description(self):
-        if self.actions.get('action') is None:
-            key = frozenset([self.actions.get('pose').id])
+        actions = self.participants[0].actions
+        if actions.get('action') is None:
+            key = frozenset([actions.get('pose').id])
         else:
-            key = frozenset([i.id for i in self.actions.values()])
+            key = frozenset([i.id for i in actions.values()])
         return store.actions_descriptions.get(key, 'No description for %s' % '-'.join(list(key)))
 
     def type(self):
@@ -109,4 +137,15 @@ class SexAction(object):
 
     def conditions(self):
         return self.data.get('conditions', [])
-        
+
+    def edit_conditions(self):
+        return self.data.get('edit_conditions', {'remove': [], 'add': []})
+
+    def personal_conditions(self):
+        return self.data.get('personal_conditions', [])
+
+    def edit_personal_conditions(self):
+        return self.data.get('edit_personal_conditions', {'remove': [], 'add': []})
+    
+    def temp_personal_conditions(self):
+        return self.data.get('temp_personal_conditions', {'remove': [], 'add': []})
