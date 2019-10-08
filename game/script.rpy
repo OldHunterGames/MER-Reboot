@@ -391,7 +391,7 @@ label start:
 
         # for i in range(10):
         #     test()
-        sex = MerSex([SexParticipant(player, True)])
+        sex = MerSex([SexParticipant(player, True), SexParticipant(PersonCreator.gen_person(name='Player', gender='female', genus_preset=serpsis_genus_preset), True)])
         sex.start()
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
     call lbl_storylanista_start
@@ -574,6 +574,7 @@ label lbl_market(core, player):
             'Уйти':
                 $ slaves = []
     hide sc_main_stats
+    $ print('leaving slavemarket')
     return
 
 

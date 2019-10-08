@@ -11,36 +11,40 @@ class SexParticipant(object):
         self.interest = 5
         self.used_actions = set()
         self._conditions = ['cloth', 'free_mouth']
-        self.actions = {
-            'pose': SexAction.get_action('sit'),
-            'behavior': SexAction.get_action('sadly')
-        }
+        if person.gender == 'male':
+            self._conditions.append('has_dick')
+        self.actions = {}
+        self.last_description = ''
 
     @property
     def conditions(self):
         temp_added = set()
         temp_removed = set()
         for value in self.actions.values():
-            temp_added = temp_added.union(set(value.temp_personal_conditions().get('add')))
-            temp_removed = temp_removed.union(set(value.temp_personal_conditions().get('remove')))
+            temp_added = temp_added.union(set(value.temporary_conditions().get('add')))
+            temp_removed = temp_removed.union(set(value.temporary_conditions().get('remove')))
         return list(set(self._conditions).union(temp_added).difference(temp_removed))
 
     def apply_action(self, action):
         self.actions[action.type()] = action
-        data = action.edit_personal_conditions()
+        data = action.permanent_conditions()
         for removed in data.get('remove', []):
             self._conditions.remove(removed)
         for added in data.get('add', []):
-            self._conditions.aappend(added)
-        if action.type() == 'pose' or action.type() == 'behavior':
-            try:
-                del self.actions['action']
-            except KeyError:
-                pass
-        else:
+            self._conditions.append(added)
+            
+        if action.type() == 'action':
             self.use_action(action)
+            self.actions = {}
+
+    def set_last_action_description(self):
+        actions = self.actions
+        key = frozenset([i.id for i in actions.values()])
+
+        self.last_description = store.actions_descriptions.get(key, '')
     
     def use_action(self, action):
+        self.set_last_action_description()
         self.interest -= 1
         if action in self.used_actions:
             return
@@ -52,6 +56,11 @@ class SexType(object):
     Duo = 'Duo'
     Group = 'Group'
 
+class SexState(object):
+    select_pose = 'select_pose'
+    select_modus = 'select_modus'
+    select_action = 'select_action'
+
 class MerSex(object):
 
     def __init__(self, participants, state=None):
@@ -59,15 +68,67 @@ class MerSex(object):
             raise Exception('There is should be at least one participant in sex')
         self.state = state or []
         self.participants = participants
+        self.target = participants[1]
 
-    def filter_actions(self, actions):
-        personal_conditions = self.participants[0].conditions
+    def add_action(self, action):
+        self.action_flow.append(action)
+
+    def next_action(self):
+        if self.participants[0].actions.get('behavior'):
+            return 'action'
+        elif self.participants[0].actions.get('pose'):
+            return 'behavior'
+        else:
+            return 'pose'
+
+    def filter_actions(self, actions, filter=None):
         filtered = []
         for i in actions:
-            if (all([cond in personal_conditions for cond in i.personal_conditions()])
-                and all([cond in self.state for cond in i.conditions()])):
-                    filtered.append(i)
+            current_key = [j.id for j in self.participants[0].actions.values()]
+            current_key.append(i.id)
+            current_key = frozenset(current_key)
+            keys = list(store.actions_descriptions.keys())
+            good_keys = []
+            allowed = False
+            for k in keys:
+                if current_key.issubset(k):
+                    good_keys.append(k)
+            if len(current_key) < 3:
+                for key in good_keys:
+                    act = self.find_action(key)
+                    behavior = self.find_behavior(key)
+                    if self.is_available(act) and self.is_available(behavior):
+                        allowed = True
+            if len(current_key) == 3:
+                for key in good_keys:
+                    act = self.find_action(key)
+                    if self.is_available(act):
+                        allowed = True
+            if not allowed:
+                continue
+            if self.is_available(i):
+                filtered.append(i)
+        if filter is not None:
+            return [i for i in filtered if filter(i)]
         return filtered
+
+    def is_available(self, action):
+        personal_conditions = self.participants[0].conditions
+        target_conditions = self.target.conditions
+        return (all([cond in personal_conditions for cond in action.required_conditions()])
+            and all([cond in target_conditions for cond in action.required_target_conditions()]))
+
+    def find_action(self, key):
+        for i in SexAction.get_by_type('action'):
+            if i.id in key:
+                return i
+
+    def find_behavior(self, key):
+        for i in SexAction.get_by_type('behavior'):
+            if i.id in key:
+                return i
+    def is_available_pose(self, pose):
+        return any([pose.id in key for key in SexAction.description_keys()])
 
     def apply_action(self, action):
         self.participants[0].apply_action(action)
@@ -86,12 +147,7 @@ class MerSex(object):
         return text
     
     def action_multikey_description(self):
-        actions = self.participants[0].actions
-        if actions.get('action') is None:
-            key = frozenset([actions.get('pose').id])
-        else:
-            key = frozenset([i.id for i in actions.values()])
-        return store.actions_descriptions.get(key, 'No description for %s' % '-'.join(list(key)))
+        return self.participants[0].last_description
 
     def type(self):
         if len(self.participants) == 1:
@@ -105,7 +161,7 @@ class MerSex(object):
         return renpy.call_screen('sc_sex', self)
 
     def filter(self, cards):
-        return [i for i in cards if all([state in self.state for state in i.conditions()])]
+        return [i for i in cards]
 
 class SexAction(object):
     _ACTIONS = {}
@@ -135,17 +191,22 @@ class SexAction(object):
     def name(self):
         return self.data.get('name', 'No name action')
 
-    def conditions(self):
+    def required_conditions(self):
         return self.data.get('conditions', [])
 
-    def edit_conditions(self):
-        return self.data.get('edit_conditions', {'remove': [], 'add': []})
+    def required_target_conditions(self):
+        return self.data.get('target_conditions', [])
 
-    def personal_conditions(self):
-        return self.data.get('personal_conditions', [])
-
-    def edit_personal_conditions(self):
-        return self.data.get('edit_personal_conditions', {'remove': [], 'add': []})
+    def permanent_conditions(self):
+        return self.data.get('permanent_conditions', {'remove': [], 'add': []})
     
-    def temp_personal_conditions(self):
-        return self.data.get('temp_personal_conditions', {'remove': [], 'add': []})
+    def temporary_conditions(self):
+        return self.data.get('temporary_conditions', {'remove': [], 'add': []})
+
+    @classmethod
+    def description_keys(cls):
+        return store.actions_descriptions.keys()
+
+    @classmethod
+    def pose_keys(cls):
+        return [i.id for i in cls.get_by_type('pose')]

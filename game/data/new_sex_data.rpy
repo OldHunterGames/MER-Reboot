@@ -60,9 +60,8 @@ init python:
         'undress': {
             'name': __("Undress"),
             'description': __("Undress"),
-            'conditions': [],
-            'personal_conditions': ['cloth'],
-            'edit_personal_conditions': {
+            'target_conditions': ['cloth'],
+            'permanent_conditions': {
                 'remove': ['cloth'],
                 'add': [],
             },
@@ -71,17 +70,29 @@ init python:
         'speak': {
             'name': __("Speak"),
             'description': __("Speak"),
-            'conditions': [],
-            'personal_conditions': ['free_mouth'],
-            'temp_personal_conditions': {
+            'conditions': ['free_mouth'],
+            'temporary_conditions': {
                 'remove': ['free_mouth'],
                 'add': [],
             },
             'type': 'action',
         },
+        'blowjob': {
+            'name': __("Blowjob"),
+            'description': __("Blowjob"),
+            'conditions': ['free_mouth'],
+            'target_conditions': ['has_dick'],
+            'temporary_conditions': {
+                'remove': ['free_mouth'],
+                'add': [],
+            },
+            'type': 'action',
+        },
+
     }
 
     # example of multikey descriptions
     actions_descriptions = {
+        frozenset(('blowjob', 'sadly', 'sit')): 'Suck while passively sitting',
         frozenset(('speak', 'sadly', 'sit')): 'Speak while sadly sitting',
     }

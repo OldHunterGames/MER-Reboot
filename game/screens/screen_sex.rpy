@@ -15,6 +15,12 @@ screen sc_sex(sex):
                 image im.Scale(sex.participants[0].person.avatar, 100, 100)
                 text 'thrill: %s' % sex.participants[0].thrill
                 text 'interest: %s' % sex.participants[0].interest
+        frame:
+            xalign 1.0
+            vbox:
+                image im.Scale(sex.target.person.avatar, 100, 100)
+                text 'thrill: %s' % sex.target.thrill
+                text 'interest: %s' % sex.target.interest
 
         frame:
             xalign 0.5
@@ -29,16 +35,22 @@ screen sc_sex(sex):
             yalign 1.0
 
             hbox:
-                vbox:
-                    for i in sex.filter_actions(positions):
-                        textbutton i.name():
-                            action Function(sex.apply_action, i)
-                vbox:
-                    for i in sex.filter_actions(behaviors):
-                        textbutton i.name():
-                            text_bold sex.is_active_behavior(i)
-                            action Function(sex.apply_action, i)
-                vbox:
-                    for i in sex.filter_actions(actions):
-                        textbutton i.name():
-                            action Function(sex.apply_action, i)
+                if sex.next_action() == 'pose':
+                    vbox:
+                        text 'Select pose'
+                        for i in sex.filter_actions(positions):
+                            textbutton i.name():
+                                action Function(sex.apply_action, i)
+                if sex.next_action() == 'behavior':
+                    vbox:
+                        text 'Select behavior'
+                        for i in sex.filter_actions(behaviors):
+                            textbutton i.name():
+                                text_bold sex.is_active_behavior(i)
+                                action Function(sex.apply_action, i)
+                if sex.next_action() == 'action':
+                    vbox:
+                        text 'Select action'
+                        for i in sex.filter_actions(actions):
+                            textbutton i.name():
+                                action Function(sex.apply_action, i)
