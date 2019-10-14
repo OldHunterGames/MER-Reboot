@@ -3,8 +3,10 @@ screen sc_sex(sex):
     $ positions = sex.filter(SexAction.get_by_type('pose'))
     $ behaviors = sex.filter(SexAction.get_by_type('behavior'))
     $ actions = sex.filter(SexAction.get_by_type('action'))
+    
     window:
         style 'char_info_window'
+        use sc_gui
         background '#777777'
 
         textbutton 'Leave' action Return():

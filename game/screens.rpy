@@ -232,31 +232,41 @@ style input:
 screen choice(items):
     $ mer_core = getattr(renpy.store, 'core', None)
     python:
+        import math
+        xsize = None
         if mer_core is not None:
             world = mer_core.world
         else:
             world = None
         if world is not None:
-            item_bg = world.get_menu_item_bg()
-            item_bg_hover = world.get_menu_item_bg_hover()
+            item_bg = im.Scale(world.get_menu_item_bg(), 760, 70)
+            item_bg_hover = im.Scale(world.get_menu_item_bg_hover(), 760, 70)
             ysize = world.menu_item_ysize()
         else:
-            item_bg = None
-            item_bg_hover = None
-            ysize = None
+            x_size = int(math.floor(747 * 0.666))
+            y_size = int(math.floor(110 * 0.666))
+            print(x_size)
+            print(y_size)
+            item_bg = im.Scale('gui/interface_base_assets/button_base.png', x_size, y_size)
+            item_bg_hover = im.Scale('gui/interface_base_assets/button_base_hover.png', x_size, y_size)
+            ysize = y_size
+            xsize = x_size
         
     style_prefix "choice"
 
     vbox:
+        yalign 0.2
         for i in items:
             textbutton i.caption action i.action:
                 text_yalign 0.5
                 if ysize is not None:
                     ysize ysize
+                if xsize is not None:
+                    xsize xsize
                 if item_bg is not None:
-                    background im.Scale(item_bg, 760, 70)
+                    background item_bg
                 if item_bg_hover is not None:
-                    hover_background im.Scale(item_bg_hover, 760, 70)
+                    hover_background item_bg_hover
 
             
 

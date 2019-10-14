@@ -378,7 +378,7 @@ label start:
     # $ core.skip_turn.add_callback(CoreDuel.drop_skulls_callback)
     # $ core.skip_turn.add_callback(CoreSexMinigame.decade_skip_callback)
     $ setup_arenas(core)
-
+    show screen sc_gui
     python:
         pass
         AngelMaker.add_observer('archon_generated', lambda archon: World.get_random_world()(archon))
