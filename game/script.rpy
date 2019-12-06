@@ -69,7 +69,7 @@ init 1 python:
         PersonClass.register_class(key, value)
 
     for key, value in new_sex_cards.items():
-        SexAction.register_action(key, value)
+        SexCard.register_action(key, value)
 
     for suit in CoreDuelSuit.get_suits():
         data = {'suit': suit}
