@@ -19,6 +19,7 @@ init -10 python:
     from mer_legacy_system import CoreRiteOfLegacy
     from mer_basics import *
     from mer_sex import *
+    from mer_quirks import *
 
 init 1 python:
     for key, value in core_features.items():
@@ -75,6 +76,7 @@ init 1 python:
         data = {'suit': suit}
         CoreDuelCard.register_card(suit.id, CoreDuelCard(suit.id, data))
     
+    Quirk.register_quirks(quirks_data)
     from mer_settings import *
 
 init python:
@@ -388,11 +390,13 @@ label start:
         auction = Auction(core, player)
         core.skip_turn.add_callback(auction.on_skip_turn)
         core.before_skip_turn.add_callback(home_manager.on_skip_turn)
-
+        quirk_data = QuirkData(player)
+        print(quirk_data.good_strategy())
+        print(quirk_data.bad_strategy())
         # for i in range(10):
         #     test()
-        sex = MerSex([SexParticipant(player, True), SexParticipant(PersonCreator.gen_person(name='Player', gender='female', genus_preset=serpsis_genus_preset), True)])
-        sex.start()
+        # sex = MerSex([SexParticipant(player, True), SexParticipant(PersonCreator.gen_person(name='Player', gender='female', genus_preset=serpsis_genus_preset), True)])
+        # sex.start()
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
     call lbl_storylanista_start
     call lbl_market(core, player)
