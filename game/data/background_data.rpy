@@ -37,7 +37,7 @@ init python:
         },
 
         'bitch': {
-            'name': __('уличная бядь'),
+            'name': __('уличная блядь'),
             'prerequisites': ['female'],
             'tier': 0,
             'high_attributes': [],

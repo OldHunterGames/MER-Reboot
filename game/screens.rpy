@@ -245,8 +245,6 @@ screen choice(items):
         else:
             x_size = int(math.floor(747 * 0.666))
             y_size = int(math.floor(110 * 0.666))
-            print(x_size)
-            print(y_size)
             item_bg = im.Scale('gui/interface_base_assets/button_base.png', x_size, y_size)
             item_bg_hover = im.Scale('gui/interface_base_assets/button_base_hover.png', x_size, y_size)
             ysize = y_size

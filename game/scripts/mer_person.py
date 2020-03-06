@@ -346,7 +346,7 @@ class CorePerson(object):
             'sabotage': None,
         }
         self.relations = {} # temp, will be removed
-
+    
     def add_relation(self, relation, person):
         self.relations[relation] = person
 

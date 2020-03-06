@@ -6,6 +6,7 @@ import random
 import renpy.exports as renpy
 import renpy.store as store
 import copy
+from mer_slavery import Slave
 
 
 class MERCore(object):
@@ -16,6 +17,17 @@ class MERCore(object):
         self.characters = list()
         self.decade = 1
         self.world = None
+        self._player_approachability = 5
+
+    @property
+    def player_approachability(self):
+        return self._player_approachability
+
+    @player_approachability.setter
+    def player_approachability(self, value):
+        self._player_approachability = value
+        if value < 1:
+            self.player.exhausted = True
 
     def add_character(self, person):
         self.characters.append(person)
@@ -46,13 +58,29 @@ class MERCore(object):
     def skip_turn(self):
         # self.player.sparks += self.calc_income(self.player)
         # self.player.sparks -= 5
+        self.player_approachability = 5
         self.before_skip_turn()
         if self.player.sparks < 0:
             renpy.call_in_new_context('lbl_gameover')
         self.decade += 1
         self.player.exhausted = False 
         for i in self.player.slaves:
+            Slave(i).refresh()
             i.exhausted = False
+    
+    def can_interact(self, person):
+        return (
+            not person.exhausted and 
+            not self.player.exhausted and 
+            self.player_approachability > 0 and
+            Slave(person).approachability > 0
+        )
+    
+    def player_can_act(self):
+        return not self.player.exhausted and self.player_approachability > 0
+    
+    def can_act(self, person):
+        return not person.exhausted and Slave(person).approachability > 0
 
 class EventsBook(object):
 

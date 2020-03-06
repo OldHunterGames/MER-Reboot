@@ -20,6 +20,7 @@ init -10 python:
     from mer_basics import *
     from mer_sex import *
     from mer_quirks import *
+    from mer_slavery import *
 
 init 1 python:
     for key, value in core_features.items():
@@ -390,9 +391,6 @@ label start:
         auction = Auction(core, player)
         core.skip_turn.add_callback(auction.on_skip_turn)
         core.before_skip_turn.add_callback(home_manager.on_skip_turn)
-        quirk_data = QuirkData(player)
-        print(quirk_data.good_strategy())
-        print(quirk_data.bad_strategy())
         # for i in range(10):
         #     test()
         # sex = MerSex([SexParticipant(player, True), SexParticipant(PersonCreator.gen_person(name='Player', gender='female', genus_preset=serpsis_genus_preset), True)])
@@ -425,12 +423,12 @@ label lbl_main:
         #     python:
         #         angel = AngelMaker.gen_archon()
         #         MistTravel(angel.world, player, core).run()
-        'Таверна':
-            call lbl_taberna()
-        'Лупанарий':
-            call lbl_lupanarium()
-        'Колизей':
-            call lbl_colosseum()
+        # 'Таверна':
+        #     call lbl_taberna()
+        # 'Лупанарий':
+        #     call lbl_lupanarium()
+        # 'Колизей':
+        #     call lbl_colosseum()
         'Домой':
             python:
                 home_manager.call()
@@ -461,93 +459,95 @@ label lbl_slave_actions(slave):
         is_all_exhausted = all(is_all_exhausted)
         description = MarketDescription(slave).make_description()
         price = PriceCalculator(slave).price()
-    while True:
+    while core.can_interact(slave):
         menu:
             '[description]'
-            'Оценка вариантов':
-                call lbl_storylanista_actionanalys
-            'Продвинутое обучение [[{image=[icon]}]' if can_upgrade:
-                python:
-                    choice = True
-                    upgraded = False
-                    while choice:
-                        items = [('{0} ({1})'.format(i.name, i.cost), i) for i in home_manager.slave_upgrades(slave) if i.cost <= player.sparks]
-                        items.append((__('Передумать'), False))
-                        choice = renpy.display_menu(items)
-                        if choice:
-                            variants = []
-                            text = __('Начать тренировки (%s)') % choice.cost
-                            if choice.cost <= player.sparks:
-                                variants.append((text, choice))
-                            else:
-                                variants.append((text, None))
-                            variants.append((__('Передумать'), False))
-                            renpy.say(None, choice.description, interact=False)
-                            next_choice = renpy.display_menu(variants)
-                            if next_choice:
-                                home_manager.upgrade_slave(slave, next_choice)
-                                choice = False
-                                upgraded = True
-                if upgraded:
-                    return
+            'Поднять верность':
+                call lbl_raise_obedience(slave)
+            # 'Оценка вариантов':
+            #     call lbl_storylanista_actionanalys
+            # 'Продвинутое обучение [[{image=[icon]}]' if can_upgrade:
+            #     python:
+            #         choice = True
+            #         upgraded = False
+            #         while choice:
+            #             items = [('{0} ({1})'.format(i.name, i.cost), i) for i in home_manager.slave_upgrades(slave) if i.cost <= player.sparks]
+            #             items.append((__('Передумать'), False))
+            #             choice = renpy.display_menu(items)
+            #             if choice:
+            #                 variants = []
+            #                 text = __('Начать тренировки (%s)') % choice.cost
+            #                 if choice.cost <= player.sparks:
+            #                     variants.append((text, choice))
+            #                 else:
+            #                     variants.append((text, None))
+            #                 variants.append((__('Передумать'), False))
+            #                 renpy.say(None, choice.description, interact=False)
+            #                 next_choice = renpy.display_menu(variants)
+            #                 if next_choice:
+            #                     home_manager.upgrade_slave(slave, next_choice)
+            #                     choice = False
+            #                     upgraded = True
+            #     if upgraded:
+            #         return
 
-            'Продвинутое обучение [[X]' if not can_upgrade:
-                python:
-                    text = ''
-                    if player.person_class.tier <= slave.person_class.tier:
-                        text = __('Простите, хозяин, но прежде чем вы сможете готовить более сильных гладиаторов Вам нужно заработать больше опыта и славы. Нужна достойная победа на новой арене.')
-                    elif not getattr(slave, 'win_arena', False):
-                        text = __('Мне нужно больше боевого опыта прежде чем я смогу выступать с новым снаряжением, Хозяин. Позвольте мне победить хотя бы одного достойного противника.')
-                    elif slave.person_class.tier == 5:
-                        text = __('Я уже чемпион арены. Более сильных гладиаторов Рим не знал.')
+            # 'Продвинутое обучение [[X]' if not can_upgrade:
+            #     python:
+            #         text = ''
+            #         if player.person_class.tier <= slave.person_class.tier:
+            #             text = __('Простите, хозяин, но прежде чем вы сможете готовить более сильных гладиаторов Вам нужно заработать больше опыта и славы. Нужна достойная победа на новой арене.')
+            #         elif not getattr(slave, 'win_arena', False):
+            #             text = __('Мне нужно больше боевого опыта прежде чем я смогу выступать с новым снаряжением, Хозяин. Позвольте мне победить хотя бы одного достойного противника.')
+            #         elif slave.person_class.tier == 5:
+            #             text = __('Я уже чемпион арены. Более сильных гладиаторов Рим не знал.')
                     
-                slave '[text]'
-            'Отработать тактику боя' if not has_temp:
-                if player.exhausted:
-                    player 'Я слишком устал чтобы этим заниматься'
-                else:
-                    $ home_manager.train(slave)
-                    return
-            'Оплатить развлечение (5 искр)':
-                if is_all_exhausted:
-                    slave "Вы очень щедры, Хозяин, но какой смысл развлекаться в одиночку? Мне нужна компания, а все уже заняты другими делами на этой декаде."
-                else:
-                    python:
-                        variants = []
-                        if not player.exhausted:
-                            variants.append((player.name, player))
-                        friend = slave.get_relation('best_friend')
-                        lover = slave.get_relation('lover')
-                        if friend is not None:
-                            variants.append(
-                                (__('{0} (лучший друг').format(friend.name), friend if not friend.exhausted else None)
-                            )
-                        if lover is not None:
-                            variants.append(
-                                (__('{0} (любовник').format(lover.name), lover if not lover.exhausted else None)
-                            )
-                        for i in player.slaves:
-                            if i != friend and i != lover and i != player and not i.exhausted and i != slave:
-                                variants.append((i.name, i))
-                        variants.append((__('Передумать'), False))
-                        choice = renpy.display_menu(variants)
-                        if choice:
-                            if choice.gender == slave.gender:
-                                if not triggers.slave_party and choice == player:
-                                    triggers.slave_party_first({'slave': slave})
-                                home_manager.attend_party(choice, slave)
-                            else:
-                                if not triggers.slave_sex and choice == player:
-                                    triggers.slave_sex_first({'slave': slave})
-                                home_manager.make_love(choice, slave)
-                    if choice:
-                        return
+            #     slave '[text]'
+            # 'Отработать тактику боя' if not has_temp:
+            #     if player.exhausted:
+            #         player 'Я слишком устал чтобы этим заниматься'
+            #     else:
+            #         $ home_manager.train(slave)
+            #         return
+            # 'Оплатить развлечение (5 искр)':
+            #     if is_all_exhausted:
+            #         slave "Вы очень щедры, Хозяин, но какой смысл развлекаться в одиночку? Мне нужна компания, а все уже заняты другими делами на этой декаде."
+            #     else:
+            #         python:
+            #             variants = []
+            #             if not player.exhausted:
+            #                 variants.append((player.name, player))
+            #             friend = slave.get_relation('best_friend')
+            #             lover = slave.get_relation('lover')
+            #             if friend is not None:
+            #                 variants.append(
+            #                     (__('{0} (лучший друг').format(friend.name), friend if not friend.exhausted else None)
+            #                 )
+            #             if lover is not None:
+            #                 variants.append(
+            #                     (__('{0} (любовник').format(lover.name), lover if not lover.exhausted else None)
+            #                 )
+            #             for i in player.slaves:
+            #                 if i != friend and i != lover and i != player and not i.exhausted and i != slave:
+            #                     variants.append((i.name, i))
+            #             variants.append((__('Передумать'), False))
+            #             choice = renpy.display_menu(variants)
+            #             if choice:
+            #                 if choice.gender == slave.gender:
+            #                     if not triggers.slave_party and choice == player:
+            #                         triggers.slave_party_first({'slave': slave})
+            #                     home_manager.attend_party(choice, slave)
+            #                 else:
+            #                     if not triggers.slave_sex and choice == player:
+            #                         triggers.slave_sex_first({'slave': slave})
+            #                     home_manager.make_love(choice, slave)
+            #         if choice:
+            #             return
             'Продать на рынке [price] искр':
                 $ home_manager.sell(slave)
                 return
             'Закончить разговор':
                 return
-
+    return
 
         
 label lbl_market(core, player):
