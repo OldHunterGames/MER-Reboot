@@ -396,7 +396,7 @@ label start:
         # sex = MerSex([SexParticipant(player, True), SexParticipant(PersonCreator.gen_person(name='Player', gender='female', genus_preset=serpsis_genus_preset), True)])
         # sex.start()
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
-    call lbl_storylanista_start
+    # call lbl_storylanista_start
     call lbl_market(core, player)
     call _main from _call__main
 

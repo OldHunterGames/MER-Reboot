@@ -1,5 +1,6 @@
 label lbl_raise_obedience(slave, show_initial=True):
     if not core.can_interact(slave):
+        "Беседа заходит в тупик. Надо вернуться когда [slave.name] успокоится"
         return
     python:
         import random
@@ -48,8 +49,8 @@ label lbl_raise_obedience(slave, show_initial=True):
                 renpy.say(None, random.choice(natures_bad_reactions[slave_nature][choisen_type]))
             loop_counter += 1
     if phase1_state != 'true_choise':
+        call lbl_raise_obedience(slave, False)
         return
-
     python:
         while True:
             phase2_state = None
