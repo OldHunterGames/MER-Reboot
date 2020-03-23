@@ -10,10 +10,6 @@ class BasicResource(object):
     def change_value(self, person, value):
 
 
-class Material(object):
-
-    def __init__(self, id, name,)
-
 
 class ResourceManager(object):
 
