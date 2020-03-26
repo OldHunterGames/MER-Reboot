@@ -2,6 +2,7 @@
 import random
 import renpy.store as store
 import renpy.exports as renpy
+import copy
 
 from mer_utilities import default_avatar, weighted_random, encolor_text
 from mer_sexuality import CorePersonSexuality
@@ -175,6 +176,21 @@ class PersonCreator(object):
         person = CorePerson(name, gender, genus)
         for i in cls.make_features():
             person.add_feature(i)
+        keys = store.new_features.keys()
+        random.shuffle(keys)
+        level = person.soul_level - 1
+        for key in keys:
+            if level < 1:
+                break
+            feature = store.new_features[key]
+            if feature.get('limitations') is None:
+                person.add_feature(CoreFeature(key, feature))
+            else:
+                limitations = feature.get('limitations')
+                if limitations['gender'] == person.gender:
+                    person.add_feature(CoreFeature(key, feature))
+        # for i in cls.make_features():
+        #     person.add_feature(i)
         # for i in cls.gender_features(gender.id):
         #     person.add_feature(i)
 

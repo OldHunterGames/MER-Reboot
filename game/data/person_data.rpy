@@ -248,3 +248,37 @@ init python:
     #     'coward': {'slot': 'safety', 'name': __('Coward'), 'market_description': __('Осторожность. '), 'subtlety': 1},
     #     'zealous': {'slot': 'safety', 'name': __('Zealous'), 'market_description': __('Отвага. '), 'might': 1},
     # }
+
+    new_features = {
+        'big_tits': {
+            'name': __("Big tits"),
+            'visible': True,
+            'limitations': {
+                'gender': 'female',
+            },
+            'class_social': 1,
+        },
+        'big_dick': {
+            'name': __("Big dick"),
+            'visible': True,
+            'limitations': {
+                'gender': 'male',
+            },
+            'class_social': 1,
+        },
+        'atletic': {
+            'name': __("Atletic"),
+            'visible': True,
+            'class_matrial': 1,
+        },
+        'diligence': {
+            'name': __("Diligence"),
+            'visible': False,
+            'class_service': 1,
+        },
+        'sharp mind': {
+            'name': __("Sharp mind"),
+            'visible': False,
+            'class_managing': 1,
+        },
+    }

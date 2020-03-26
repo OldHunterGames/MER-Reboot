@@ -21,6 +21,7 @@ init -10 python:
     from mer_sex import *
     from mer_quirks import *
     from mer_slavery import *
+    from mer_new_classes import *
 
 init 1 python:
     for key, value in core_features.items():
@@ -76,6 +77,9 @@ init 1 python:
     for suit in CoreDuelSuit.get_suits():
         data = {'suit': suit}
         CoreDuelCard.register_card(suit.id, CoreDuelCard(suit.id, data))
+    
+    MERClass.register_classes(new_class_data)
+    MERBackgroundClass.register_classes(new_bacground_class_data)
     
     Quirk.register_quirks(quirks_data)
     from mer_settings import *

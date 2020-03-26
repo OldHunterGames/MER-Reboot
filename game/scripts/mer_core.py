@@ -7,6 +7,7 @@ import renpy.exports as renpy
 import renpy.store as store
 import copy
 from mer_slavery import Slave
+from mer_stress import Stress
 
 
 class MERCore(object):
@@ -63,11 +64,21 @@ class MERCore(object):
         if self.player.sparks < 0:
             renpy.call_in_new_context('lbl_gameover')
         self.decade += 1
-        self.player.exhausted = False 
+        self.player.exhausted = False
+        self.stress_test()
         for i in self.player.slaves:
             Slave(i).refresh()
             i.exhausted = False
     
+    def stress_test(self):
+        first_stress_aquired = False
+        for i in self.player.slaves:
+            stress = Stress(i).stress_check()
+            if stress and not first_stress_aquired:
+                first_stress_aquired = True
+                renpy.say(None, 'player slave stress handling event here')
+
+
     def can_interact(self, person):
         return (
             not person.exhausted and 

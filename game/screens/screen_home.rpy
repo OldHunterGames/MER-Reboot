@@ -114,6 +114,7 @@ screen sc_home(home):
             background im.Scale('gui/marble_texture_bordered.jpg', 1280-600, 720)
             if home.current_slave is not None:
                 $ quirks_suggestions = QuirksSuggestions(home.current_slave)
+                $ class_data = ClassData(home.current_slave)
                 python:
                     quirk1_text = '???' if quirks_suggestions.get_suggestion('quirk1') is None else quirks_suggestions.get_suggestion('quirk1').name
                     quirk2_text = '???' if quirks_suggestions.get_suggestion('quirk2') is None else quirks_suggestions.get_suggestion('quirk2').name
@@ -144,6 +145,8 @@ screen sc_home(home):
                             # for attr in home.current_slave.show_attributes().values():
                             #     text attr
                             text SlaveClassTree(home.current_slave).get_class()
+                            text 'Backgound: %s' % class_data.get_background().name()
+                            text 'Class: %s' % class_data.get_class().name()
                             text home.current_slave.feature_by_slot('background').name()
                             text 'Obedience: %s' % Slave(home.current_slave).obedience()
                             textbutton quirk1_text action Show('sc_quirk_selection', None, quirks_suggestions, 'quirk1')
