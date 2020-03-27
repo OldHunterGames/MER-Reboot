@@ -5,7 +5,6 @@ import renpy.exports as renpy
 import copy
 
 from mer_utilities import default_avatar, weighted_random, encolor_text
-from mer_sexuality import CorePersonSexuality
 from mer_relations import Relations
 from mer_class import PersonClassCard
 
@@ -196,8 +195,8 @@ class PersonCreator(object):
 
         cls.gen_background(person)
         person.set_avatar(PersonCreator.gen_avatar(gender.id, genus.id))
-        cls.gen_initial_hand(person)
         return person
+
     @classmethod
     def gen_background(cls, person):
         soul = person.soul_level
@@ -240,13 +239,6 @@ class PersonCreator(object):
                 Features available for world: %s.
                 """ % (soul, feats, world.id, [i.id for i in available_features], available_classes_by_world)
             )
-    @classmethod
-    def gen_initial_hand(cls, person):
-        cards = person.sexuality.deck.get_cards()
-        random.shuffle(cards)
-        for card in cards[0:person.sexuality.deck.initial_hand_length()]:
-            person.sexuality.deck.add_to_hand(card)
-
 
     @classmethod
     def gender_features(cls, gender):
@@ -349,7 +341,6 @@ class CorePerson(object):
         self.features = dict()
         self.slotless_features = list()
         self.add_feature(gender)
-        self.sexuality = CorePersonSexuality()
         self.player_relations = Relations()
         self.soul_level = weighted_random(store.core_soul_weights)
         self.person_class = None

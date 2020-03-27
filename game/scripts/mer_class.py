@@ -433,7 +433,7 @@ class PriceCalculator(object):
             return self.raiting_price() / 20
         
         def price(self):
-            return max(5, max(self.potential_price(), self.training_price(), self.raiting_price()))
+            return max(5, self.potential_price())
         
         def entertainment_raiting_formula(self):
             return self.training_price() * self.person.person_class.tier ** 2

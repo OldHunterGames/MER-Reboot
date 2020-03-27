@@ -35,7 +35,7 @@ init python:
             'level': 1,
             'class': 'gladiator',
         },
-        'Slut': {
+        'slut': {
             'name': __("Slut"),
             'type': 'social',
             'level': 1,

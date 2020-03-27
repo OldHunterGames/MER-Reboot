@@ -139,7 +139,6 @@ available_arenas = {
 
 def make_starter_slave():
     slave = PersonCreator.gen_person(genus_preset=store.serpsis_genus_preset)
-    slave.person_class = PersonClass.random_by_tag('starter')
     return slave
 
 def setup_arenas(core):

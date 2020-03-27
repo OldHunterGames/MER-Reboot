@@ -13,10 +13,8 @@ init -10 python:
     from mer_core import *
     from mer_command import *
     from mer_sparks_festival import *
-    from mer_sexuality import *
     from mer_duel import *
     from mer_class import *
-    from mer_legacy_system import CoreRiteOfLegacy
     from mer_basics import *
     from mer_sex import *
     from mer_quirks import *
@@ -56,24 +54,6 @@ init 1 python:
         new_value['slot'] = 'background'
         CoreFeature.register_feature(key, CoreFeature(key, new_value))
 
-    for key, value in sex_cards_data.items():
-        CoreSexCard.register_card(key, CoreSexCard(key, value))
-
-    for key, value in sexual_types_data.items():
-        SexualType.register_type(key, SexualType(key, value))
-
-    for key, value in sexual_orientations_data.items():
-        SexualOrientation.register_orientation(key, SexualOrientation(key, value))
-
-    for key, value in core_duel_suits_data.items():
-        CoreDuelSuit.register_suit(key, CoreDuelSuit(key, value))
-
-    for key, value in mer_class_data.items():
-        PersonClass.register_class(key, value)
-
-    for key, value in new_sex_cards.items():
-        SexCard.register_action(key, value)
-
     for suit in CoreDuelSuit.get_suits():
         data = {'suit': suit}
         CoreDuelCard.register_card(suit.id, CoreDuelCard(suit.id, data))
@@ -82,9 +62,11 @@ init 1 python:
     MERBackgroundClass.register_classes(new_bacground_class_data)
     
     Quirk.register_quirks(quirks_data)
-    from mer_settings import *
-
+    
 init python:
+    def make_starter_slave():
+        slave = PersonCreator.gen_person(genus_preset=store.serpsis_genus_preset)
+        return slave
     class FighterSelector(object):
         def __init__(self, player, arena_maker, exclude=None, team=None, start_text=__('select')):
             self.player = player
@@ -375,7 +357,7 @@ init python:
 label start:
 
     $ player = PersonCreator.gen_person(name='Player', gender='male', genus_preset=serpsis_genus_preset)
-    $ player.person_class = PersonClass.get_by_id('infamous_lanista')
+    # $ player.person_class = PersonClass.get_by_id('infamous_lanista')
     # $ player.armor = Armor.random_by_type(player.person_class.available_garments[0])
     $ player.slaves = []
     $ core = MERCore()
@@ -384,7 +366,7 @@ label start:
     # $ core.skip_turn.add_callback(CoreAddCards(player).run)
     # $ core.skip_turn.add_callback(CoreDuel.drop_skulls_callback)
     # $ core.skip_turn.add_callback(CoreSexMinigame.decade_skip_callback)
-    $ setup_arenas(core)
+    # $ setup_arenas(core)
     show screen sc_gui
     python:
         pass

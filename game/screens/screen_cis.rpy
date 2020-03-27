@@ -80,8 +80,6 @@ screen sc_cis(info, relations=None):
                 if controlled:
                     textbutton 'Ensembles':
                         action Function(EnsembleMaker(person).show)
-                    textbutton 'Sex Deck':
-                        action Function(SexDeckInfo(person.sexuality.deck).show)
             textbutton "Leave" action Hide('sc_cis')
         vbox:
             xpos 205

@@ -59,7 +59,6 @@ screen sc_home(home):
                         textbutton 'Отдыхать' action Function(home.skip_turn), Return()
                         textbutton 'Дождаться аукциона' action Function(auction.activate), Function(home.skip_turn), Return()
                         vbox:
-                            text home.player.person_class.colored_name()
                             for attr in home.player.show_attributes().values():
                                 text attr
                     
@@ -84,7 +83,6 @@ screen sc_home(home):
                                 vbox:
                                     xalign 0.5
                                     text slave.name xalign 0.5 color '#fff'
-                                    text slave.person_class.colored_name() xalign 0.5
                     hbox:
                         xalign 0.5
                         spacing 15
@@ -139,13 +137,11 @@ screen sc_home(home):
                                     action Function(home.slave_actions)
                             # Gladiators info block
                             # text home.current_slave.name color '#fff'
-                            # text home.current_slave.person_class.colored_name()
                             # text 'Победы: %s (%s)' % (PriceCalculator(home.current_slave).total_wins(), PriceCalculator(home.current_slave).current_class_wins())
                             # text encolor_text(core_souls[home.current_slave.soul_level], home.current_slave.soul_level)
                             # for attr in home.current_slave.show_attributes().values():
                             #     text attr
                             text SlaveClassTree(home.current_slave).get_class()
-                            text 'Backgound: %s' % class_data.get_background().name()
                             text 'Class: %s' % class_data.get_class().name()
                             text home.current_slave.feature_by_slot('background').name()
                             text 'Obedience: %s' % Slave(home.current_slave).obedience()
