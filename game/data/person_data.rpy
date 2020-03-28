@@ -128,10 +128,11 @@ init python:
     }
 
     core_homeworld_features = {
-        'prehistoric': {'slot': 'homeworld', 'name': __('Prehistoric world'), 'market_description': __(' из дикого, неразвитого мира, где люди крепки телом, но ещё не существует письменности'), 'backgrounds': ['moron', 'tribesman', 'tribeswoman', 'brute', 'wisewoman', 'shaman', 'chiefwife', 'cheften', 'wildflower', 'amazon', 'epic_hero',]},
-        'industrial': {'slot': 'homeworld', 'name': __('Industrial world'), 'market_description': __('из индустриального мира, с развитой наукой но плохой экологией'), 'backgrounds': ['beggar', 'vargant', 'moron',  'bitch', 'commoner', 'worker', 'housewife', 'soldier', 'whore', 'comander', 'ballerina', 'playboy', 'idol', 'epic_hero',]},
-        'postapoc': {'slot': 'homeworld', 'name': __('Postapocalyptic world'), 'market_description': __('из мира разрушенного катаклизмом, где подлость ценнее красоты'), 'backgrounds': ['beggar', 'vargant', 'bitch', 'tribesman', 'tribeswoman', 'brute', 'wisewoman', 'shaman', 'chiefwife', 'cheften', 'amazon',  'epic_hero',]},
-        'utopia': {'slot': 'homeworld', 'name': __('Utopic world'), 'market_description': __('из счастливой утопической цивилизации, где ценится красота но люди бесхитростны и наивны'), 'backgrounds': ['moron', 'commoner', 'nerd', 'muse', 'model', 'atlete', 'fitgirl', 'poet', 'vigilante', 'opinion_leader', 'epic_hero']},
+        'prehistoric': {'slot': 'homeworld', 'name': __('Prehistoric world'), 'market_description': __(' из дикого, неразвитого мира, где люди крепки телом, но ещё не существует письменности'), 'backgrounds': ['moron', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'hermit', 'storyteller', 'shaman', 'mentor', 'philosopher',  'cutey', 'slut', 'wisperer', 'jester', 'chef',]
+},
+        'industrial': {'slot': 'homeworld', 'name': __('Industrial world'), 'market_description': __('из индустриального мира, с развитой наукой но плохой экологией'), 'backgrounds': ['moron', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'hermit', 'storyteller', 'shaman', 'mentor', 'philosopher',  'cutey', 'slut', 'wisperer', 'jester', 'chef',]},
+        'postapoc': {'slot': 'homeworld', 'name': __('Postapocalyptic world'), 'market_description': __('из мира разрушенного катаклизмом, где подлость ценнее красоты'), 'backgrounds': ['moron', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'hermit', 'storyteller', 'shaman', 'mentor', 'philosopher',  'cutey', 'slut', 'wisperer', 'jester', 'chef',]},
+        'utopia': {'slot': 'homeworld', 'name': __('Utopic world'), 'market_description': __('из счастливой утопической цивилизации, где ценится красота но люди бесхитростны и наивны'), 'backgrounds': ['moron', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'hermit', 'storyteller', 'shaman', 'mentor', 'philosopher',  'cutey', 'slut', 'wisperer', 'jester', 'chef',]},
     }
 
     person_genusgender = {
