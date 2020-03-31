@@ -58,8 +58,8 @@ init 1 python:
         data = {'suit': suit}
         CoreDuelCard.register_card(suit.id, CoreDuelCard(suit.id, data))
     
-    MERClass.register_classes(new_class_data)
-    MERBackgroundClass.register_classes(new_bacground_class_data)
+    MERClass.register_classes(class_data)
+    # MERBackgroundClass.register_classes(new_bacground_class_data)
     
     Quirk.register_quirks(quirks_data)
     
