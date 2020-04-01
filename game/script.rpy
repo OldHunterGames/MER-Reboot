@@ -438,7 +438,7 @@ label lbl_slave_actions(slave):
     show expression im.Scale(slave.avatar, 150, 150) at left
     python:
         icon = 'gui/heart_small.png'
-        can_upgrade = home_manager.can_upgrade_slave(slave)
+        can_upgrade = True
         has_temp = slave.temporary_cards['support'] is not None
         is_all_exhausted = [i.exhausted for i in player.slaves if i != slave]
         is_all_exhausted.append(player.exhausted)
