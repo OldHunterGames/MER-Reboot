@@ -98,7 +98,7 @@ init python:
 
         'brute': {
             'name': __('дикарь'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 2,
             'type': 'matrial',
             'description': __('Сильный и ловкий первобытный охотник, настоящее воплощение брутальной дикости.'),
@@ -106,7 +106,7 @@ init python:
 
         'ranger': {
             'name': __('следопыт'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 3,
             'type': 'matrial',
             'description': __('Опытный следопыт, способный выследить и завалить любую дичь будь то зверь, человек или чудовище.'),
@@ -114,7 +114,7 @@ init python:
 
         'warlord': {
             'name': __('атаман'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 4,
             'type': 'matrial',
             'description': __('Отважный воин заправлявший целым отрядом лихих бойцов.'),
@@ -122,7 +122,7 @@ init python:
 
         'hermit': {
             'name': __('отшельник'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 1,
             'type': 'managing',
             'description': __('Долгое проживание вдали от общества даёт время на раздумия.'),
@@ -130,7 +130,7 @@ init python:
 
         'storyteller': {
             'name': __('сказитель'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 2,
             'type': 'managing',
             'description': __('В племенах не имеющих письменности, сказителей уважают за крепкую память.'),
@@ -138,7 +138,7 @@ init python:
 
         'shaman': {
             'name': __('шаман'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 3,
             'type': 'managing',
             'description': __('Шаманом племени может стать лишь самый умный в племени дикарей.'),
@@ -146,7 +146,7 @@ init python:
 
         'mentor': {
             'name': __('наставник'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 4,
             'type': 'managing',
             'description': __('Отличается редкой интеллектуальной одаренностью.'),
@@ -154,7 +154,7 @@ init python:
 
         'philosopher': {
             'name': __('философ'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 5,
             'type': 'managing',
             'description': __('Мыслитель опередивший своё время и прозревший многие тайны вселенной.'),
@@ -170,7 +170,7 @@ init python:
 
         'cutey': {
             'name': __('очаровашка'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 4,
             'type': 'social',
             'description': __('Имея приятную врешность и дружелюбную натуру можно неплохо жить за счёт доброты окружающих.'),
@@ -178,7 +178,7 @@ init python:
 
         'slut': {
             'name': __('блядь'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 1,
             'type': 'social',
             'description': __('Выживать за счёт своей сексуальной доступности - древнейшая стратегия. И она неплохо работает.'),
@@ -186,7 +186,7 @@ init python:
 
         'wisperer': {
             'name': __('интриган'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 3,
             'type': 'social',
             'description': __('Знать всё и обо всех, значит обладать большим влиянием.'),
@@ -194,7 +194,7 @@ init python:
 
         'jester': {
             'name': __('шут'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 2,
             'type': 'social',
             'description': __('Даже если над тобой все смеются и пинают, со стола сильных мира сего всегда можно собрать лушчие объедки.'),
@@ -210,7 +210,7 @@ init python:
 
         'chef': {
             'name': __('вождь'),
-            'prerequisites': [''],
+            'prerequisites': [],
             'tier': 5,
             'type': 'social',
             'description': __('Даже в первобытном племени надор быть искустным политиком,чтобы занять место любимого всеми и авторитетного лидера.'),
