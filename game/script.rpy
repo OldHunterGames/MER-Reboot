@@ -268,8 +268,8 @@ init python:
             gender = self.person.gender
             attr = slavemarket_attribute[gender][top_attr]
             background = self.person.feature_by_slot('background')
-            background_name = background.name()
-            background_description = background.description()
+            background_name = background.name(self.person)
+            background_description = background.description(self.person)
             genderage = person_genusgender[self.person.genus.id + gender]
             world = self.person.feature_by_slot('homeworld') and self.person.feature_by_slot('homeworld').market_description
             soul = slavemarket_soul[slave.soul_level]

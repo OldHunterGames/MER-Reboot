@@ -75,11 +75,11 @@ class MERClass(object):
         self.id = id
         self.data = data
 
-    def name(self):
-        return self.data.get('name', 'No name')
+    def name(self, person):
+        return self.data.get(person.gender, {}).get('name', 'No name')
     
-    def description(self):
-        return self.data.get('description', 'No description')
+    def description(self, person):
+        return self.data.get(person.gender, {}).get('description', 'No description')
     
     def type(self):
         return self.data['type']

@@ -142,8 +142,8 @@ screen sc_home(home):
                             # for attr in home.current_slave.show_attributes().values():
                             #     text attr
                             text SlaveClassTree(home.current_slave).get_class()
-                            text 'Class: %s' % class_data.get_class().name()
-                            text home.current_slave.feature_by_slot('background').name()
+                            text 'Class: %s' % class_data.get_class().name(home.current_slave)
+                            text home.current_slave.feature_by_slot('background').name(home.current_slave)
                             text 'Obedience: %s' % Slave(home.current_slave).obedience()
                             textbutton quirk1_text action Show('sc_quirk_selection', None, quirks_suggestions, 'quirk1')
                             textbutton quirk2_text action Show('sc_quirk_selection', None, quirks_suggestions, 'quirk2')

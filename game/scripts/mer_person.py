@@ -50,11 +50,11 @@ class CoreFeature(object):
     def market_description(self):
         return self._data.get('market_description', 'No description %s' % self.id)
     
-    def description(self):
-        return self._data.get('description', 'No description %s' % self.id)
+    def description(self, person):
+        return self._data.get(person.gender, {}).get('description', 'No description')
 
-    def name(self):
-        return self._data.get('name')
+    def name(self, person):
+        return self._data.get(person.gender, {}).get('name', 'No description')
     
     def count_modifiers(self, attr):
         return self._data.get(attr, 0)
