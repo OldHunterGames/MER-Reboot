@@ -1,5 +1,7 @@
 init python:
     mer_background_data = {
+
+    # БЕСПОЛЕЗНЫЕ
         'beggar': {
             'male': {
                 'name': __('чумичка'),
@@ -37,6 +39,8 @@ init python:
             'description': __('Ничем не примечательный обыватель.'),
         },
 
+    # MARTIAL
+
         'troglodyte': {
             'name': __('троглодит'),
             'prerequisites': [],
@@ -44,7 +48,7 @@ init python:
             'type': 'matrial',
             'description': __('Ничем не прмечательный представитель дикого племени'),
         },
-
+    # SETVICE
         'gatherer': {
             'name': __('собиратель'),
             'prerequisites': [],
