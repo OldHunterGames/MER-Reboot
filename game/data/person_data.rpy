@@ -128,8 +128,12 @@ init python:
     }
 
     core_homeworld_features = {
-        'prehistoric': {'slot': 'homeworld', 'name': __('Prehistoric world'), 'market_description': __(' из дикого, неразвитого мира, где ещё не существует письменности и цивилизации, а люди живут родовыми общинами и племенами'), 'backgrounds': ['moron', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'hermit', 'storyteller', 'shaman', 'mentor', 'philosopher',  'cutey', 'slut', 'wisperer', 'jester', 'chef',]
-},
+        'prehistoric': {
+            'slot': 'homeworld',
+            'name': __('Prehistoric world'),
+            'market_description': __(' из дикого, неразвитого мира, где ещё не существует письменности и цивилизации, а люди живут родовыми общинами и племенами'),
+            'backgrounds': ['moron', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'hermit', 'storyteller', 'shaman', 'mentor', 'philosopher',  'cutey', 'slut', 'wisperer', 'jester', 'chef',]
+        },
         'industrial': {'slot': 'homeworld', 'name': __('Industrial world'), 'market_description': __('из индустриального мира, с развитой наукой но плохой экологией'), 'backgrounds': ['beggar', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'nerd', 'storyteller', 'shaman', 'mentor', 'philosopher',  'mentor', 'whore', 'wisperer', 'jester', 'chef',]},
         'postapoc': {'slot': 'homeworld', 'name': __('Postapocalyptic world'), 'market_description': __('из мира разрушенного катаклизмом, где каждый выживает как умеет'), 'backgrounds': ['vargant', 'commoner', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'hermit', 'storyteller', 'shaman', 'mentor', 'philosopher',  'cutey', 'whore', 'wisperer', 'jester', 'chef',]},
         'utopia': {'slot': 'homeworld', 'name': __('Utopic world'), 'market_description': __('из счастливой утопической цивилизации, где ценится красота но люди бесхитростны и наивны'), 'backgrounds': ['moron', 'commoner', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'hermit', 'storyteller', 'shaman', 'mentor', 'philosopher',  'cutey', 'slut', 'wisperer', 'jester', 'chef',]},
