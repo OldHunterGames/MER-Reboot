@@ -132,11 +132,40 @@ init python:
             'slot': 'homeworld',
             'name': __('Prehistoric world'),
             'market_description': __(' из дикого, неразвитого мира, где ещё не существует письменности и цивилизации, а люди живут родовыми общинами и племенами'),
-            'backgrounds': ['moron', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'hermit', 'storyteller', 'shaman', 'mentor', 'philosopher',  'cutey', 'slut', 'wisperer', 'jester', 'chef',]
+            'backgrounds': ['moron', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero',
+                'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master',
+                'hermit', 'storyteller', 'shaman', 'mentor', 'genius',
+                'slut', 'jester', 'wisperer', 'cutey', 'chieftan',]
         },
-        'industrial': {'slot': 'homeworld', 'name': __('Industrial world'), 'market_description': __('из индустриального мира, с развитой наукой но плохой экологией'), 'backgrounds': ['beggar', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'nerd', 'storyteller', 'shaman', 'mentor', 'philosopher',  'mentor', 'whore', 'wisperer', 'jester', 'chef',]},
-        'postapoc': {'slot': 'homeworld', 'name': __('Postapocalyptic world'), 'market_description': __('из мира разрушенного катаклизмом, где каждый выживает как умеет'), 'backgrounds': ['vargant', 'commoner', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'hermit', 'storyteller', 'shaman', 'mentor', 'philosopher',  'cutey', 'whore', 'wisperer', 'jester', 'chef',]},
-        'utopia': {'slot': 'homeworld', 'name': __('Utopic world'), 'market_description': __('из счастливой утопической цивилизации, где ценится красота но люди бесхитростны и наивны'), 'backgrounds': ['moron', 'commoner', 'troglodyte', 'brute', 'ranger', 'warlord', 'hero', 'gatherer', 'hearthkeeper', 'herbalist', 'artisan', 'master', 'hermit', 'storyteller', 'shaman', 'mentor', 'philosopher',  'cutey', 'slut', 'wisperer', 'jester', 'chef',]},
+        'industrial': {
+            'slot': 'homeworld',
+            'name': __('Industrial world') ,
+            'market_description': __('из индустриального мира, с развитой наукой но плохой экологией'),
+            'backgrounds': ['beggar', 'commoner', 'ruffian', 'soldier', 'ranger', 'commander', 'hero',
+                'worker', 'housewife', 'cook', 'artisan', 'chief',
+                'clerk', 'nerd', 'manager', 'lawer', 'genius',
+                'whore', 'model', 'poet', 'cutey', 'idol',]
+        },
+
+        'postapoc': {
+            'slot': 'homeworld',
+            'name': __('Postapocalyptic world'),
+            'market_description': __('из мира разрушенного катаклизмом, где каждый выживает как умеет'),
+            'backgrounds': ['vargant', 'commoner', 'raider', 'guardian', 'ranger', 'warlord', 'hero',
+                'gatherer', 'repairman', 'herbalist', 'engineer', 'master',
+                'hermit', 'storyteller', 'shaman', 'mentor', 'genius',
+                'whore', 'jester', 'wisperer', 'cutey', 'chieftan',]
+        },
+
+        'utopia': {
+            'slot': 'homeworld',
+            'name': __('Utopic world'),
+            'market_description': __('из счастливой утопической цивилизации, где ценится красота но люди бесхитростны и наивны'),
+            'backgrounds': ['moron', 'commoner', 'rescuer', 'athlete', 'adventurer', 'vigilante', 'champion',
+                'worker', 'housewife', 'cook', 'engineer', 'chief',
+                'clerk', 'nerd', 'manager', 'lawer', 'genius',
+                'muse', 'model', 'poet', 'opinion_leader', 'idol',]
+        },
     }
 
     person_genusgender = {
