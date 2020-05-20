@@ -277,7 +277,7 @@ init python:
             features = self.features_description()
             price = PriceCalculator(self.person).price()
             temper = self.person.feature_by_slot('temper')
-            return "{name}, {genderage} {background_name} {world}. {temper}. {background_description} Цена: {price} искр".format(
+            return "{name}, {genderage} {background_name} {world}. {background_description} {temper}. Цена: {price} искр".format(
                 name=name,
                 attr=attr,
                 background_name=background_name,
