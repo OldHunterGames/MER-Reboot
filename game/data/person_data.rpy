@@ -151,7 +151,7 @@ init python:
             'slot': 'homeworld',
             'name': __('Postapocalyptic world'),
             'market_description': __('из мира разрушенного катаклизмом, где каждый выживает как умеет'),
-            'backgrounds': ['vargant', 'commoner', 'raider', 'guardian', 'ranger', 'warlord', 'hero',
+            'backgrounds': ['beggar', 'commoner', 'raider', 'guardian', 'ranger', 'warlord', 'hero',
                 'gatherer', 'repairman', 'herbalist', 'engineer', 'master',
                 'hermit', 'storyteller', 'shaman', 'mentor', 'genius',
                 'whore', 'jester', 'wisperer', 'cutey', 'chieftan',]
