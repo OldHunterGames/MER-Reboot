@@ -20,6 +20,7 @@ init -10 python:
     from mer_quirks import *
     from mer_slavery import *
     from mer_new_classes import *
+    from mer_emotional_alchemy import *
 
 init 1 python:
     for key, value in core_features.items():
@@ -559,6 +560,7 @@ label lbl_market(core, player):
                 python:
                     player.slaves.append(slave)
                     player.sparks -= price
+                call lbl_new_slave_event(slave)
             'Пропустить':
                 $ pass
             'Уйти':
