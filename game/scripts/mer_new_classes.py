@@ -36,6 +36,11 @@ class ClassData(object):
             return self._CLASS_DATA[self.person]
         return self._get_background()
     
+    def get_class_type(self):
+        if self.person in self._CLASS_DATA.keys():
+            return self.get_class().type()
+        return 'useless'
+    
     def _get_background(self):
         return self.person.feature_by_slot('background')
 

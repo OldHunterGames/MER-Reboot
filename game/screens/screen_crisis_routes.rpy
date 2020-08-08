@@ -1,9 +1,10 @@
 screen sc_crisis_routes(player, person):
     modal True
     zorder 10
-    tag info
+    tag crisis
     window:
         style 'char_info_window'
+        textbutton 'Leave' action Hide('sc_crisis_routes')
         frame:
             hbox:
                 for crisis in MerCrisisSystem(person).get_active_crisises():

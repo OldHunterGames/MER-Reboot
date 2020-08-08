@@ -33,16 +33,18 @@ class MerCrisisSystem(object):
             self._TRIGGERED_CRISIS_DATA[person] = []
 
     def trigger_crisis(self, crisis):
-        print("ADDING_CRISIS")
-        print(crisis)
         self._TRIGGERED_CRISIS_DATA[self.person].append(crisis)
+    
+    def is_triggered_crisis(self, crisis):
+        return crisis in self._TRIGGERED_CRISIS_DATA[self.person]
 
     def is_passed_crisis(self, crisis):
         return crisis in self._PASSED_CRISIS_DATA[self.person]
 
-    def check_crisis(self, trigger):
-        crisis = MerCrisis.find_by_trigger(trigger, self.person)
-        if self.is_passed_crisis(crisis):
+    def check_crisis(self, actor, trigger):
+        print(trigger)
+        crisis = MerCrisis.find_by_trigger(trigger, actor, self.person)
+        if not self.is_passed_crisis(crisis) and not self.is_triggered_crisis(crisis):
             return crisis
         return None
 

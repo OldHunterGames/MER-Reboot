@@ -383,9 +383,6 @@ label start:
         # sex = MerSex([SexParticipant(player, True), SexParticipant(PersonCreator.gen_person(name='Player', gender='female', genus_preset=serpsis_genus_preset), True)])
         # sex.start()
     call lbl_make_initial_characters() from _call_lbl_make_initial_characters
-    $ some_slave = PersonCreator.gen_person()
-    $ MerCrisisSystem(some_slave).trigger_crisis(MerCrisis.find_by_trigger('make_pain', player, some_slave))
-    call screen sc_crisis_routes(player, some_slave)
     # call lbl_storylanista_start
     call lbl_market(core, player)
     call _main from _call__main
@@ -535,6 +532,18 @@ label lbl_slave_actions(slave):
             'Продать на рынке [price] искр':
                 $ home_manager.sell(slave)
                 return
+            'Воспитывать':
+                python:
+                    print("{} class type is {}".format(slave.name, ClassData(slave).get_class_type()))
+                    crisis_system = MerCrisisSystem(slave)
+                    crisis = crisis_system.check_crisis(player, 'train')
+                    if crisis is not None:
+                        crisis_system.trigger_crisis(crisis)
+                if crisis is not None:
+                    'Попытка воспитания. Спроцирован кризис'
+                else:
+                    "[slave.name] признает своё положение. Воспитание прошло гладко."
+
             'Закончить разговор':
                 return
     return
