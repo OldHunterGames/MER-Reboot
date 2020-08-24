@@ -572,7 +572,6 @@ label lbl_market(core, player):
                 python:
                     player.slaves.append(slave)
                     player.sparks -= price
-                call lbl_new_slave_event(slave)
             'Пропустить':
                 $ pass
             'Уйти':
