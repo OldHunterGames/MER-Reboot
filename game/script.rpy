@@ -537,12 +537,14 @@ label lbl_slave_actions(slave):
                     print("{} class type is {}".format(slave.name, ClassData(slave).get_class_type()))
                     crisis_system = MerCrisisSystem(slave)
                     crisis = crisis_system.check_crisis(player, 'train')
-                    if crisis is not None:
-                        crisis_system.trigger_crisis(crisis)
                 if crisis is not None:
                     'Попытка воспитания. Спроцирован кризис'
                 else:
                     "[slave.name] признает своё положение. Воспитание прошло гладко."
+                python:
+                    if crisis is not None:
+                        crisis_system.trigger_crisis(crisis)
+                return  
 
             'Закончить разговор':
                 return

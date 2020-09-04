@@ -51,3 +51,15 @@ label lbl_resolve_1(player, person, crisis):
         MerCrisisSystem(person).fulfill_crisis(crisis)
     'Kekukek'
     return
+
+
+# technical label
+label lbl_crisis_menu_glue(crisis, crisis_system):
+    $ routes = MerCrisisRoute.get_by_crisis(crisis)
+    if len(routes) < 1:
+        "No routes available for this crisis. Dead end"
+        return
+    python:
+        choice = renpy.display_menu([[route.name, route] for route in routes])
+        choice.go_to_route(player, crisis_system.person)
+    return

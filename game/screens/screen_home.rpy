@@ -135,7 +135,6 @@ screen sc_home(home):
                                 imagebutton:
                                     idle 'gui/btn_callslave.png'
                                     action Function(home.slave_actions)
-                            textbutton 'Кризисы' action Show('sc_crisis_routes', player=player, person=home.current_slave)
                             # Gladiators info block
                             # text home.current_slave.name color '#fff'
                             # text 'Победы: %s (%s)' % (PriceCalculator(home.current_slave).total_wins(), PriceCalculator(home.current_slave).current_class_wins())

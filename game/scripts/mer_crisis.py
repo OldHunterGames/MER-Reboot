@@ -23,7 +23,6 @@ class MerCrisis(object):
 
 
 class MerCrisisSystem(object):
-    _TRIGGERED_CRISIS_DATA = {}
     _PASSED_CRISIS_DATA = {}
 
     def __init__(self, person):
@@ -33,10 +32,7 @@ class MerCrisisSystem(object):
             self._TRIGGERED_CRISIS_DATA[person] = []
 
     def trigger_crisis(self, crisis):
-        self._TRIGGERED_CRISIS_DATA[self.person].append(crisis)
-    
-    def is_triggered_crisis(self, crisis):
-        return crisis in self._TRIGGERED_CRISIS_DATA[self.person]
+        renpy.call_in_new_context('lbl_crisis_menu_glue', crisis, self)
 
     def is_passed_crisis(self, crisis):
         return crisis in self._PASSED_CRISIS_DATA[self.person]
@@ -44,15 +40,12 @@ class MerCrisisSystem(object):
     def check_crisis(self, actor, trigger):
         print(trigger)
         crisis = MerCrisis.find_by_trigger(trigger, actor, self.person)
-        if not self.is_passed_crisis(crisis) and not self.is_triggered_crisis(crisis):
+        if not self.is_passed_crisis(crisis):
             return crisis
         return None
 
     def fulfill_crisis(self, crisis):
         self._PASSED_CRISIS_DATA[self.person].append(crisis)
-
-    def get_active_crisises(self):
-        return [i for i in self._TRIGGERED_CRISIS_DATA[self.person] if i not in self._PASSED_CRISIS_DATA[self.person]]
 
 
 class MerCrisisRoute(object):
