@@ -29,7 +29,6 @@ class MerCrisisSystem(object):
         self.person = person
         if self._PASSED_CRISIS_DATA.get(person) is None:
             self._PASSED_CRISIS_DATA[person] = []
-            self._TRIGGERED_CRISIS_DATA[person] = []
 
     def trigger_crisis(self, crisis):
         renpy.call_in_new_context('lbl_crisis_menu_glue', crisis, self)

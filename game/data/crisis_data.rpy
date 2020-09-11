@@ -60,6 +60,9 @@ label lbl_crisis_menu_glue(crisis, crisis_system):
         "No routes available for this crisis. Dead end"
         return
     python:
-        choice = renpy.display_menu([[route.name, route] for route in routes])
-        choice.go_to_route(player, crisis_system.person)
+        variants = [[route.name, route] for route in routes]
+        variants.append(['Leave', False])
+        choiced = renpy.display_menu(variants)
+        if choiced:
+            choiced.go_to_route(player, crisis_system.person)
     return
